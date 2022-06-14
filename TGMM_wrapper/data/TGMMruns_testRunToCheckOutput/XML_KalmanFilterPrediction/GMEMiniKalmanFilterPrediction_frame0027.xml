@@ -1,0 +1,423 @@
+<?xml version="1.0" encoding="utf-8"?>
+<document>
+<GaussianMixtureModel id="0" lineage="0" parent="0" dims="3" splitScore="0" scale="1 1 5 "
+nu="183.065" beta="91.5324" alpha="91.5324" m="64.5908 83.4107 14.1577 " W="0.000910017 -3.57141e-006 0 -3.57141e-006 0.00121374 0 0 0 0.0057151 "
+nuPrior="91.5324" betaPrior="0.915324" alphaPrior="0.0608616" distMRFPrior="0" mPrior="64.5908 83.4107 14.1577 " WPrior="0.00182003 -7.14281e-006 0 -7.14281e-006 0.00242747 0 0 0 0.0114302 " svIdx="63 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="1" lineage="1" parent="1" dims="3" splitScore="0" scale="1 1 5 "
+nu="165.053" beta="82.5267" alpha="82.5267" m="111.725 3.63148 14.0016 " W="0.00101363 -0.000161392 0 -0.000161392 0.000866295 0 0 0 0.00540503 "
+nuPrior="82.5267" betaPrior="0.825267" alphaPrior="0.0608616" distMRFPrior="0" mPrior="111.725 3.63148 14.0016 " WPrior="0.00202726 -0.000322783 0 -0.000322783 0.00173259 0 0 0 0.0108101 " svIdx="32 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="2" lineage="2" parent="2" dims="3" splitScore="0" scale="1 1 5 "
+nu="198.024" beta="99.0122" alpha="99.0122" m="42.2748 22.9803 10.512 " W="0.000955541 0.00026841 0 0.00026841 0.00053914 0 0 0 0.00446643 "
+nuPrior="99.0122" betaPrior="0.990122" alphaPrior="0.0608616" distMRFPrior="0" mPrior="42.2748 22.9803 10.512 " WPrior="0.00191108 0.000536819 0 0.000536819 0.00107828 0 0 0 0.00893285 " svIdx="56 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="3" lineage="3" parent="3" dims="3" splitScore="0" scale="1 1 5 "
+nu="219.115" beta="109.557" alpha="109.557" m="81.1364 38.1687 12.948 " W="0.000755501 -1.39442e-005 0 -1.39442e-005 0.000613573 0 0 0 0.00368434 "
+nuPrior="109.557" betaPrior="1.09557" alphaPrior="0.0608616" distMRFPrior="0" mPrior="81.1364 38.1687 12.948 " WPrior="0.001511 -2.78884e-005 0 -2.78884e-005 0.00122715 0 0 0 0.00736867 " svIdx="38 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="4" lineage="4" parent="4" dims="3" splitScore="0" scale="1 1 5 "
+nu="205.137" beta="102.568" alpha="102.568" m="42.2774 52.8294 13.4264 " W="0.000807653 -0.000227838 0 -0.000227838 0.000721742 0 0 0 0.0042552 "
+nuPrior="102.568" betaPrior="1.02568" alphaPrior="0.0608616" distMRFPrior="0" mPrior="42.2774 52.8294 13.4264 " WPrior="0.00161531 -0.000455675 0 -0.000455675 0.00144348 0 0 0 0.0085104 " svIdx="87 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="5" lineage="5" parent="5" dims="3" splitScore="0" scale="1 1 5 "
+nu="201.25" beta="100.625" alpha="100.625" m="99.7855 30.0661 13.1149 " W="0.000615369 -3.0446e-005 0 -3.0446e-005 0.000494856 0 0 0 0.00477362 "
+nuPrior="100.625" betaPrior="1.00625" alphaPrior="0.0608616" distMRFPrior="0" mPrior="99.7855 30.0661 13.1149 " WPrior="0.00123074 -6.0892e-005 0 -6.0892e-005 0.000989713 0 0 0 0.00954724 " svIdx="30 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="6" lineage="6" parent="6" dims="3" splitScore="0" scale="1 1 5 "
+nu="199.649" beta="99.8247" alpha="99.8247" m="32.5999 8.75509 11.5152 " W="0.000661875 0.000260684 0 0.000260684 0.000962297 0 0 0 0.00400494 "
+nuPrior="99.8247" betaPrior="0.998247" alphaPrior="0.0608616" distMRFPrior="0" mPrior="32.5999 8.75509 11.5152 " WPrior="0.00132375 0.000521368 0 0.000521368 0.00192459 0 0 0 0.00800989 " svIdx="3 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="7" lineage="7" parent="7" dims="3" splitScore="0" scale="1 1 5 "
+nu="182.007" beta="91.0035" alpha="91.0035" m="25.9751 28.6838 10.836 " W="0.00103669 -0.000240015 0 -0.000240015 0.000706862 0 0 0 0.004996 "
+nuPrior="91.0035" betaPrior="0.910035" alphaPrior="0.0608616" distMRFPrior="0" mPrior="25.9751 28.6838 10.836 " WPrior="0.00207338 -0.000480031 0 -0.000480031 0.00141372 0 0 0 0.009992 " svIdx="57 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="8" lineage="8" parent="8" dims="3" splitScore="0" scale="1 1 5 "
+nu="213.233" beta="106.616" alpha="106.616" m="11.2076 39.1823 11.2802 " W="0.000665985 -5.54286e-005 0 -5.54286e-005 0.000596252 0 0 0 0.00368814 "
+nuPrior="106.616" betaPrior="1.06616" alphaPrior="0.0608616" distMRFPrior="0" mPrior="11.2076 39.1823 11.2802 " WPrior="0.00133197 -0.000110857 0 -0.000110857 0.0011925 0 0 0 0.00737628 " svIdx="50 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="9" lineage="9" parent="9" dims="3" splitScore="0" scale="1 1 5 "
+nu="190.171" beta="95.0856" alpha="95.0856" m="6.78618 17.8393 12.4419 " W="0.000653635 -0.000128105 0 -0.000128105 0.00102519 0 0 0 0.00295854 "
+nuPrior="95.0856" betaPrior="0.950856" alphaPrior="0.0608616" distMRFPrior="0" mPrior="6.78618 17.8393 12.4419 " WPrior="0.00130727 -0.00025621 0 -0.00025621 0.00205038 0 0 0 0.00591708 " svIdx="49 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="10" lineage="10" parent="10" dims="3" splitScore="0" scale="1 1 5 "
+nu="147.484" beta="73.7419" alpha="73.7419" m="15.0158 3.37575 12.5826 " W="0.00118735 6.94508e-005 0 6.94508e-005 0.00141884 0 0 0 0.00411178 "
+nuPrior="73.7419" betaPrior="0.737419" alphaPrior="0.0608616" distMRFPrior="0" mPrior="15.0158 3.37575 12.5826 " WPrior="0.0023747 0.000138902 0 0.000138902 0.00283769 0 0 0 0.00822356 " svIdx="110 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="11" lineage="11" parent="11" dims="3" splitScore="0" scale="1 1 5 "
+nu="182.116" beta="91.0579" alpha="91.0579" m="29.3295 48.0937 11.0629 " W="0.000651734 7.78561e-005 0 7.78561e-005 0.000687423 0 0 0 0.00636807 "
+nuPrior="91.0579" betaPrior="0.910579" alphaPrior="0.0608616" distMRFPrior="0" mPrior="29.3295 48.0937 11.0629 " WPrior="0.00130347 0.000155712 0 0.000155712 0.00137485 0 0 0 0.0127361 " svIdx="88 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="12" lineage="12" parent="12" dims="3" splitScore="0" scale="1 1 5 "
+nu="203.551" beta="101.775" alpha="101.775" m="125.058 91.0395 14.1249 " W="0.00103731 6.16626e-005 0 6.16626e-005 0.000373979 0 0 0 0.00289721 "
+nuPrior="101.775" betaPrior="1.01775" alphaPrior="0.0608616" distMRFPrior="0" mPrior="125.058 91.0395 14.1249 " WPrior="0.00207463 0.000123325 0 0.000123325 0.000747959 0 0 0 0.00579443 " svIdx="5 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="13" lineage="13" parent="13" dims="3" splitScore="0" scale="1 1 5 "
+nu="196.564" beta="98.2818" alpha="98.2818" m="109.843 90.8064 12.519 " W="0.00110366 -0.000131314 0 -0.000131314 0.000486128 0 0 0 0.0048677 "
+nuPrior="98.2818" betaPrior="0.982818" alphaPrior="0.0608616" distMRFPrior="0" mPrior="109.843 90.8064 12.519 " WPrior="0.00220732 -0.000262628 0 -0.000262628 0.000972257 0 0 0 0.0097354 " svIdx="37 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="14" lineage="14" parent="14" dims="3" splitScore="0" scale="1 1 5 "
+nu="21.4734" beta="10.7367" alpha="10.7367" m="149.488 86.0618 16.6878 " W="0.0103477 1.0842e-019 0 -1.0842e-019 0.0103477 0 0 0 0.0311464 "
+nuPrior="10.7367" betaPrior="0.107367" alphaPrior="0.0608616" distMRFPrior="0" mPrior="149.488 86.0618 16.6878 " WPrior="0.0206954 2.1684e-019 0 -2.1684e-019 0.0206954 0 0 0 0.0622928 " svIdx="19 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="15" lineage="15" parent="15" dims="3" splitScore="0" scale="1 1 5 "
+nu="139.138" beta="69.5688" alpha="69.5688" m="146.963 70.0322 16.7227 " W="0.00122045 -0.000156525 0 -0.000156525 0.00114326 0 0 0 0.00373074 "
+nuPrior="69.5688" betaPrior="0.695688" alphaPrior="0.0608616" distMRFPrior="0" mPrior="146.963 70.0322 16.7227 " WPrior="0.0024409 -0.000313051 0 -0.000313051 0.00228652 0 0 0 0.00746149 " svIdx="13 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="16" lineage="16" parent="16" dims="3" splitScore="0" scale="1 1 5 "
+nu="193.846" beta="96.9229" alpha="96.9229" m="96.46 47.2851 11.9021 " W="0.000962046 0.000216872 0 0.000216872 0.000680714 0 0 0 0.00360143 "
+nuPrior="96.9229" betaPrior="0.969229" alphaPrior="0.0608616" distMRFPrior="0" mPrior="96.46 47.2851 11.9021 " WPrior="0.00192409 0.000433744 0 0.000433744 0.00136143 0 0 0 0.00720287 " svIdx="15 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="17" lineage="17" parent="17" dims="3" splitScore="0" scale="1 1 5 "
+nu="213.282" beta="106.641" alpha="106.641" m="114.035 21.6114 14.4153 " W="0.000498964 4.28892e-006 0 4.28892e-006 0.00104178 0 0 0 0.00344217 "
+nuPrior="106.641" betaPrior="1.06641" alphaPrior="0.0608616" distMRFPrior="0" mPrior="114.035 21.6114 14.4153 " WPrior="0.000997929 8.57784e-006 0 8.57784e-006 0.00208355 0 0 0 0.00688435 " svIdx="29 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="18" lineage="18" parent="18" dims="3" splitScore="0" scale="1 1 5 "
+nu="175.923" beta="87.9613" alpha="87.9613" m="66.1949 43.9889 14.2004 " W="0.0009455 -1.66456e-005 0 -1.66456e-005 0.000419192 0 0 0 0.00300886 "
+nuPrior="87.9613" betaPrior="0.879613" alphaPrior="0.0608616" distMRFPrior="0" mPrior="66.1949 43.9889 14.2004 " WPrior="0.001891 -3.32912e-005 0 -3.32912e-005 0.000838384 0 0 0 0.00601773 " svIdx="40 44 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="19" lineage="19" parent="19" dims="3" splitScore="0" scale="1 1 5 "
+nu="231.872" beta="115.936" alpha="115.936" m="71.1739 18.5703 13.6245 " W="0.000812092 -6.94751e-005 0 -6.94751e-005 0.000497538 0 0 0 0.00229654 "
+nuPrior="115.936" betaPrior="1.15936" alphaPrior="0.0608616" distMRFPrior="0" mPrior="71.1739 18.5703 13.6245 " WPrior="0.00162418 -0.00013895 0 -0.00013895 0.000995075 0 0 0 0.00459308 " svIdx="65 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="20" lineage="20" parent="20" dims="3" splitScore="0" scale="1 1 5 "
+nu="80.257" beta="40.1285" alpha="40.1285" m="65.7687 1.89197 11.8346 " W="0.00258807 -4.01548e-005 0 -4.01548e-005 0.00275968 0 0 0 0.0084641 "
+nuPrior="40.1285" betaPrior="0.401285" alphaPrior="0.0608616" distMRFPrior="0" mPrior="65.7687 1.89197 11.8346 " WPrior="0.00517613 -8.03097e-005 0 -8.03097e-005 0.00551935 0 0 0 0.0169282 " svIdx="26 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="21" lineage="21" parent="21" dims="3" splitScore="0" scale="1 1 5 "
+nu="196.524" beta="98.2622" alpha="98.2622" m="23.2915 61.5276 9.9065 " W="0.000664634 -0.000215767 0 -0.000215767 0.00053679 0 0 0 0.00652234 "
+nuPrior="98.2622" betaPrior="0.982622" alphaPrior="0.0608616" distMRFPrior="0" mPrior="23.2915 61.5276 9.9065 " WPrior="0.00132927 -0.000431534 0 -0.000431534 0.00107358 0 0 0 0.0130447 " svIdx="94 95 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="22" lineage="22" parent="22" dims="3" splitScore="0" scale="1 1 5 "
+nu="184.089" beta="92.0445" alpha="92.0445" m="5.36214 62.3703 10.6605 " W="0.000833821 -6.99619e-005 0 -6.99619e-005 0.000864715 0 0 0 0.00432663 "
+nuPrior="92.0445" betaPrior="0.920445" alphaPrior="0.0608616" distMRFPrior="0" mPrior="5.36214 62.3703 10.6605 " WPrior="0.00166764 -0.000139924 0 -0.000139924 0.00172943 0 0 0 0.00865327 " svIdx="77 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="23" lineage="23" parent="23" dims="3" splitScore="0" scale="1 1 5 "
+nu="211.303" beta="105.652" alpha="105.652" m="117.363 68.1646 13.7012 " W="0.000978423 -0.000211345 0 -0.000211345 0.000440912 0 0 0 0.00325279 "
+nuPrior="105.652" betaPrior="1.05652" alphaPrior="0.0608616" distMRFPrior="0" mPrior="117.363 68.1646 13.7012 " WPrior="0.00195685 -0.00042269 0 -0.00042269 0.000881824 0 0 0 0.00650558 " svIdx="8 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="24" lineage="24" parent="24" dims="3" splitScore="0" scale="1 1 5 "
+nu="190.796" beta="95.3982" alpha="95.3982" m="128.887 60.028 13.7678 " W="0.000895207 -9.19879e-005 0 -9.19879e-005 0.000612194 0 0 0 0.00430481 "
+nuPrior="95.3982" betaPrior="0.953982" alphaPrior="0.0608616" distMRFPrior="0" mPrior="128.887 60.028 13.7678 " WPrior="0.00179041 -0.000183976 0 -0.000183976 0.00122439 0 0 0 0.00860962 " svIdx="4 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="25" lineage="25" parent="25" dims="3" splitScore="0" scale="1 1 5 "
+nu="181.906" beta="90.9531" alpha="90.9531" m="103.279 75.0535 11.478 " W="0.000946234 0.000218767 0 0.000218767 0.00099264 0 0 0 0.00469825 "
+nuPrior="90.9531" betaPrior="0.909531" alphaPrior="0.0608616" distMRFPrior="0" mPrior="103.279 75.0535 11.478 " WPrior="0.00189247 0.000437533 0 0.000437533 0.00198528 0 0 0 0.00939649 " svIdx="7 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="26" lineage="26" parent="26" dims="3" splitScore="0" scale="1 1 5 "
+nu="189.249" beta="94.6244" alpha="94.6244" m="98.5336 61.7872 13.2405 " W="0.000645572 0.000282515 0 0.000282515 0.000942736 0 0 0 0.00309266 "
+nuPrior="94.6244" betaPrior="0.946244" alphaPrior="0.0608616" distMRFPrior="0" mPrior="98.5336 61.7872 13.2405 " WPrior="0.00129114 0.00056503 0 0.00056503 0.00188547 0 0 0 0.00618532 " svIdx="6 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="27" lineage="27" parent="27" dims="3" splitScore="0" scale="1 1 5 "
+nu="194.57" beta="97.2848" alpha="97.2848" m="137.099 79.8451 13.4819 " W="0.000715634 -0.000260381 0 -0.000260381 0.000934034 0 0 0 0.00314708 "
+nuPrior="97.2848" betaPrior="0.972848" alphaPrior="0.0608616" distMRFPrior="0" mPrior="137.099 79.8451 13.4819 " WPrior="0.00143127 -0.000520762 0 -0.000520762 0.00186807 0 0 0 0.00629417 " svIdx="21 20 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="28" lineage="28" parent="28" dims="3" splitScore="0" scale="1 1 5 "
+nu="211.028" beta="105.514" alpha="105.514" m="112.419 47.3025 11.5798 " W="0.000868205 -0.000293541 0 -0.000293541 0.000568479 0 0 0 0.00359775 "
+nuPrior="105.514" betaPrior="1.05514" alphaPrior="0.0608616" distMRFPrior="0" mPrior="112.419 47.3025 11.5798 " WPrior="0.00173641 -0.000587082 0 -0.000587082 0.00113696 0 0 0 0.0071955 " svIdx="16 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="29" lineage="29" parent="29" dims="3" splitScore="0" scale="1 1 5 "
+nu="171.123" beta="85.5614" alpha="85.5614" m="128.502 11.0574 14.7798 " W="0.000968428 0.000420889 0 0.000420889 0.000761762 0 0 0 0.00416786 "
+nuPrior="85.5614" betaPrior="0.855614" alphaPrior="0.0608616" distMRFPrior="0" mPrior="128.502 11.0574 14.7798 " WPrior="0.00193686 0.000841779 0 0.000841779 0.00152352 0 0 0 0.00833572 " svIdx="31 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="30" lineage="30" parent="30" dims="3" splitScore="0" scale="1 1 5 "
+nu="188.552" beta="94.276" alpha="94.276" m="94.8942 92.2659 12.0394 " W="0.000909583 -0.000168749 0 -0.000168749 0.000933615 0 0 0 0.00503766 "
+nuPrior="94.276" betaPrior="0.94276" alphaPrior="0.0608616" distMRFPrior="0" mPrior="94.8942 92.2659 12.0394 " WPrior="0.00181917 -0.000337498 0 -0.000337498 0.00186723 0 0 0 0.0100753 " svIdx="36 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="31" lineage="31" parent="31" dims="3" splitScore="0" scale="1 1 5 "
+nu="181.571" beta="90.7853" alpha="90.7853" m="57.3647 29.9665 11.0344 " W="0.000847883 -0.000207699 0 -0.000207699 0.00098935 0 0 0 0.0034583 "
+nuPrior="90.7853" betaPrior="0.907853" alphaPrior="0.0608616" distMRFPrior="0" mPrior="57.3647 29.9665 11.0344 " WPrior="0.00169577 -0.000415399 0 -0.000415399 0.0019787 0 0 0 0.0069166 " svIdx="59 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="32" lineage="32" parent="32" dims="3" splitScore="0" scale="1 1 5 "
+nu="175.357" beta="87.6783" alpha="87.6783" m="48.9142 39.2009 12.0101 " W="0.000528548 -0.000284815 0 -0.000284815 0.0011573 0 0 0 0.0055074 "
+nuPrior="87.6783" betaPrior="0.876783" alphaPrior="0.0608616" distMRFPrior="0" mPrior="48.9142 39.2009 12.0101 " WPrior="0.0010571 -0.000569629 0 -0.000569629 0.0023146 0 0 0 0.0110148 " svIdx="58 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="33" lineage="33" parent="33" dims="3" splitScore="0" scale="1 1 5 "
+nu="175.52" beta="87.7599" alpha="87.7599" m="96.1114 7.77536 12.272 " W="0.00101776 -0.000350975 0 -0.000350975 0.000769638 0 0 0 0.00457387 "
+nuPrior="87.7599" betaPrior="0.877599" alphaPrior="0.0608616" distMRFPrior="0" mPrior="96.1114 7.77536 12.272 " WPrior="0.00203552 -0.00070195 0 -0.00070195 0.00153928 0 0 0 0.00914774 " svIdx="0 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="34" lineage="34" parent="34" dims="3" splitScore="0" scale="1 1 5 "
+nu="192.551" beta="96.2754" alpha="96.2754" m="85.2226 17.7007 11.9412 " W="0.000838051 -0.000205748 0 -0.000205748 0.000617002 0 0 0 0.00266967 "
+nuPrior="96.2754" betaPrior="0.962754" alphaPrior="0.0608616" distMRFPrior="0" mPrior="85.2226 17.7007 11.9412 " WPrior="0.0016761 -0.000411495 0 -0.000411495 0.001234 0 0 0 0.00533934 " svIdx="79 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="35" lineage="35" parent="35" dims="3" splitScore="0" scale="1 1 5 "
+nu="62.647" beta="31.3235" alpha="31.3235" m="38.5658 73.5122 20.4299 " W="0.000843858 -0.000124797 0 -0.000124797 0.00103833 0 0 0 0.0125117 "
+nuPrior="31.3235" betaPrior="0.313235" alphaPrior="0.0608616" distMRFPrior="0" mPrior="38.5658 73.5122 20.4299 " WPrior="0.00168772 -0.000249594 0 -0.000249594 0.00207666 0 0 0 0.0250233 " svIdx="122 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="36" lineage="36" parent="36" dims="3" splitScore="0" scale="1 1 5 "
+nu="144.641" beta="72.3206" alpha="72.3206" m="53.9107 63.3688 14.268 " W="0.00150602 -2.30155e-005 0 -2.30155e-005 0.000698375 0 0 0 0.0041852 "
+nuPrior="72.3206" betaPrior="0.723206" alphaPrior="0.0608616" distMRFPrior="0" mPrior="53.9107 63.3688 14.268 " WPrior="0.00301203 -4.6031e-005 0 -4.6031e-005 0.00139675 0 0 0 0.0083704 " svIdx="76 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="37" lineage="37" parent="37" dims="3" splitScore="0" scale="1 1 5 "
+nu="180.159" beta="90.0793" alpha="90.0793" m="67.5996 65.8876 12.1594 " W="0.00122695 5.79553e-005 0 5.79553e-005 0.000709336 0 0 0 0.00425712 "
+nuPrior="90.0793" betaPrior="0.900793" alphaPrior="0.0608616" distMRFPrior="0" mPrior="67.5996 65.8876 12.1594 " WPrior="0.0024539 0.000115911 0 0.000115911 0.00141867 0 0 0 0.00851424 " svIdx="25 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="38" lineage="38" parent="38" dims="3" splitScore="0" scale="1 1 5 "
+nu="191.551" beta="95.7756" alpha="95.7756" m="123.363 39.5457 15.4027 " W="0.000831196 -0.00013684 0 -0.00013684 0.000593163 0 0 0 0.00484643 "
+nuPrior="95.7756" betaPrior="0.957756" alphaPrior="0.0608616" distMRFPrior="0" mPrior="123.363 39.5457 15.4027 " WPrior="0.00166239 -0.00027368 0 -0.00027368 0.00118633 0 0 0 0.00969286 " svIdx="11 12 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="39" lineage="39" parent="39" dims="3" splitScore="0" scale="1 1 5 "
+nu="205.818" beta="102.909" alpha="102.909" m="54.3109 80.9832 10.0513 " W="0.000585481 -0.000267424 0 -0.000267424 0.000811457 0 0 0 0.0043292 "
+nuPrior="102.909" betaPrior="1.02909" alphaPrior="0.0608616" distMRFPrior="0" mPrior="54.3109 80.9832 10.0513 " WPrior="0.00117096 -0.000534849 0 -0.000534849 0.00162291 0 0 0 0.0086584 " svIdx="64 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="40" lineage="40" parent="40" dims="3" splitScore="0" scale="1 1 5 "
+nu="224.134" beta="112.067" alpha="112.067" m="89.599 80.0132 16.1027 " W="0.000612695 1.92983e-005 0 1.92983e-005 0.000927485 0 0 0 0.0030392 "
+nuPrior="112.067" betaPrior="1.12067" alphaPrior="0.0608616" distMRFPrior="0" mPrior="89.599 80.0132 16.1027 " WPrior="0.00122539 3.85967e-005 0 3.85967e-005 0.00185497 0 0 0 0.0060784 " svIdx="35 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="41" lineage="41" parent="41" dims="3" splitScore="0" scale="1 1 5 "
+nu="176.774" beta="88.3871" alpha="88.3871" m="77.6775 77.4062 11.5257 " W="0.00106372 -0.000230536 0 -0.000230536 0.000607965 0 0 0 0.00412103 "
+nuPrior="88.3871" betaPrior="0.883871" alphaPrior="0.0608616" distMRFPrior="0" mPrior="77.6775 77.4062 11.5257 " WPrior="0.00212743 -0.000461072 0 -0.000461072 0.00121593 0 0 0 0.00824205 " svIdx="24 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="42" lineage="42" parent="42" dims="3" splitScore="0" scale="1 1 5 "
+nu="178.435" beta="89.2177" alpha="89.2177" m="82.4161 59.8863 12.2671 " W="0.00123187 -0.000103603 0 -0.000103603 0.000444413 0 0 0 0.00453211 "
+nuPrior="89.2177" betaPrior="0.892177" alphaPrior="0.0608616" distMRFPrior="0" mPrior="82.4161 59.8863 12.2671 " WPrior="0.00246373 -0.000207205 0 -0.000207205 0.000888826 0 0 0 0.00906423 " svIdx="17 18 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="43" lineage="43" parent="43" dims="3" splitScore="0" scale="1 1 5 "
+nu="166.562" beta="83.2812" alpha="83.2812" m="135.393 25.7014 15.6936 " W="0.000978922 3.50076e-005 0 3.50076e-005 0.000711226 0 0 0 0.00482093 "
+nuPrior="83.2812" betaPrior="0.832812" alphaPrior="0.0608616" distMRFPrior="0" mPrior="135.393 25.7014 15.6936 " WPrior="0.00195784 7.00151e-005 0 7.00151e-005 0.00142245 0 0 0 0.00964185 " svIdx="14 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="44" lineage="44" parent="44" dims="3" splitScore="0" scale="1 1 5 "
+nu="37.6169" beta="18.8085" alpha="18.8085" m="148.853 24.9064 17.3563 " W="0.00583007 0.000479631 0 0.000479631 0.00291341 0 0 0 0.0349955 "
+nuPrior="18.8085" betaPrior="0.188085" alphaPrior="0.0608616" distMRFPrior="0" mPrior="148.853 24.9064 17.3563 " WPrior="0.0116601 0.000959262 0 0.000959262 0.00582682 0 0 0 0.0699909 " svIdx="43 42 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="45" lineage="45" parent="45" dims="3" splitScore="0" scale="1 1 5 "
+nu="192.115" beta="96.0574" alpha="96.0574" m="140.361 44.2076 14.9854 " W="0.000782618 0.000229025 0 0.000229025 0.000693164 0 0 0 0.0026979 "
+nuPrior="96.0574" betaPrior="0.960574" alphaPrior="0.0608616" distMRFPrior="0" mPrior="140.361 44.2076 14.9854 " WPrior="0.00156524 0.000458049 0 0.000458049 0.00138633 0 0 0 0.00539579 " svIdx="9 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="46" lineage="46" parent="46" dims="3" splitScore="0" scale="1 1 5 "
+nu="161.892" beta="80.9461" alpha="80.9461" m="76.7761 97.5846 11.3783 " W="0.000952069 0.000195464 0 0.000195464 0.00128165 0 0 0 0.00439407 "
+nuPrior="80.9461" betaPrior="0.809461" alphaPrior="0.0608616" distMRFPrior="0" mPrior="76.7761 97.5846 11.3783 " WPrior="0.00190414 0.000390928 0 0.000390928 0.0025633 0 0 0 0.00878814 " svIdx="1 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="47" lineage="47" parent="47" dims="3" splitScore="0" scale="1 1 5 "
+nu="25.0972" beta="12.5486" alpha="12.5486" m="68.1601 99.3783 15.3297 " W="0.00885357 -5.42101e-020 0 5.42101e-020 0.00885357 0 0 0 0.0595085 "
+nuPrior="12.5486" betaPrior="0.125486" alphaPrior="0.0608616" distMRFPrior="0" mPrior="68.1601 99.3783 15.3297 " WPrior="0.0177071 -1.0842e-019 0 1.0842e-019 0.0177071 0 0 0 0.119017 " svIdx="2 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="48" lineage="48" parent="48" dims="3" splitScore="0" scale="1 1 5 "
+nu="203.973" beta="101.987" alpha="101.987" m="44.5153 91.6143 10.3114 " W="0.000617379 -0.0003835 0 -0.0003835 0.000777749 0 0 0 0.0044295 "
+nuPrior="101.987" betaPrior="1.01987" alphaPrior="0.0608616" distMRFPrior="0" mPrior="44.5153 91.6143 10.3114 " WPrior="0.00123476 -0.000767 0 -0.000767 0.0015555 0 0 0 0.00885899 " svIdx="60 61 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="49" lineage="49" parent="49" dims="3" splitScore="0" scale="1 1 5 "
+nu="209.502" beta="104.751" alpha="104.751" m="21.8053 78.4099 13.9503 " W="0.000575092 0.000124711 0 0.000124711 0.000611122 0 0 0 0.00385059 "
+nuPrior="104.751" betaPrior="1.04751" alphaPrior="0.0608616" distMRFPrior="0" mPrior="21.8053 78.4099 13.9503 " WPrior="0.00115018 0.000249422 0 0.000249422 0.00122224 0 0 0 0.00770117 " svIdx="55 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="50" lineage="50" parent="50" dims="3" splitScore="0" scale="1 1 5 "
+nu="198.626" beta="99.3132" alpha="99.3132" m="37.4763 70.2664 10.7831 " W="0.000591948 -0.000208101 0 -0.000208101 0.000911512 0 0 0 0.00431645 "
+nuPrior="99.3132" betaPrior="0.993132" alphaPrior="0.0608616" distMRFPrior="0" mPrior="37.4763 70.2664 10.7831 " WPrior="0.0011839 -0.000416202 0 -0.000416202 0.00182302 0 0 0 0.0086329 " svIdx="89 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="51" lineage="51" parent="51" dims="3" splitScore="0" scale="1 1 5 "
+nu="34.5671" beta="17.2836" alpha="17.2836" m="29.1035 98.7878 11.9911 " W="0.00468275 -0.000230194 0 -0.000230194 0.00639771 0 0 0 0.0410626 "
+nuPrior="17.2836" betaPrior="0.172836" alphaPrior="0.0608616" distMRFPrior="0" mPrior="29.1035 98.7878 11.9911 " WPrior="0.0093655 -0.000460388 0 -0.000460388 0.0127954 0 0 0 0.0821252 " svIdx="48 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="52" lineage="52" parent="52" dims="3" splitScore="0" scale="1 1 5 "
+nu="186.963" beta="93.4814" alpha="93.4814" m="8.08181 78.9239 10.8487 " W="0.000476233 4.42852e-005 0 4.42852e-005 0.00118572 0 0 0 0.00448926 "
+nuPrior="93.4814" betaPrior="0.934814" alphaPrior="0.0608616" distMRFPrior="0" mPrior="8.08181 78.9239 10.8487 " WPrior="0.000952465 8.85704e-005 0 8.85704e-005 0.00237144 0 0 0 0.00897853 " svIdx="54 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="53" lineage="53" parent="53" dims="3" splitScore="0" scale="1 1 5 "
+nu="161.63" beta="80.8148" alpha="80.8148" m="6.11927 95.5906 11.3669 " W="0.000724713 1.83048e-005 0 1.83048e-005 0.00137423 0 0 0 0.00565893 "
+nuPrior="80.8148" betaPrior="0.808148" alphaPrior="0.0608616" distMRFPrior="0" mPrior="6.11927 95.5906 11.3669 " WPrior="0.00144943 3.66095e-005 0 3.66095e-005 0.00274847 0 0 0 0.0113179 " svIdx="10 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="54" lineage="54" parent="54" dims="3" splitScore="0" scale="1 1 5 "
+nu="208.378" beta="104.189" alpha="104.189" m="26.8939 94.9902 9.08303 " W="0.000394513 -0.0001686 0 -0.0001686 0.000574025 0 0 0 0.00384034 "
+nuPrior="104.189" betaPrior="1.04189" alphaPrior="0.0608616" distMRFPrior="0" mPrior="26.8939 94.9902 9.08303 " WPrior="0.000789026 -0.000337199 0 -0.000337199 0.00114805 0 0 0 0.00768069 " svIdx="47 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="55" lineage="55" parent="55" dims="3" splitScore="0" scale="1 1 5 "
+nu="399.556" beta="199.778" alpha="199.778" m="30.5212 14.8241 20.4303 " W="6.60326e-005 -1.42599e-005 0 -1.42599e-005 6.27829e-005 0 0 0 0.00125139 "
+nuPrior="199.778" betaPrior="1.99778" alphaPrior="0.0608616" distMRFPrior="0" mPrior="30.5212 14.8241 20.4303 " WPrior="0.000132065 -2.85198e-005 0 -2.85198e-005 0.000125566 0 0 0 0.00250278 " svIdx="127 124 123 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="56" lineage="56" parent="56" dims="3" splitScore="0" scale="1 1 5 "
+nu="246.302" beta="123.151" alpha="123.151" m="30.2159 90.7241 20.29 " W="8.27957e-005 1.09323e-005 0 1.09323e-005 0.000156147 0 0 0 0.00220069 "
+nuPrior="123.151" betaPrior="1.23151" alphaPrior="0.0608616" distMRFPrior="0" mPrior="30.2159 90.7241 20.29 " WPrior="0.000165591 2.18645e-005 0 2.18645e-005 0.000312294 0 0 0 0.00440139 " svIdx="93 133 134 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="57" lineage="57" parent="57" dims="3" splitScore="0" scale="1 1 5 "
+nu="145.258" beta="72.6291" alpha="72.6291" m="71.5502 38.0109 20.2938 " W="0.000177865 8.76763e-005 0 8.76763e-005 0.000329007 0 0 0 0.00401457 "
+nuPrior="72.6291" betaPrior="0.726291" alphaPrior="0.0608616" distMRFPrior="0" mPrior="71.5502 38.0109 20.2938 " WPrior="0.00035573 0.000175353 0 0.000175353 0.000658014 0 0 0 0.00802913 " svIdx="39 45 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="58" lineage="58" parent="58" dims="3" splitScore="0" scale="1 1 5 "
+nu="17.3032" beta="8.65162" alpha="8.65162" m="1.47258 82.0843 27.2859 " W="0.0128355 -0.000216944 0 -0.000216944 0.00501368 0 0 0 0.106659 "
+nuPrior="8.65162" betaPrior="0.0865162" alphaPrior="0.0608616" distMRFPrior="0" mPrior="1.47258 82.0843 27.2859 " WPrior="0.025671 -0.000433888 0 -0.000433888 0.0100274 0 0 0 0.213318 " svIdx="118 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="59" lineage="59" parent="59" dims="3" splitScore="0" scale="1 1 5 "
+nu="173.317" beta="86.6586" alpha="86.6586" m="144.056 10.5217 16.5128 " W="0.000898025 5.52662e-005 0 5.52662e-005 0.00084418 0 0 0 0.00558264 "
+nuPrior="86.6586" betaPrior="0.866586" alphaPrior="0.0608616" distMRFPrior="0" mPrior="144.056 10.5217 16.5128 " WPrior="0.00179605 0.000110532 0 0.000110532 0.00168836 0 0 0 0.0111653 " svIdx="52 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="60" lineage="60" parent="60" dims="3" splitScore="0" scale="1 1 5 "
+nu="219.385" beta="109.692" alpha="109.692" m="128.404 11.4269 25.4756 " W="0.000101887 -3.6696e-005 0 -3.6696e-005 0.000216742 0 0 0 0.0022791 "
+nuPrior="109.692" betaPrior="1.09692" alphaPrior="0.0608616" distMRFPrior="0" mPrior="128.404 11.4269 25.4756 " WPrior="0.000203775 -7.33921e-005 0 -7.33921e-005 0.000433485 0 0 0 0.00455821 " svIdx="67 81 80 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="61" lineage="61" parent="61" dims="3" splitScore="0" scale="1 1 5 "
+nu="127.01" beta="63.5052" alpha="63.5052" m="57.2853 96.8712 12.422 " W="0.00165234 -0.000179263 0 -0.000179263 0.00141859 0 0 0 0.00552859 "
+nuPrior="63.5052" betaPrior="0.635052" alphaPrior="0.0608616" distMRFPrior="0" mPrior="57.2853 96.8712 12.422 " WPrior="0.00330468 -0.000358525 0 -0.000358525 0.00283718 0 0 0 0.0110572 " svIdx="46 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="62" lineage="62" parent="62" dims="3" splitScore="0" scale="1 1 5 "
+nu="84.478" beta="42.239" alpha="42.239" m="148.208 56.353 16.4006 " W="0.00251638 2.78007e-005 0 2.78007e-005 0.00201974 0 0 0 0.00699425 "
+nuPrior="42.239" betaPrior="0.42239" alphaPrior="0.0608616" distMRFPrior="0" mPrior="148.208 56.353 16.4006 " WPrior="0.00503275 5.56014e-005 0 5.56014e-005 0.00403948 0 0 0 0.0139885 " svIdx="23 22 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="63" lineage="63" parent="63" dims="3" splitScore="0" scale="1 1 5 "
+nu="65.125" beta="32.5625" alpha="32.5625" m="59.8152 60.5815 21.3177 " W="0.000838955 0.000123432 0 0.000123432 0.00151173 0 0 0 0.00853127 "
+nuPrior="32.5625" betaPrior="0.325625" alphaPrior="0.0608616" distMRFPrior="0" mPrior="59.8152 60.5815 21.3177 " WPrior="0.00167791 0.000246863 0 0.000246863 0.00302347 0 0 0 0.0170625 " svIdx="99 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="64" lineage="64" parent="64" dims="3" splitScore="0" scale="1 1 5 "
+nu="60.7141" beta="30.3571" alpha="30.3571" m="101.941 3.50685 26.4092 " W="0.00151669 -0.000715805 0 -0.000715805 0.00277773 0 0 0 0.0103516 "
+nuPrior="30.3571" betaPrior="0.303571" alphaPrior="0.0608616" distMRFPrior="0" mPrior="101.941 3.50685 26.4092 " WPrior="0.00303339 -0.00143161 0 -0.00143161 0.00555546 0 0 0 0.0207033 " svIdx="68 69 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="65" lineage="65" parent="65" dims="3" splitScore="0" scale="1 1 5 "
+nu="305.941" beta="152.971" alpha="152.971" m="118.261 74.4246 23.7089 " W="6.69363e-005 -4.88332e-006 0 -4.88332e-006 8.06163e-005 0 0 0 0.0016343 "
+nuPrior="152.971" betaPrior="1.52971" alphaPrior="0.0608616" distMRFPrior="0" mPrior="118.261 74.4246 23.7089 " WPrior="0.000133873 -9.76663e-006 0 -9.76663e-006 0.000161233 0 0 0 0.0032686 " svIdx="107 106 100 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="66" lineage="66" parent="66" dims="3" splitScore="0" scale="1 1 5 "
+nu="63.5822" beta="31.7911" alpha="31.7911" m="40.2861 43.3393 27.6537 " W="0.000845879 -0.000512522 0 -0.000512522 0.000812741 0 0 0 0.0476316 "
+nuPrior="31.7911" betaPrior="0.317911" alphaPrior="0.0608616" distMRFPrior="0" mPrior="40.2861 43.3393 27.6537 " WPrior="0.00169176 -0.00102504 0 -0.00102504 0.00162548 0 0 0 0.0952631 " svIdx="96 97 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="67" lineage="67" parent="67" dims="3" splitScore="0" scale="1 1 5 "
+nu="61.3819" beta="30.691" alpha="30.691" m="7.14116 19.9806 22.1153 " W="0.001184 0.00028948 0 0.00028948 0.00201287 0 0 0 0.00927278 "
+nuPrior="30.691" betaPrior="0.30691" alphaPrior="0.0608616" distMRFPrior="0" mPrior="7.14116 19.9806 22.1153 " WPrior="0.00236801 0.000578961 0 0.000578961 0.00402573 0 0 0 0.0185456 " svIdx="126 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="68" lineage="68" parent="68" dims="3" splitScore="0" scale="1 1 5 "
+nu="111.764" beta="55.882" alpha="55.882" m="19.1915 28.4533 20.8741 " W="0.000391575 -1.4981e-005 0 -1.4981e-005 0.000471742 0 0 0 0.00447372 "
+nuPrior="55.882" betaPrior="0.55882" alphaPrior="0.0608616" distMRFPrior="0" mPrior="19.1915 28.4533 20.8741 " WPrior="0.000783151 -2.9962e-005 0 -2.9962e-005 0.000943484 0 0 0 0.00894743 " svIdx="114 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="69" lineage="69" parent="69" dims="3" splitScore="0" scale="1 1 5 "
+nu="64.1667" beta="32.0833" alpha="32.0833" m="4.57013 80.242 20.2729 " W="0.00151952 0.000516699 0 0.000516699 0.0015305 0 0 0 0.00788715 "
+nuPrior="32.0833" betaPrior="0.320833" alphaPrior="0.0608616" distMRFPrior="0" mPrior="4.57013 80.242 20.2729 " WPrior="0.00303905 0.0010334 0 0.0010334 0.00306101 0 0 0 0.0157743 " svIdx="129 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="70" lineage="70" parent="70" dims="3" splitScore="0" scale="1 1 5 "
+nu="58.463" beta="29.2315" alpha="29.2315" m="4.96535 7.28769 22.4378 " W="0.00253531 0.000262867 0 0.000262867 0.00107143 0 0 0 0.00855242 "
+nuPrior="29.2315" betaPrior="0.292315" alphaPrior="0.0608616" distMRFPrior="0" mPrior="4.96535 7.28769 22.4378 " WPrior="0.00507062 0.000525735 0 0.000525735 0.00214286 0 0 0 0.0171048 " svIdx="125 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="71" lineage="71" parent="71" dims="3" splitScore="0" scale="1 1 5 "
+nu="92.7604" beta="46.3802" alpha="46.3802" m="71.6896 91.8946 21.6114 " W="0.000290211 6.42753e-005 0 6.42753e-005 0.000887769 0 0 0 0.00796786 "
+nuPrior="46.3802" betaPrior="0.463802" alphaPrior="0.0608616" distMRFPrior="0" mPrior="71.6896 91.8946 21.6114 " WPrior="0.000580422 0.000128551 0 0.000128551 0.00177554 0 0 0 0.0159357 " svIdx="72 73 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="72" lineage="72" parent="72" dims="3" splitScore="0" scale="1 1 5 "
+nu="196.94" beta="98.47" alpha="98.47" m="129.366 52.8555 25.7211 " W="0.000113002 -1.37808e-005 0 -1.37808e-005 0.000164184 0 0 0 0.00253884 "
+nuPrior="98.47" betaPrior="0.9847" alphaPrior="0.0608616" distMRFPrior="0" mPrior="129.366 52.8555 25.7211 " WPrior="0.000226005 -2.75615e-005 0 -2.75615e-005 0.000328367 0 0 0 0.00507769 " svIdx="119 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="73" lineage="73" parent="73" dims="3" splitScore="0" scale="1 1 5 "
+nu="87.5266" beta="43.7633" alpha="43.7633" m="131.628 95.3447 25.4645 " W="0.000495165 9.78904e-005 0 9.78904e-005 0.000686304 0 0 0 0.00904015 "
+nuPrior="43.7633" betaPrior="0.437633" alphaPrior="0.0608616" distMRFPrior="0" mPrior="131.628 95.3447 25.4645 " WPrior="0.00099033 0.000195781 0 0.000195781 0.00137261 0 0 0 0.0180803 " svIdx="70 135 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="74" lineage="74" parent="74" dims="3" splitScore="0" scale="1 1 5 "
+nu="23.7986" beta="11.8993" alpha="11.8993" m="5.05972 1.72439 27.2207 " W="0.00459913 0.000693236 0 0.000693236 0.00923524 0 0 0 0.0746103 "
+nuPrior="11.8993" betaPrior="0.118993" alphaPrior="0.0608616" distMRFPrior="0" mPrior="5.05972 1.72439 27.2207 " WPrior="0.00919826 0.00138647 0 0.00138647 0.0184705 0 0 0 0.149221 " svIdx="101 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="75" lineage="75" parent="75" dims="3" splitScore="0" scale="1 1 5 "
+nu="303.53" beta="151.765" alpha="151.765" m="20.5915 55.8118 20.2602 " W="9.32847e-005 7.35406e-006 0 7.35406e-006 6.78656e-005 0 0 0 0.00164728 "
+nuPrior="151.765" betaPrior="1.51765" alphaPrior="0.0608616" distMRFPrior="0" mPrior="20.5915 55.8118 20.2602 " WPrior="0.000186569 1.47081e-005 0 1.47081e-005 0.000135731 0 0 0 0.00329457 " svIdx="117 132 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="76" lineage="76" parent="76" dims="3" splitScore="0" scale="1 1 5 "
+nu="84.8773" beta="42.4387" alpha="42.4387" m="121.404 32.4787 24.4643 " W="0.000555059 0.000429613 0 0.000429613 0.00135179 0 0 0 0.00644506 "
+nuPrior="42.4387" betaPrior="0.424387" alphaPrior="0.0608616" distMRFPrior="0" mPrior="121.404 32.4787 24.4643 " WPrior="0.00111012 0.000859226 0 0.000859226 0.00270357 0 0 0 0.0128901 " svIdx="74 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="77" lineage="77" parent="77" dims="3" splitScore="0" scale="1 1 5 "
+nu="8.96643" beta="4.48322" alpha="4.48322" m="107.956 14.0312 23.4977 " W="0.0233793 0.00155047 0 0.00155047 0.0178162 0 0 0 0.311068 "
+nuPrior="4.48322" betaPrior="0.0448322" alphaPrior="0.0608616" distMRFPrior="0" mPrior="107.956 14.0312 23.4977 " WPrior="0.0467586 0.00310094 0 0.00310094 0.0356324 0 0 0 0.622136 " svIdx="86 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="78" lineage="78" parent="78" dims="3" splitScore="0" scale="1 1 5 "
+nu="202.354" beta="101.177" alpha="101.177" m="105.234 92.2212 22.3802 " W="0.000102816 -3.00606e-005 0 -3.00606e-005 0.000325906 0 0 0 0.00336617 "
+nuPrior="101.177" betaPrior="1.01177" alphaPrior="0.0608616" distMRFPrior="0" mPrior="105.234 92.2212 22.3802 " WPrior="0.000205632 -6.01212e-005 0 -6.01212e-005 0.000651813 0 0 0 0.00673234 " svIdx="92 82 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="79" lineage="79" parent="79" dims="3" splitScore="0" scale="1 1 5 "
+nu="139.852" beta="69.9259" alpha="69.9259" m="3.21507 64.7372 21.5389 " W="0.00117023 2.67318e-005 0 2.67318e-005 0.000157472 0 0 0 0.00357521 "
+nuPrior="69.9259" betaPrior="0.699259" alphaPrior="0.0608616" distMRFPrior="0" mPrior="3.21507 64.7372 21.5389 " WPrior="0.00234045 5.34636e-005 0 5.34636e-005 0.000314944 0 0 0 0.00715042 " svIdx="131 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="80" lineage="80" parent="80" dims="3" splitScore="0" scale="1 1 5 "
+nu="29.0926" beta="14.5463" alpha="14.5463" m="39.9904 38.9128 19.8951 " W="0.00310352 6.35849e-005 0 6.35849e-005 0.00358706 0 0 0 0.0254751 "
+nuPrior="14.5463" betaPrior="0.145463" alphaPrior="0.0608616" distMRFPrior="0" mPrior="39.9904 38.9128 19.8951 " WPrior="0.00620704 0.00012717 0 0.00012717 0.00717412 0 0 0 0.0509503 " svIdx="128 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="81" lineage="81" parent="81" dims="3" splitScore="0" scale="1 1 5 "
+nu="143.618" beta="71.8091" alpha="71.8091" m="101.797 53.5793 27.057 " W="0.000416699 0.000335284 0 0.000335284 0.000880005 0 0 0 0.00523893 "
+nuPrior="71.8091" betaPrior="0.718091" alphaPrior="0.0608616" distMRFPrior="0" mPrior="101.797 53.5793 27.057 " WPrior="0.000833397 0.000670569 0 0.000670569 0.00176001 0 0 0 0.0104779 " svIdx="83 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="82" lineage="82" parent="82" dims="3" splitScore="0" scale="1 1 5 "
+nu="24.0648" beta="12.0324" alpha="12.0324" m="80.691 0.677905 15.4593 " W="0.0092334 -5.42101e-020 0 5.42101e-020 0.0092334 0 0 0 0.0451055 "
+nuPrior="12.0324" betaPrior="0.120324" alphaPrior="0.0608616" distMRFPrior="0" mPrior="80.691 0.677905 15.4593 " WPrior="0.0184668 -1.0842e-019 0 1.0842e-019 0.0184668 0 0 0 0.090211 " svIdx="66 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="83" lineage="83" parent="83" dims="3" splitScore="0" scale="1 1 5 "
+nu="17.5949" beta="8.79745" alpha="8.79745" m="0.2574 46.9164 12.6771 " W="0.0126287 0 0 0 0.0126287 0 0 0 0.0451077 "
+nuPrior="8.79745" betaPrior="0.0879745" alphaPrior="0.0608616" distMRFPrior="0" mPrior="0.2574 46.9164 12.6771 " WPrior="0.0252573 0 0 0 0.0252573 0 0 0 0.0902154 " svIdx="51 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="84" lineage="84" parent="84" dims="3" splitScore="0" scale="1 1 5 "
+nu="26.7755" beta="13.3877" alpha="13.3877" m="0.815467 3.66206 13.9413 " W="0.00829864 2.1684e-019 0 -2.1684e-019 0.00829864 0 0 0 0.0324785 "
+nuPrior="13.3877" betaPrior="0.133877" alphaPrior="0.0608616" distMRFPrior="0" mPrior="0.815467 3.66206 13.9413 " WPrior="0.0165973 4.33681e-019 0 -4.33681e-019 0.0165973 0 0 0 0.0649569 " svIdx="78 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="85" lineage="85" parent="85" dims="3" splitScore="0" scale="1 1 5 "
+nu="171.343" beta="85.6713" alpha="85.6713" m="53.4513 9.23874 12.5593 " W="0.000651341 2.8294e-005 0 2.8294e-005 0.00129558 0 0 0 0.00510472 "
+nuPrior="85.6713" betaPrior="0.856713" alphaPrior="0.0608616" distMRFPrior="0" mPrior="53.4513 9.23874 12.5593 " WPrior="0.00130268 5.6588e-005 0 5.6588e-005 0.00259115 0 0 0 0.0102094 " svIdx="33 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="86" lineage="86" parent="86" dims="3" splitScore="0" scale="1 1 5 "
+nu="7.81366" beta="3.90683" alpha="3.90683" m="149.628 18.3217 24.3853 " W="0.0284374 -1.27096e-006 0 -1.27096e-006 0.0277831 0 0 0 0.344134 "
+nuPrior="3.90683" betaPrior="0.0390683" alphaPrior="0.0608616" distMRFPrior="0" mPrior="149.628 18.3217 24.3853 " WPrior="0.0568748 -2.54192e-006 0 -2.54192e-006 0.0555663 0 0 0 0.688267 " svIdx="112 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="87" lineage="87" parent="87" dims="3" splitScore="0" scale="1 1 5 "
+nu="770.155" beta="385.077" alpha="385.077" m="75.8626 69.577 26.3834 " W="2.59688e-005 0 0 0 2.59688e-005 0 0 0 0.00064922 "
+nuPrior="385.077" betaPrior="3.85077" alphaPrior="0.0608616" distMRFPrior="0" mPrior="75.8626 69.577 26.3834 " WPrior="5.19376e-005 0 0 0 5.19376e-005 0 0 0 0.00129844 " svIdx="104 62 91 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="88" lineage="88" parent="88" dims="3" splitScore="0" scale="1 1 5 "
+nu="167.13" beta="83.5648" alpha="83.5648" m="100.695 30.8311 21.6792 " W="0.000182637 3.23877e-005 0 3.23877e-005 0.000432124 0 0 0 0.00299169 "
+nuPrior="83.5648" betaPrior="0.835648" alphaPrior="0.0608616" distMRFPrior="0" mPrior="100.695 30.8311 21.6792 " WPrior="0.000365274 6.47753e-005 0 6.47753e-005 0.000864247 0 0 0 0.00598338 " svIdx="75 85 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="89" lineage="89" parent="89" dims="3" splitScore="0" scale="1 1 5 "
+nu="47.7245" beta="23.8623" alpha="23.8623" m="91.3776 43.5543 20.5125 " W="0.00178572 -0.000173324 0 -0.000173324 0.00275425 0 0 0 0.0150512 "
+nuPrior="23.8623" betaPrior="0.238623" alphaPrior="0.0608616" distMRFPrior="0" mPrior="91.3776 43.5543 20.5125 " WPrior="0.00357143 -0.000346648 0 -0.000346648 0.00550849 0 0 0 0.0301023 " svIdx="53 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="90" lineage="90" parent="90" dims="3" splitScore="0" scale="1 1 5 "
+nu="48.0509" beta="24.0254" alpha="24.0254" m="108.653 47.6929 20.6592 " W="0.00169355 -0.000507487 0 -0.000507487 0.00222608 0 0 0 0.0222734 "
+nuPrior="24.0254" betaPrior="0.240254" alphaPrior="0.0608616" distMRFPrior="0" mPrior="108.653 47.6929 20.6592 " WPrior="0.00338711 -0.00101497 0 -0.00101497 0.00445217 0 0 0 0.0445468 " svIdx="84 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="91" lineage="91" parent="91" dims="3" splitScore="0" scale="1 1 5 "
+nu="162.22" beta="81.1099" alpha="81.1099" m="7.86745 39.9084 21.2537 " W="0.000386526 -3.21956e-005 0 -3.21956e-005 0.000206373 0 0 0 0.00308224 "
+nuPrior="81.1099" betaPrior="0.811099" alphaPrior="0.0608616" distMRFPrior="0" mPrior="7.86745 39.9084 21.2537 " WPrior="0.000773053 -6.43912e-005 0 -6.43912e-005 0.000412747 0 0 0 0.00616447 " svIdx="116 115 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="92" lineage="92" parent="92" dims="3" splitScore="0" scale="1 1 5 "
+nu="9.15393" beta="4.57697" alpha="4.57697" m="145.938 22.9659 27.5345 " W="0.0126537 0.00277747 0 0.00277747 0.0156763 0 0 0 0.231243 "
+nuPrior="4.57697" betaPrior="0.0457697" alphaPrior="0.0608616" distMRFPrior="0" mPrior="145.938 22.9659 27.5345 " WPrior="0.0253075 0.00555494 0 0.00555494 0.0313527 0 0 0 0.462486 " svIdx="111 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="93" lineage="93" parent="93" dims="3" splitScore="0" scale="1 1 5 "
+nu="47.7859" beta="23.8929" alpha="23.8929" m="144.891 35.8452 26.6426 " W="0.00167013 -0.000275623 0 -0.000275623 0.00231614 0 0 0 0.0182003 "
+nuPrior="23.8929" betaPrior="0.238929" alphaPrior="0.0608616" distMRFPrior="0" mPrior="144.891 35.8452 26.6426 " WPrior="0.00334026 -0.000551246 0 -0.000551246 0.00463228 0 0 0 0.0364006 " svIdx="109 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="94" lineage="94" parent="94" dims="3" splitScore="0" scale="1 1 5 "
+nu="203.805" beta="101.903" alpha="101.903" m="140.331 93.762 15.1718 " W="0.0006282 -6.5112e-005 0 -6.5112e-005 0.000866569 0 0 0 0.00245332 "
+nuPrior="101.903" betaPrior="1.01903" alphaPrior="0.0608616" distMRFPrior="0" mPrior="140.331 93.762 15.1718 " WPrior="0.0012564 -0.000130224 0 -0.000130224 0.00173314 0 0 0 0.00490664 " svIdx="27 28 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="95" lineage="95" parent="95" dims="3" splitScore="0" scale="1 1 5 "
+nu="26.8623" beta="13.4311" alpha="13.4311" m="62.0453 2.08066 19.0022 " W="0.00264313 -2.57171e-005 0 -2.57171e-005 0.00827171 0 0 0 0.0283896 "
+nuPrior="13.4311" betaPrior="0.134311" alphaPrior="0.0608616" distMRFPrior="0" mPrior="62.0453 2.08066 19.0022 " WPrior="0.00528626 -5.14342e-005 0 -5.14342e-005 0.0165434 0 0 0 0.0567792 " svIdx="34 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="96" lineage="96" parent="96" dims="3" splitScore="0" scale="1 1 5 "
+nu="59.2639" beta="29.6319" alpha="29.6319" m="54.4234 21.1639 19.9557 " W="0.00127279 2.3883e-005 0 2.3883e-005 0.00155592 0 0 0 0.0112784 "
+nuPrior="29.6319" betaPrior="0.296319" alphaPrior="0.0608616" distMRFPrior="0" mPrior="54.4234 21.1639 19.9557 " WPrior="0.00254559 4.77659e-005 0 4.77659e-005 0.00311184 0 0 0 0.0225568 " svIdx="113 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="97" lineage="97" parent="97" dims="3" splitScore="0" scale="1 1 5 "
+nu="9.97222" beta="4.98611" alpha="4.98611" m="149.188 3.96948 20.4304 " W="0.0222819 0 0 0 0.0222819 0 0 0 0.283349 "
+nuPrior="4.98611" betaPrior="0.0498611" alphaPrior="0.0608616" distMRFPrior="0" mPrior="149.188 3.96948 20.4304 " WPrior="0.0445638 0 0 0 0.0445638 0 0 0 0.566699 " svIdx="41 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="98" lineage="98" parent="98" dims="3" splitScore="0" scale="1 1 5 "
+nu="5.49537" beta="2.74768" alpha="2.74768" m="132.497 36.3178 27.4259 " W="0.0404163 0.000504263 0 0.000504263 0.0260867 0 0 0 0.505533 "
+nuPrior="3" betaPrior="0.0274768" alphaPrior="0.0608616" distMRFPrior="0" mPrior="132.497 36.3178 27.4259 " WPrior="0.0740342 0.000923703 0 0.000923703 0.0477853 0 0 0 0.926031 " svIdx="121 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="99" lineage="99" parent="99" dims="3" splitScore="0" scale="1 1 5 "
+nu="8.14236" beta="4.07118" alpha="4.07118" m="146.584 55.952 27.6067 " W="0.0272894 1.68748e-006 0 1.68748e-006 0.0217234 0 0 0 0.403783 "
+nuPrior="4.07118" betaPrior="0.0407118" alphaPrior="0.0608616" distMRFPrior="0" mPrior="146.584 55.952 27.6067 " WPrior="0.0545788 3.37495e-006 0 3.37495e-006 0.0434468 0 0 0 0.807566 " svIdx="120 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="100" lineage="100" parent="100" dims="3" splitScore="0" scale="1 1 5 "
+nu="264.66" beta="132.33" alpha="132.33" m="89.3265 14.5957 19.8034 " W="7.86067e-005 1.75447e-005 0 1.75447e-005 0.000176893 0 0 0 0.00188922 "
+nuPrior="132.33" betaPrior="1.3233" alphaPrior="0.0608616" distMRFPrior="0" mPrior="89.3265 14.5957 19.8034 " WPrior="0.000157213 3.50893e-005 0 3.50893e-005 0.000353787 0 0 0 0.00377844 " svIdx="103 102 90 98 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="101" lineage="101" parent="101" dims="3" splitScore="0" scale="1 1 5 "
+nu="7.60648" beta="3.80324" alpha="3.80324" m="86.0539 74.9968 22.7996 " W="0.0186855 0.00125255 0 0.00125255 0.0290629 0 0 0 0.3846 "
+nuPrior="3.80324" betaPrior="0.0380324" alphaPrior="0.0608616" distMRFPrior="0" mPrior="86.0539 74.9968 22.7996 " WPrior="0.0373709 0.00250509 0 0.00250509 0.0581258 0 0 0 0.7692 " svIdx="105 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="102" lineage="102" parent="102" dims="3" splitScore="0" scale="1 1 5 "
+nu="15.353" beta="7.67651" alpha="7.67651" m="144.303 71.6873 27.4751 " W="0.00852916 0.00125867 0 0.00125867 0.00602562 0 0 0 0.131103 "
+nuPrior="7.67651" betaPrior="0.0767651" alphaPrior="0.0608616" distMRFPrior="0" mPrior="144.303 71.6873 27.4751 " WPrior="0.0170583 0.00251734 0 0.00251734 0.0120512 0 0 0 0.262207 " svIdx="108 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="103" lineage="103" parent="103" dims="3" splitScore="0" scale="1 1 5 "
+nu="25.2338" beta="12.6169" alpha="12.6169" m="144.495 91.0429 27.5182 " W="0.00307739 6.36996e-006 0 6.36996e-006 0.00363154 0 0 0 0.0990677 "
+nuPrior="12.6169" betaPrior="0.126169" alphaPrior="0.0608616" distMRFPrior="0" mPrior="144.495 91.0429 27.5182 " WPrior="0.00615478 1.27399e-005 0 1.27399e-005 0.00726308 0 0 0 0.198135 " svIdx="71 ">
+</GaussianMixtureModel>
+<GaussianMixtureModel id="104" lineage="104" parent="104" dims="3" splitScore="0" scale="1 1 5 "
+nu="34.7002" beta="17.3501" alpha="17.3501" m="3.76758 95.2834 20.6942 " W="0.00447655 0.000405589 0 0.000405589 0.00348407 0 0 0 0.0194436 "
+nuPrior="17.3501" betaPrior="0.173501" alphaPrior="0.0608616" distMRFPrior="0" mPrior="3.76758 95.2834 20.6942 " WPrior="0.0089531 0.000811179 0 0.000811179 0.00696814 0 0 0 0.0388871 " svIdx="130 ">
+</GaussianMixtureModel>
+</document>

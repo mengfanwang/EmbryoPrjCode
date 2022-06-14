@@ -1,0 +1,59 @@
+% align the data temporally
+addpath('src_code_cellSegment');
+
+%% align cropped data
+data_folder = '/home/ccw/storage/Yinan_data/TM0-49/crop/';
+save_folder = '/home/ccw/storage/Yinan_data/TM0-49/crop_temporal_aligned/';
+tif_files = dir(fullfile(data_folder, '*.tif'));
+
+embryo_vid_org = cell(numel(tif_files), 1); % original data
+for i=1:numel(tif_files)
+    embryo_vid_org{i} = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
+end
+tranlations = InitialDriftEstimate(embryo_vid_org);
+
+tx = 0;
+ty = 0;
+tz = 0;
+for i=2:numel(embryo_vid_org)
+    tx = tx - tranlations(i, 1);
+    ty = ty - tranlations(i, 2);
+    tz = tz - tranlations(i, 3);
+    tform = affine3d([1 0 0 0; 0 1 0 0; 0 0 1 0; tx, ty, tz, 1]);
+    out = imwarp_same(embryo_vid_org{i}, tform);
+    tifwrite(uint16(out), ...
+        fullfile(save_folder, tif_files(i).name));
+end
+
+tifwrite(uint16(embryo_vid_org{1}), ...
+        fullfile(save_folder, tif_files(1).name));
+
+moving_reg = imregister(embryo_vid_org{9}, embryo_vid_org{8},...
+'translation',optimizer,metric);
+
+%% align the original data (one direction)
+data_folder = '/home/ccw/storage/Yinan_data/TM0-49/crop/';
+save_folder = '/home/ccw/storage/Yinan_data/TM0-49/crop_temporal_aligned/';
+tif_files = dir(fullfile(data_folder, '*.tif'));
+
+embryo_vid_org = cell(numel(tif_files), 1); % original data
+for i=1:numel(tif_files)
+    embryo_vid_org{i} = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
+end
+tranlations = InitialDriftEstimate(embryo_vid_org);
+
+tx = 0;
+ty = 0;
+tz = 0;
+for i=2:numel(embryo_vid_org)
+    tx = tx - tranlations(i, 1);
+    ty = ty - tranlations(i, 2);
+    tz = tz - tranlations(i, 3);
+    tform = affine3d([1 0 0 0; 0 1 0 0; 0 0 1 0; tx, ty, tz, 1]);
+    out = imwarp_same(embryo_vid_org{i}, tform);
+    tifwrite(uint16(out), ...
+        fullfile(save_folder, tif_files(i).name));
+end
+
+tifwrite(uint16(embryo_vid_org{1}), ...
+        fullfile(save_folder, tif_files(1).name));

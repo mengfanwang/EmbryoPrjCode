@@ -1,0 +1,5 @@
+Image basename = C:/Users/Fernando/cppProjects/TrackingGaussianMixtures/NM2013-paperRun/data/dataJP2/TM00015_timeFused_blending/SPC0_CM0_CM1_CHN00_CHN01.fusedStack_00015
+Radius median filter = 2
+Min tau =2
+Background threshold = 200
+Conn3D = 74
