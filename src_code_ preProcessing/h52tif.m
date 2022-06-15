@@ -36,15 +36,18 @@ if ~isfolder(fullfile(path_name, target_folder))
 end
 num_time = length(h5_struct);
 for tt = 1:num_time
+    fprintf('Processing time point %d/%d:', tt, num_time);
     tt_ind = num2str(99999+tt);
     tt_ind = tt_ind(2:6);
     mkdir(fullfile(path_name, target_folder, tt_ind));
     for vv = 1:num_view
+        fprintf(' %d', vv);
         vv_ind = num2str(99+vv);
         vv_ind = vv_ind(2:3);
         data = hdf5read(fullfile(path_name, source_data),['/t' tt_ind '/s' vv_ind '/0/cells']);
         tifwrite(uint16(data),fullfile(path_name, target_folder,  tt_ind, vv_ind));
     end
+    fprintf('\n');
 end
 
 
