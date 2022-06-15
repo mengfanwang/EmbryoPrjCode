@@ -1,0 +1,23 @@
+clc;clear;close all;
+dbstop if error
+addpath('..\src_code_cellSegment');
+
+
+%% simulation
+len = 100;
+for ii = 1:101
+    smoothness = (ii - 1)/10;
+    fprintf('Working on the smothness %d', smoothness);
+    bound_size = 2*ceil(2*smoothness)+1;
+    vid = normrnd(0, 1, [len+2*bound_size,len+2*bound_size, len+2*bound_size]);
+    [eig_all, ~] = principalCv3d(vid, zeros(size(vid)), smoothness, ones(size(vid)));
+    eig_all = eig_all(bound_size+1:end-bound_size, bound_size+1:end-bound_size, bound_size+1:end-bound_size);
+    
+    max_eig = max(eig_all(:));
+    min_eig = min(eig_all(:));
+    h = hist(eig_all(:), );
+
+
+
+
+end
