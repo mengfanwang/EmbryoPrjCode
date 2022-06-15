@@ -34,7 +34,7 @@ for view = 0:7
     fprintf(' %d ', view);
     data = h5read([folder_path source_data],['/t000' tt_ind '/s0' num2str(view) '/0/cells']);
 
-%     data = double(data);
+    data = double(data);
     data_median = medfilt3(data,[3 3 1]);
     
 
