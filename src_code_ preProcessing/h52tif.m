@@ -2,8 +2,10 @@ clc;clear;close all;
 
 %% system and path
 if isunix
+    addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
     path_name = '/work/Mengfan/Embryo/21-04-28';
     source_data = 'H2BGFP_21-04-28.h5';
+    target_folder = 'data';
 else
     path_name = 'E:\Embryo\TM0-49';
     source_data = 'H2BGFP_TM0-49.h5';
