@@ -23,7 +23,9 @@ for ii = 1:51
     binLength = (max_eig-min_eig)/9999;
     h = hist(eig_all(:), min_eig:binLength:max_eig);
     
-    PriCvtSim(ii).smoothness = smoothness;
+    PriCvtSim(ii).smoothness = smoothness;    
+    PriCvtSim(ii).mean = mean(eig_all(:));
+    PriCvtSim(ii).std = std(eig_all(:));
     PriCvtSim(ii).max_eig = max_eig;
     PriCvtSim(ii).min_eig = min_eig;
     PriCvtSim(ii).binCenters = min_eig:binLength:max_eig;
