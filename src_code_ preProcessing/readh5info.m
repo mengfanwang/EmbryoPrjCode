@@ -1,4 +1,5 @@
 function [h5_struct, num_view] = readh5info(file_name)
+
     % warning: don't use h5info. It's 200 times slower.
     h5_struct = hdf5info(file_name);
     h5_struct = h5_struct.GroupHierarchy.Groups;

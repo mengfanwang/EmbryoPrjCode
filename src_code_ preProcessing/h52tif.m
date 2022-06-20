@@ -3,8 +3,8 @@ clc;clear;close all;
 %% system and path
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
-    path_name = '/work/Mengfan/Embryo/21-04-28';
-    source_data = 'H2BGFP_21-04-28.h5';
+    path_name = '/work/Mengfan/Embryo/TM0-49';
+    source_data = 'H2BGFP_TM0-49.h5';
     target_folder = 'data';
 else
     path_name = 'E:\Embryo\TM0-49';
@@ -13,24 +13,7 @@ else
 end
 
 %% read info from h5 file
-% warning: don't use h5info. It's 200 times slower.
-h5_struct = hdf5info(fullfile(path_name, source_data));
-h5_struct = h5_struct.GroupHierarchy.Groups;
-
-% bdv data format: tTTTTT/sSS/L/cells
-% tTTTTT: time points
-% sSS: id of the setup (view)
-% L: mipmap level (downsample exponent)
-remove_flag = true(size(h5_struct));
-num_view = 0;
-for ii = 1:length(h5_struct)
-    if h5_struct(ii).Name(2) == 't'
-        remove_flag(ii) = false;
-    elseif h5_struct(ii).Name(2) == 's'
-        num_view = num_view + 1;
-    end
-end
-h5_struct(remove_flag) = [];
+[h5_struct, num_view] = readh5info(fullfile(path_name, source_data));
 
 % read h5 data and save as tif file
 if ~isfolder(fullfile(path_name, target_folder))
