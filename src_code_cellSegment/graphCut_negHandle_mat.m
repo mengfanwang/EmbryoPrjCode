@@ -27,7 +27,7 @@ vox_num = numel(vid);
 valid_vox = find(fMap);
 
 nei_mat = neighbours_mat(valid_vox, vid, connect);                          % [size(valid_vox) connect]
-vox_mat = repmat(valid_vox, 1, connect);                
+vox_mat = repmat(valid_vox, 1, connect);                +
 map = [vox_mat(:) nei_mat(:)];                                              % [size(valid_vox)*connect 2]
 map = map(~isnan(map(:,2)),:);                                              % [vox_mat nei_mat]
 

@@ -89,8 +89,8 @@ for i=1:numel(s.VoxelIdxList)%[7 9 13 15 17 18 19 20 21 22]%
 %     if i==9
 %         fprintf('process %d out of %d\n', i, numel(s.VoxelIdxList));
 %     end
-%     seed_id = seed_proc_order(i);
-    seed_id = 59;                           % debug mode
+    seed_id = seed_proc_order(i);
+%     seed_id = 80;                           % debug mode
     yxz = s.VoxelIdxList{seed_id};
     ids = idMap_current(yxz);
     yxz = yxz(ids==seed_id);

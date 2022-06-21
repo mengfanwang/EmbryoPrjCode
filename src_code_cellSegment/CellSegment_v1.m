@@ -7,13 +7,13 @@ addpath('..\src_code_cellTracker');
 addpath('..\src_code_visualization');
 addpath('D:\Congchao''s code\cc_ImHandle\');
 
-mydir  = 'E:\Embryo\TM0-49\debug_v1\input\';
+mydir  = 'E:\Embryo\TM0-49\debug_v2\input\';
 % mydir  = 'E:\Embryo\TM0-49\data_crop\';
 data_folder = mydir;
 tif_files = dir(fullfile(data_folder, '/*.tif'));
 
 % results folder
-res_folder = fullfile('E:\Embryo\TM0-49\debug_v1\');
+res_folder = fullfile('E:\Embryo\TM0-49\debug_v2\');
 % if ~exist(res_folder,'dir')
 %     mkdir(res_folder);
 % end
