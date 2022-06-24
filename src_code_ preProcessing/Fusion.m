@@ -22,26 +22,28 @@ end
 xml = xml2struct(xml_name);
 register_info = xml.SpimData.ViewRegistrations.ViewRegistration;
 [h5_struct, num_view] = readh5info(fullfile(path_name, source_data));
-if ~isfolder(fullfile(path_name, target_folder))
-    mkdir(fullfile(path_name, target_folder));
-end
 num_time = length(h5_struct);
 num_total = num_time * num_view;
 if num_view ~= 8
     error('Current version is for 8 views.');
 end
 %% parameter setting
-device = 'GPU'; % GPU 25s CPU 45s parallel 250s
+device = 'CPU'; % GPU 25s CPU 45s parallel 250s
 save_mode = 'both'; %save as 'tif', 'h5', or 'both' 
 
-downsample_scale = 4;
+downsample_scale = 1;
 pad_size = ceil(40 / downsample_scale); % fusion refinement constriant
 bd_size = 3; % related to the deconvolution (n-1)/2. remove boundary
 maxIter = 1000; % max iteration of step 4
 baseIntensity = 200; % may not be the best threhsold, refine later
+
+target_folder = [target_folder '_' num2str(1/downsample_scale)];
 %% primary fusion
+if ~isfolder(fullfile(path_name, target_folder))
+    mkdir(fullfile(path_name, target_folder));
+end
 tic;
-for tt = 47:num_time-1
+for tt = 0:num_time-1
     tt_ind = num2str(100000+tt);
     tt_ind = tt_ind(2:6);
     fprintf('processing: %d\n',tt);
@@ -216,7 +218,7 @@ for tt = 47:num_time-1
         end
     end
     clear im1 im2
-    [~, ind_min] = min(loss);
+    [~, ind_min] = min(loss,[],'all');
     [xx_min,yy_min,zz_min] = ind2sub(size(loss),ind_min);
     diff(:,1) = diff(:,1) + bias_list{1}(xx_min,:)';
     diff(:,2) = diff(:,2) + bias_list{2}(yy_min,:)';
@@ -251,6 +253,7 @@ for tt = 47:num_time-1
     end
 
     im_fusion = zeros(y_max-y_min,x_max-x_min,z_max-z_min,'single');
+    im_num = zeros(y_max-y_min,x_max-x_min,z_max-z_min,'single');
     for vv = 1:4
         im_unit = ones(size(im{vv}),'single');
         if strcmp(device, 'GPU')
@@ -262,6 +265,37 @@ for tt = 47:num_time-1
         im_unit(:,:,end-bd_size+1:bd_size) = 0; % remove boundary
         im_unit = imwarp(im_unit,affine3d(trans{vv}'));
         im{vv} = im{vv} .* im_unit;
-        im_fusion = gather(im{vv});
+
+        x_start = round(ref{vv}.XWorldLimits(1) - x_min + 1);
+        x_end = round(ref{vv}.XWorldLimits(2) - x_min);
+        y_start = round(ref{vv}.YWorldLimits(1) - y_min + 1);
+        y_end = round(ref{vv}.YWorldLimits(2) - y_min);
+        z_start = round(ref{vv}.ZWorldLimits(1) - z_min + 1);
+        z_end = round(ref{vv}.ZWorldLimits(2) - z_min);
+
+        if strcmp(device, 'GPU')
+            im_fusion(y_start:y_end,x_start:x_end,z_start:z_end) = ...
+            im_fusion(y_start:y_end,x_start:x_end,z_start:z_end) + gather(im{vv});
+            im_num(y_start:y_end,x_start:x_end,z_start:z_end) = ...
+            im_num(y_start:y_end,x_start:x_end,z_start:z_end) + gather(im_unit);
+        else
+            im_fusion(y_start:y_end,x_start:x_end,z_start:z_end) = ...
+            im_fusion(y_start:y_end,x_start:x_end,z_start:z_end) + im{vv};
+            im_num(y_start:y_end,x_start:x_end,z_start:z_end) = ...
+            im_num(y_start:y_end,x_start:x_end,z_start:z_end) + im_unit;
+        end
     end
+    im_fusion = im_fusion./im_num;
+    im_fusion(isnan(im_fusion)) = 0;
+    if strcmp(save_mode, 'h5') || strcmp(save_mode, 'both')
+        h5create(fullfile(path_name, target_folder, ['fusion_' source_data]),...
+            ['/t' tt_ind '/0/cells'],size(im_fusion),'Datatype','single');
+        h5write(fullfile(path_name, target_folder, ['fusion_' source_data]),...
+            ['/t' tt_ind '/0/cells'],im_fusion);
+    end
+    if strcmp(save_mode, 'tif') || strcmp(save_mode, 'both')
+        tifwrite(uint16(im_fusion),fullfile(path_name, target_folder, tt_ind));
+    end
+    clear im im_fusion im_num im_unit
+    toc
 end

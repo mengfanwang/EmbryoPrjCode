@@ -1,9 +1,9 @@
 clc;clear;close all;
 
-data_path = '\\rs0001\Mengfan\Embryo\TM0-49\registration_step1\';
-result_path = '\\rs0001\Mengfan\Embryo\TM0-49\registration_step2\';
+data_path = 'H:\Embryo\TM0-49\registration_step1\';
+result_path = 'H:\Embryo\TM0-49\registration_step2\';
 
-for tt = 0:49
+for tt = 47:49
 order = [1 2;2 3; 3 4; 4 1];
 tt_ind = num2str(100+tt);
 tt_ind = tt_ind(2:3);
