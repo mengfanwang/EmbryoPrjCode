@@ -1,32 +1,38 @@
 clc;clear;close all;
 dbstop if error
-addpath('..\');
-addpath('..\src_code_matlab');
-addpath('..\src_code_cellSegment');
-addpath('..\src_code_cellTracker');
-addpath('..\src_code_visualization');
-addpath('D:\Congchao''s code\cc_ImHandle\');
+addpath('../');
+addpath('../src_code_matlab');
+addpath('../src_code_cellSegment');
+addpath('../src_code_cellTracker');
+addpath('../src_code_visualization');
 
-mydir  = 'E:\Embryo\TM0-49\debug_v2\input\';
-% mydir  = 'E:\Embryo\TM0-49\data_crop\';
-data_folder = mydir;
+%% system and path
+if isunix
+    addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
+    addpath('/home/mengfan/ForExecute/cc_ImHandle');
+    data_folder  = '/work/Mengfan/Embryo/TM0-49/fusion_0.5/';
+    res_folder = '/work/Mengfan/Embryo/TM0-49/detection_0.5/';
+else
+    addpath('D:\Congchao''s code\cc_ImHandle\');
+    addpath D:\MatlabTools;
+    data_folder  = 'E:\Embryo\TM0-49\debug_v2\input\';
+    res_folder = fullfile('E:\Embryo\TM0-49\debug_v2\');
+end
+
 tif_files = dir(fullfile(data_folder, '/*.tif'));
-
-% results folder
-res_folder = fullfile('E:\Embryo\TM0-49\debug_v2\');
-% if ~exist(res_folder,'dir')
-%     mkdir(res_folder);
-% end
+if ~exist(res_folder,'dir')
+    mkdir(res_folder);
+end
 minIntensity = 50; % The middle of two Gaussian intensity distributions (
                     % should learn from data)
 
 %% synQuant
 % add synQuant java path
-Pij = fullfile('..\src_synquant\ij-1.52i.jar');
+Pij = fullfile('../src_synquant/ij-1.52i.jar');
 javaaddpath(Pij);
-p1 = fullfile('..\src_synquant\commons-math3-3.6.1.jar');
+p1 = fullfile('../src_synquant/commons-math3-3.6.1.jar');
 javaaddpath(p1);
-p0 = fullfile('..\src_synquant\SynQuantVid_v1.2.5.1.jar');
+p0 = fullfile('../src_synquant/SynQuantVid_v1.2.5.1.jar');
 javaaddpath(p0);
 
 z_mat = cell(numel(tif_files), 1);
@@ -68,9 +74,6 @@ for i=1:numel(tif_files)
     tic;
     org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
     synId = id_mat{i};
-    
-    
-    
     
     fMaps = ones(size(org_im));
     

@@ -28,10 +28,10 @@ if num_view ~= 8
     error('Current version is for 8 views.');
 end
 %% parameter setting
-device = 'CPU'; % GPU 25s CPU 45s parallel 250s
+device = 'GPU'; % GPU 25s CPU 45s parallel 250s
 save_mode = 'both'; %save as 'tif', 'h5', or 'both' 
 
-downsample_scale = 1;
+downsample_scale = 2;
 pad_size = ceil(40 / downsample_scale); % fusion refinement constriant
 bd_size = 3; % related to the deconvolution (n-1)/2. remove boundary
 maxIter = 1000; % max iteration of step 4
