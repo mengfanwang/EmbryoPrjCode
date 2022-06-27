@@ -10,8 +10,8 @@ addpath('../src_code_visualization');
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
     addpath('/home/mengfan/ForExecute/cc_ImHandle');
-    data_folder  = '/work/Mengfan/Embryo/TM0-49/fusion_0.5/';
-    res_folder = '/work/Mengfan/Embryo/TM0-49/detection_0.5/';
+    data_folder  = '/work/Mengfan/Embryo/TM0-49/fusion_0.25/';
+    res_folder = '/work/Mengfan/Embryo/TM0-49/detection_0.25/';
 else
     addpath('D:\Congchao''s code\cc_ImHandle\');
     addpath D:\MatlabTools;
@@ -27,6 +27,7 @@ minIntensity = 50; % The middle of two Gaussian intensity distributions (
                     % should learn from data)
 
 %% synQuant
+tic;
 % add synQuant java path
 Pij = fullfile('../src_synquant/ij-1.52i.jar');
 javaaddpath(Pij);
@@ -41,7 +42,6 @@ fMaps = cell(numel(tif_files), 1);
 q.minIntensity = minIntensity;
 for i=1:numel(tif_files)
     fprintf('processing %d/%d file\n', i, numel(tif_files));
-    tic;
     org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
     [h, w, slices] = size(org_im);
     %out_ims = SliceImage(in_im);
@@ -55,7 +55,7 @@ for i=1:numel(tif_files)
     z_mat{i} = single(zMap);
     id_mat{i} = uint16(synId);
     fMaps{i} = fMap;
-    toc;
+    toc
 end
 save(fullfile(res_folder, 'synQuant_res.mat'), 'z_mat', 'id_mat','fMaps','-v7.3');
 % tifwrite(uint8(id_mat{1}*255), [res_folder 'result_1']);
@@ -63,15 +63,17 @@ save(fullfile(res_folder, 'synQuant_res.mat'), 'z_mat', 'id_mat','fMaps','-v7.3'
 javarmpath(p0);
 javarmpath(p1);
 javarmpath(Pij);
+fprintf('Synquant part running time:') % around 12000s 0.25
+toc
 
 %% refine results from synQuant
+tic;
 load(fullfile(res_folder, 'synQuant_res.mat'));
 eig_res_2d = cell(numel(tif_files), 1);
 eig_res_3d = cell(numel(tif_files), 1);
 eig_overlay = cell(numel(tif_files), 1);
 for i=1:numel(tif_files)
-    fprintf('cal priCur %d/%d file\n', i, numel(tif_files));
-    tic;
+    fprintf('cal priCvt %d/%d file\n', i, numel(tif_files));
     org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
     synId = id_mat{i};
     
@@ -86,20 +88,18 @@ for i=1:numel(tif_files)
     eig_res_2d{i} = single(eig2d);
     eig_res_3d{i} = single(eig3d);
     eig_overlay{i} = [];
-    toc;
 end
 save(fullfile(res_folder, 'synQuant_priCvt_res.mat'), 'eig_res_2d',...
     'eig_res_3d','eig_overlay','-v7.3');
-% a = eig_res_3d{1};
-% a = 255*(a-min(a(:)))/(max(a(:))-min(a(:)));
-% tifwrite(uint8(a), [res_folder 'temp']);
-% tifwrite(uint8(eig_overlay{1}), [res_folder 'temp2']);
+fprintf('Principal curvature running time:'); % around 5700s 0.25
+toc
 %% calculate the variance map of all frames
+tic;
 varMap = cell(numel(tif_files), 1);
 scale_term = 300;
 for i=1:numel(tif_files)
     disp(i);
-    tic;
+    
     org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
     vid = 255*org_im/scale_term;
     varMap{i} = cell(3,2);
@@ -108,9 +108,10 @@ for i=1:numel(tif_files)
     vid_stb = sqrt(vid+3/8);
     [varMap{i}{1,2}, varMap{i}{2,2},varMap{i}{3,2}] = ...
         calVarianceStablizationBY(vid_stb, 0.8, 3);
-    toc;
 end
 save(fullfile(res_folder, 'varianceMap.mat'), 'varMap','-v7.3');
+fprintf('Variance running time:'); % around 7500s 0.25
+toc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % % % variance map by ConvexVST from Mengfan
 % addpath D:\MatlabTools\
@@ -149,9 +150,10 @@ save(fullfile(res_folder, 'varianceMap.mat'), 'varMap','-v7.3');
 % 
 %     toc;
 % end
-save(fullfile(res_folder, 'varianceMap.mat'), 'varMap','-v7.3');
+% save(fullfile(res_folder, 'varianceMap.mat'), 'varMap','-v7.3');
 
 %% region refine based on 4d information (infor across >1 frame) around 1 hour
+tic;
 scale_term = 300;
 load(fullfile(res_folder, 'synQuant_priCvt_res.mat'));
 load(fullfile(res_folder, 'synQuant_res.mat'));
@@ -162,7 +164,7 @@ multi_frames_flag = false; % use multiple frames for segmentation
 cell_wise_save_flag = false; % save each cell segment
 for i=1:numel(tif_files)
     fprintf('Processing the frame %d ', i);
-    tic;
+    
     if cell_wise_save_flag
         seg_res_folder = fullfile(res_folder,'segment_cells');
         seg_res_folder = fullfile(seg_res_folder,['frame_', num2str(i)]);
@@ -203,12 +205,14 @@ for i=1:numel(tif_files)
             eigAll,org_im, varMapAll, []);%, i
     %profile viewer;
     %profile off;
-    toc;
     refine_res{i} = uint32(newIdMap);
     threshold_res{i} = uint8(thresholdMap);
+    toc
 end
 save(fullfile(res_folder, 'synQuant_refine_res_4d_v9.mat'), 'refine_res',...
     'threshold_res','-v7.3');
+fprintf('Refinement running time:');
+toc
 % tifwrite(uint8((refine_res{1}>0)*255), [res_folder 'result_2']);
 %% write 4d segmentatin result with label
 org_im_all = zeros(h, w, slices, numel(tif_files));
