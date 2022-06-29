@@ -211,14 +211,23 @@ for i=1:numel(tif_files)
 end
 save(fullfile(res_folder, 'synQuant_refine_res_4d_v9.mat'), 'refine_res',...
     'threshold_res','-v7.3');
-fprintf('Refinement running time:');
+fprintf('Refinement running time:'); % around 183000s 0.25
 toc
 % tifwrite(uint8((refine_res{1}>0)*255), [res_folder 'result_2']);
-%% write 4d segmentatin result with label
-org_im_all = zeros(h, w, slices, numel(tif_files));
-refine_res_all = zeros(size(org_im_all));
+%% write 3d segmentation result with label
+mkdir(fullfile(res_folder,'synQuant_refine_res_4d_v9'));
 for tt = 1:numel(tif_files)
-        org_im_all(:,:,:,tt) = tifread(fullfile(tif_files(tt).folder, tif_files(tt).name));
-        refine_res_all(:,:,:,tt) = refine_res{tt};
+    tt_ind = num2str(100000+tt);
+    tt_ind = tt_ind(2:6);
+    org_im_all = tifread(fullfile(tif_files(tt).folder, tif_files(tt).name));
+    refine_res_all = refine_res{tt};
+    labelwrite(uint8(org_im_all),refine_res_all, fullfile(res_folder,'synQuant_refine_res_4d_v9',tt_ind));
 end
-labelwrite(uint8(org_im_all),refine_res_all, [res_folder '\synQuant_refine_res_4d_v9']);
+%% write 4d segmentatin result with label
+% org_im_all = zeros(h, w, slices, numel(tif_files));
+% refine_res_all = zeros(size(org_im_all));
+% for tt = 1:numel(tif_files)
+%         org_im_all(:,:,:,tt) = tifread(fullfile(tif_files(tt).folder, tif_files(tt).name));
+%         refine_res_all(:,:,:,tt) = refine_res{tt};
+% end
+% labelwrite(uint8(org_im_all),refine_res_all, [res_folder '\synQuant_refine_res_4d_v9']);

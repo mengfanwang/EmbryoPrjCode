@@ -10,10 +10,10 @@ clc;clear;close all;
 %% system and path
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
-    path_name = '/work/Mengfan/Embryo/TM0-49';
-    source_data = 'H2BGFP_TM0-49.h5';
-    data_name = fullfile(path_name, 'deconvolution/deconvolution_H2BGFP_TM0-49.h5');
-    xml_name = fullfile(path_name, 'H2BGFP_TM0-49.xml');
+    path_name = '/work/Mengfan/Embryo/21-04-28';
+    source_data = 'H2BGFP_21-04-28.h5';
+    data_name = fullfile(path_name, 'deconvolution/deconvolution_H2BGFP_21-04-28.h5');
+    xml_name = fullfile(path_name, 'H2BGFP_21-04-28.xml');
     target_folder = 'fusion';
 else
     addpath D:\MatlabTools;
@@ -29,9 +29,9 @@ if num_view ~= 8
 end
 %% parameter setting
 device = 'GPU'; % GPU 25s CPU 45s parallel 250s
-save_mode = 'both'; %save as 'tif', 'h5', or 'both' 
+save_mode = 'tif'; %save as 'tif', 'h5', or 'both' 
 
-downsample_scale = 2;
+downsample_scale = 4;
 pad_size = ceil(40 / downsample_scale); % fusion refinement constriant
 bd_size = 3; % related to the deconvolution (n-1)/2. remove boundary
 maxIter = 1000; % max iteration of step 4
@@ -43,7 +43,7 @@ if ~isfolder(fullfile(path_name, target_folder))
     mkdir(fullfile(path_name, target_folder));
 end
 tic;
-for tt = 0:num_time-1
+for tt = num_time-3:num_time-1
     tt_ind = num2str(100000+tt);
     tt_ind = tt_ind(2:6);
     fprintf('processing: %d\n',tt);
