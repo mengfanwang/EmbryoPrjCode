@@ -38,12 +38,12 @@ maxIter = 1000; % max iteration of step 4
 baseIntensity = 200; % may not be the best threhsold, refine later
 
 target_folder = [target_folder '_' num2str(1/downsample_scale)];
-%% primary fusion
+%% fusion
 if ~isfolder(fullfile(path_name, target_folder))
     mkdir(fullfile(path_name, target_folder));
 end
 tic;
-for tt = num_time-3:num_time-1
+for tt = 100:100 %num_time-1
     tt_ind = num2str(100000+tt);
     tt_ind = tt_ind(2:6);
     fprintf('processing: %d\n',tt);
