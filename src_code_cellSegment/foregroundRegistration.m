@@ -1,5 +1,6 @@
 clc;clear;close all;
 
+% It's old version. Please see ../src_code_proProcessing/Registration.m
 % register label map with given transformation matrix
 % input:
 % refine_res ------- logical foreground

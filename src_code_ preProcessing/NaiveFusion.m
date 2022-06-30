@@ -24,7 +24,7 @@ if num_view ~= 8
 end
 %% parameter setting
 device = 'GPU'; % GPU 25s CPU 45s parallel 250s
-save_mode = 'tif'; %save as 'tif', 'h5', or 'both' 
+save_mode = 'colortif'; %save as 'tif', 'h5', or 'both' 
 
 downsample_scale = 4;
 pad_size = ceil(40 / downsample_scale); % fusion refinement constriant
@@ -37,7 +37,7 @@ if ~isfolder(fullfile(path_name, target_folder))
     mkdir(fullfile(path_name, target_folder));
 end
 tic;
-for tt = 100:100
+for tt = 0:349
     tt_ind = num2str(100000+tt);
     tt_ind = tt_ind(2:6);
     fprintf('processing: %d\n',tt);
@@ -130,49 +130,91 @@ for tt = 100:100
         z_min = min(z_min,round(ref{vv}.ZWorldLimits(1)));
         z_max = max(z_max,round(ref{vv}.ZWorldLimits(2)));
     end
-
-    im_fusion = zeros(y_max-y_min,x_max-x_min,z_max-z_min,'single');
-    im_num = zeros(y_max-y_min,x_max-x_min,z_max-z_min,'single');
-    for vv = 1:4
-        im_unit = ones(size(im{vv}),'single');
-        if strcmp(device, 'GPU')
-            im{vv} = gpuArray(im{vv});
-            im_unit = gpuArray(im_unit);
+    
+    if ~strcmp(save_mode, 'colortif')
+        im_fusion = zeros(y_max-y_min,x_max-x_min,z_max-z_min,'single');
+        im_num = zeros(y_max-y_min,x_max-x_min,z_max-z_min,'single');
+        for vv = 1:4
+            im_unit = ones(size(im{vv}),'single');
+            if strcmp(device, 'GPU')
+                im{vv} = gpuArray(im{vv});
+                im_unit = gpuArray(im_unit);
+            end
+            im{vv} = imwarp(im{vv},affine3d(trans{vv}'));
+            im_unit = imwarp(im_unit,affine3d(trans{vv}'));
+            im{vv} = im{vv} .* im_unit;
+    
+            x_start = round(ref{vv}.XWorldLimits(1) - x_min + 1);
+            x_end = round(ref{vv}.XWorldLimits(2) - x_min);
+            y_start = round(ref{vv}.YWorldLimits(1) - y_min + 1);
+            y_end = round(ref{vv}.YWorldLimits(2) - y_min);
+            z_start = round(ref{vv}.ZWorldLimits(1) - z_min + 1);
+            z_end = round(ref{vv}.ZWorldLimits(2) - z_min);
+    
+            if strcmp(device, 'GPU')
+                im_fusion(y_start:y_end,x_start:x_end,z_start:z_end) = ...
+                im_fusion(y_start:y_end,x_start:x_end,z_start:z_end) + gather(im{vv});
+                im_num(y_start:y_end,x_start:x_end,z_start:z_end) = ...
+                im_num(y_start:y_end,x_start:x_end,z_start:z_end) + gather(im_unit);
+            else
+                im_fusion(y_start:y_end,x_start:x_end,z_start:z_end) = ...
+                im_fusion(y_start:y_end,x_start:x_end,z_start:z_end) + im{vv};
+                im_num(y_start:y_end,x_start:x_end,z_start:z_end) = ...
+                im_num(y_start:y_end,x_start:x_end,z_start:z_end) + im_unit;
+            end
         end
-        im{vv} = imwarp(im{vv},affine3d(trans{vv}'));
-        im_unit = imwarp(im_unit,affine3d(trans{vv}'));
-        im{vv} = im{vv} .* im_unit;
-
-        x_start = round(ref{vv}.XWorldLimits(1) - x_min + 1);
-        x_end = round(ref{vv}.XWorldLimits(2) - x_min);
-        y_start = round(ref{vv}.YWorldLimits(1) - y_min + 1);
-        y_end = round(ref{vv}.YWorldLimits(2) - y_min);
-        z_start = round(ref{vv}.ZWorldLimits(1) - z_min + 1);
-        z_end = round(ref{vv}.ZWorldLimits(2) - z_min);
-
-        if strcmp(device, 'GPU')
-            im_fusion(y_start:y_end,x_start:x_end,z_start:z_end) = ...
-            im_fusion(y_start:y_end,x_start:x_end,z_start:z_end) + gather(im{vv});
-            im_num(y_start:y_end,x_start:x_end,z_start:z_end) = ...
-            im_num(y_start:y_end,x_start:x_end,z_start:z_end) + gather(im_unit);
-        else
-            im_fusion(y_start:y_end,x_start:x_end,z_start:z_end) = ...
-            im_fusion(y_start:y_end,x_start:x_end,z_start:z_end) + im{vv};
-            im_num(y_start:y_end,x_start:x_end,z_start:z_end) = ...
-            im_num(y_start:y_end,x_start:x_end,z_start:z_end) + im_unit;
+        im_fusion = im_fusion./im_num;
+        im_fusion(isnan(im_fusion)) = 0;
+        if strcmp(save_mode, 'h5') || strcmp(save_mode, 'both')
+            h5create(fullfile(path_name, target_folder, ['fusion_' source_data]),...
+                ['/t' tt_ind '/0/cells'],size(im_fusion),'Datatype','single');
+            h5write(fullfile(path_name, target_folder, ['fusion_' source_data]),...
+                ['/t' tt_ind '/0/cells'],im_fusion);
         end
+        if strcmp(save_mode, 'tif') || strcmp(save_mode, 'both')
+            tifwrite(uint16(im_fusion),fullfile(path_name, target_folder, tt_ind));
+        end
+    else
+        color = hsv2rgb([0 1 0.5; 0.25 1 0.5; 0.5 1 0.5; 0.75 1 0.5]);
+        im_fusion = zeros(y_max-y_min,x_max-x_min,3,z_max-z_min,'single');
+        im_num = zeros(y_max-y_min,x_max-x_min,z_max-z_min,'single');
+        for vv = 1:4
+            im_unit = ones(size(im{vv}),'single');
+            if strcmp(device, 'GPU')
+                im{vv} = gpuArray(im{vv});
+                im_unit = gpuArray(im_unit);
+            end
+            im{vv} = imwarp(im{vv},affine3d(trans{vv}'));
+            im_unit = imwarp(im_unit,affine3d(trans{vv}'));
+            im{vv} = im{vv} .* im_unit;
+            if strcmp(device, 'GPU')
+                im{vv} = gather(im{vv});
+                im_unit = gather(im_unit);
+            end
+
+            x_start = round(ref{vv}.XWorldLimits(1) - x_min + 1);
+            x_end = round(ref{vv}.XWorldLimits(2) - x_min);
+            y_start = round(ref{vv}.YWorldLimits(1) - y_min + 1);
+            y_end = round(ref{vv}.YWorldLimits(2) - y_min);
+            z_start = round(ref{vv}.ZWorldLimits(1) - z_min + 1);
+            z_end = round(ref{vv}.ZWorldLimits(2) - z_min);
+            
+            for zz = z_start:z_end
+                im_fusion(y_start:y_end,x_start:x_end,1,zz) = im_fusion(y_start:y_end,x_start:x_end,1,zz) + im{vv}(:,:,zz-z_start+1) * color(vv,1);
+                im_fusion(y_start:y_end,x_start:x_end,2,zz) = im_fusion(y_start:y_end,x_start:x_end,2,zz) + im{vv}(:,:,zz-z_start+1) * color(vv,2);
+                im_fusion(y_start:y_end,x_start:x_end,3,zz) = im_fusion(y_start:y_end,x_start:x_end,3,zz) + im{vv}(:,:,zz-z_start+1) * color(vv,3);
+            end
+            im_num(y_start:y_end,x_start:x_end,z_start:z_end) = ...
+            im_num(y_start:y_end,x_start:x_end,z_start:z_end) + im_unit;      
+        end
+        for zz = 1:size(im_fusion,3)
+            im_fusion(:,:,1,zz) = im_fusion(:,:,1,zz)./im_num(:,:,zz);
+            im_fusion(:,:,2,zz) = im_fusion(:,:,2,zz)./im_num(:,:,zz);
+            im_fusion(:,:,3,zz) = im_fusion(:,:,3,zz)./im_num(:,:,zz);
+        end
+        im_fusion(isnan(im_fusion)) = 0;
+        tifwrite(uint8(im_fusion),fullfile(path_name, target_folder, ['color_' tt_ind]));
     end
-    im_fusion = im_fusion./im_num;
-    im_fusion(isnan(im_fusion)) = 0;
-    if strcmp(save_mode, 'h5') || strcmp(save_mode, 'both')
-        h5create(fullfile(path_name, target_folder, ['fusion_' source_data]),...
-            ['/t' tt_ind '/0/cells'],size(im_fusion),'Datatype','single');
-        h5write(fullfile(path_name, target_folder, ['fusion_' source_data]),...
-            ['/t' tt_ind '/0/cells'],im_fusion);
-    end
-    if strcmp(save_mode, 'tif') || strcmp(save_mode, 'both')
-        tifwrite(uint16(im_fusion),fullfile(path_name, target_folder, tt_ind));
-    end
-    clear im im_fusion im_num im_unit
+%     clear im im_fusion im_num im_unit
     toc
 end

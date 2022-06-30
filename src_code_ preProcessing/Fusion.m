@@ -42,8 +42,10 @@ target_folder = [target_folder '_' num2str(1/downsample_scale)];
 if ~isfolder(fullfile(path_name, target_folder))
     mkdir(fullfile(path_name, target_folder));
 end
+% loss_all = zeros(num_time,1);
+% intensity_all = zeros(num_time,1); % for measure the loss and intensity
 tic;
-for tt = 100:100 %num_time-1
+for tt = 115:num_time-1
     tt_ind = num2str(100000+tt);
     tt_ind = tt_ind(2:6);
     fprintf('processing: %d\n',tt);
@@ -146,7 +148,7 @@ for tt = 100:100 %num_time-1
             im1 = data1(ys:ye,xs:xe,zs:ze);
             for vv = 1:size(diff_candi,1)
                 im2 = data2(ys+diff_candi(vv,2):ye+diff_candi(vv,2),...
-                    xs+diff_candi(vv,1):xe+diff_candi(vv,1),zs+diff_candi(vv,3):ze+diff_candi(vv,3));
+                    xs+diff_candi(vv,1):xe+diff_candi(vv,1),zs+diff_candi(vv,3):ze+dif f_candi(vv,3));
                 loss_temp(vv) = mean((im1-im2).^2,'all');
             end
             [loss_min, ind_min] = min(loss_temp);
@@ -157,7 +159,8 @@ for tt = 100:100 %num_time-1
                 loss = loss_min;
             end
 %             fprintf('Iter: %d Loss: %f\n', iter, loss);   % for debug
-        end         
+        end
+
 %         fprintf('Pair: %d %d Diff: %d %d %d Iter: %d\n', order(oo,1), order(oo,2), diff(oo,1), diff(oo,2), diff(oo,3), iter);
     end
     clear data1 data2 im1 im2 % release gpu memory
@@ -195,7 +198,8 @@ for tt = 100:100 %num_time-1
         bias_list{dir} = bias_list{dir}(1:bias_count,:);
     end
     if prod(cellfun(@(x) size(x,1), bias_list)) > 10000
-        error('Too much calculation!')
+        warning('Too much calculation!Skipped!');
+        continue;
     end
 
     loss = zeros(cellfun(@(x) size(x,1), bias_list)');
@@ -218,7 +222,7 @@ for tt = 100:100 %num_time-1
         end
     end
     clear im1 im2
-    [~, ind_min] = min(loss,[],'all');
+    [loss_all(tt+1), ind_min] = min(loss,[],'all');
     [xx_min,yy_min,zz_min] = ind2sub(size(loss),ind_min);
     diff(:,1) = diff(:,1) + bias_list{1}(xx_min,:)';
     diff(:,2) = diff(:,2) + bias_list{2}(yy_min,:)';
@@ -287,6 +291,7 @@ for tt = 100:100 %num_time-1
     end
     im_fusion = im_fusion./im_num;
     im_fusion(isnan(im_fusion)) = 0;
+    intensity_all(tt+1) = mean(im_fusion.^2,'all');
     if strcmp(save_mode, 'h5') || strcmp(save_mode, 'both')
         h5create(fullfile(path_name, target_folder, ['fusion_' source_data]),...
             ['/t' tt_ind '/0/cells'],size(im_fusion),'Datatype','single');
