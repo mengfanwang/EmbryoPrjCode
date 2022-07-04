@@ -75,7 +75,7 @@ for tt = 1:num_time
     tt_ind_old = tt_ind;
     toc
 end
-bound.x_min = x_min;
+bound.x_min = x_min; 
 bound.x_max = x_max;
 bound.y_min = y_min;
 bound.y_max = y_max;
@@ -84,7 +84,7 @@ bound.z_max = z_max;
 save(fullfile(output_res_folder, 'registration'), 'bound', 'ref', 'tform', 'trans_mat','im_size');
 fprintf('Get transform matrix running time:'); % 14453s 0.25
 toc
-%%
+%% data, variance map and priCvt registration
 fprintf('\nRegistration...');
 load(fullfile(input_res_folder, 'varianceMap.mat'));
 load(fullfile(input_res_folder, 'synQuant_priCvt_res.mat'));
@@ -94,7 +94,6 @@ x_max = bound.x_max; x_min = bound.x_min;
 y_max = bound.y_max; y_min = bound.y_min;
 z_max = bound.z_max; z_min = bound.z_min;
 
-%%
 eig_res_2d_reg = eig_res_2d;
 eig_res_3d_reg = eig_res_3d;
 varMap_reg = varMap;
@@ -176,5 +175,70 @@ for tt = 1:num_time
     tifwrite(uint16(data_reg), fullfile(output_data_folder, tt_ind));
     toc
 end
+% ~3600s
 save(fullfile(output_res_folder, 'synQuant_pri_var_reg.mat'), 'eig_res_2d_reg', 'eig_res_3d_reg', 'varMap_reg', '-v7.3');
 toc
+
+%% synquant registration
+load(fullfile(input_res_folder, 'synQuant_refine_res_4d_v9.mat'));
+load(fullfile(output_res_folder, 'registration'));
+x_max = bound.x_max; x_min = bound.x_min;
+y_max = bound.y_max; y_min = bound.y_min;
+z_max = bound.z_max; z_min = bound.z_min;
+refine_reg = cell(num_time,1);
+threshold_reg = cell(num_time,1);
+tic;
+for tt = 1:num_time
+    tt_ind = num2str(99999+tt);
+    tt_ind = tt_ind(2:6);
+    fprintf('processing: %s ',tt_ind);
+
+    x_start = round(ref{tt}.XWorldLimits(1) - x_min + 1);
+    x_end = round(ref{tt}.XWorldLimits(2) - x_min);
+    y_start = round(ref{tt}.YWorldLimits(1) - y_min + 1);
+    y_end = round(ref{tt}.YWorldLimits(2) - y_min);
+    z_start = round(ref{tt}.ZWorldLimits(1) - z_min + 1);
+    z_end = round(ref{tt}.ZWorldLimits(2) - z_min);
+
+    % crop data to the same size
+    refine_res{tt} = refine_res{tt}(1:im_size(1),1:im_size(2),1:im_size(3));
+    threshold_res{tt} = threshold_res{tt}(1:im_size(1),1:im_size(2),1:im_size(3));
+
+    id_num = max(refine_res{tt}(:));
+    fprintf('num: %d\n',id_num);
+    refine_max = zeros(y_end - y_start + 1, x_end - x_start + 1, z_end - z_start + 1,'single');
+    refine_ind = zeros(y_end - y_start + 1, x_end - x_start + 1, z_end - z_start + 1,'single');
+    if strcmp(device, 'GPU')
+        refine_res{tt} = gpuArray(refine_res{tt});
+        threshold_res{tt} = gpuArray(threshold_res{tt});
+        refine_max = gpuArray(refine_max);
+        refine_ind = gpuArray(refine_ind);
+    end
+    for ii = 1:id_num        
+        refine_temp = imwarp(single(refine_res{tt} == ii),affine3d(trans_mat{tt}));
+        refine_temp(refine_temp < 0.5) = 0;
+        pix_list = find(refine_temp > refine_max);
+        refine_max(pix_list) = refine_temp(pix_list);
+        refine_ind(pix_list) = ii;
+    end
+
+    refine_reg{tt} = uint32(zeros(y_max - y_min, x_max - x_min, z_max - z_min));
+    refine_reg{tt}(y_start:y_end, x_start:x_end, z_start:z_end) = uint32(refine_ind);
+    threshold_reg{tt} = uint8(zeros(y_max - y_min, x_max - x_min, z_max - z_min));
+    for ii = 1:id_num
+        pix_list = find(refine_res{tt}==ii);
+        thre_ii = unique(threshold_res{tt}(pix_list));
+        if length(thre_ii) > 1
+            error('Warning! Multiple thresholds!');
+        end
+        threshold_reg{tt}(pix_list) = thre_ii;
+    end
+    if strcmp(device, 'GPU')
+        refine_res{tt} = gather(refine_res{tt});
+        threshold_res{tt} = gather(threshold_res{tt});
+        refine_max = gather(refine_max);
+        refine_ind = gather(refine_ind);
+    end
+    toc
+end
+save(fullfile(output_res_folder, 'synQuant_refine_res_reg.mat'),'refine_reg','threshold_reg','-v7.3');

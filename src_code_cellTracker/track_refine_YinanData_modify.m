@@ -1,55 +1,62 @@
-% %This is the main function for tracking results refinement
-% if isunix
-%     addpath('/home/ccw/Dropbox/cc_ImHandle/');
-%     save_folder = '/home/ccw/Desktop/embryo_res_folder';
-% else
-%     addpath('C:\Users\Congchao\Dropbox\cc_ImHandle\');
-%     save_folder = 'C:\Users\Congchao\Desktop\cell_detection_samples';
-% end
-
-% addpath('dt');
-% addpath(genpath('CINDA/'));
-% addpath('src_code_matlab');
-% addpath('src_code_cellTracker');
-% addpath('src_code_cellSegment');
-% addpath('debug_func/');
-% addpath('../../ParticleTracking/src_code/');
-% addpath('../../ParticleTracking/src_uTrack/');
-
 clc;clear;close all;
 dbstop if error
-addpath('D:\Congchao''s code\cc_ImHandle\');
-addpath('..\dt');
-addpath(genpath('..\CINDA\'));
-addpath('..\debug_func');
-addpath('..\src_code_matlab');
-addpath('..\src_code_cellSegment');
-addpath('..\src_code_cellTracker');
-addpath('..\src_code_visualization');
-addpath('D:\Congchao''s code\ParticleTracking\src_code');
-addpath('D:\Congchao''s code\ParticleTracking\src_uTrack');
 
-% set saving folder
-save_folder = 'E:\Embryo\TM0-49\track_v1';
-data_folder = 'E:\Embryo\TM0-49\data_crop_reg';
-tif_files = dir(fullfile(data_folder, '*.tif'));
-res_folder = 'E:\Embryo\TM0-49\track_v1';
+addpath('../dt');
+addpath(genpath('../CINDA/'));
+addpath('../debug_func');
+addpath('../src_code_matlab');
+addpath('../src_code_cellSegment');
+addpath('../src_code_cellTracker');
+addpath('../src_code_visualization');
+
+%% system and path
+if isunix
+    addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
+    addpath('/home/mengfan/ForExecute/cc_ImHandle');
+    addpath('/home/mengfan/ForExecute/ParticleTracking/src_code');
+    addpath('/home/mengfan/ForExecute/ParticleTracking/src_uTrack');
+    save_folder = '/work/Mengfan/Embryo/TM0-49/track_0.25';
+    data_folder = '/work/Mengfan/Embryo/TM0-49/data_reg_0.25';
+    res_folder = '/work/Mengfan/Embryo/TM0-49/res_reg_0.25';
+else
+    addpath('D:\Congchao''s code\cc_ImHandle\');
+    addpath D:\MatlabTools;
+    addpath('D:\Congchao''s code\ParticleTracking\src_code');
+    addpath('D:\Congchao''s code\ParticleTracking\src_uTrack');
+    save_folder = 'E:\Embryo\TM0-49\track_v1';
+    data_folder = 'E:\Embryo\TM0-49\data_crop_reg';
+    res_folder = 'E:\Embryo\TM0-49\track_v1';
+end
+
+%%
+tif_files = dir(fullfile(data_folder, '/*.tif'));
 if ~exist(res_folder,'dir')
     mkdir(res_folder);
 end
-% disp_folder = 'synQuant_refine_res';
+minIntensity = 50; % The middle of two Gaussian intensity distributions (
+                    % should learn from data)
+sc_f = 2;          % downsample factor
+
+% set saving folder
+tif_files = dir(fullfile(data_folder, '*.tif'));
+if ~exist(res_folder,'dir')
+    mkdir(res_folder);
+end
 
 % load original data and detection results and ground truth
 if ~exist('refine_res','var') % segmentation results
     %load(fullfile(res_folder, 'synQuant_refine_res.mat'),'refine_res');
     load(fullfile(res_folder, 'synQuant_refine_res_reg.mat'),...
         'refine_reg', 'threshold_reg');
-    refine_res = refine_reg; threshold_res = threshold_reg;
-    for ii = 1:length(refine_res) % rearrange id for cropped data
-        refine_res{ii} = rearrange_id(refine_res{ii});
+    if sc_f > 1
+        org_refine_res = refine_reg; org_threshold_res = threshold_reg;
+        for ii = 1:length(org_refine_res) % rearrange id for cropped data
+            org_refine_res{ii} = rearrange_id(org_refine_res{ii});
+        end
+    else
+        refine_res_in = refine_reg; threshold_res_in = threshold_reg;
     end
-    org_refine_res = refine_res;
-    org_threshold_res = threshold_res;
+    clear refine_reg threshold_reg
 end
 scale_term = 300;
 embryo_vid_org = cell(numel(tif_files), 1); % original data
@@ -57,41 +64,56 @@ for i=1:numel(tif_files)
     embryo_vid_org{i} = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
     embryo_vid_org{i} = 255*embryo_vid_org{i}./scale_term;
 end
+if sc_f == 1
+    embryo_vid = embryo_vid_org;
+    clear embryo_vid_org;
+end
 
 if ~exist('varMap','var') % segmentation results
     %load(fullfile(res_folder, 'synQuant_refine_res.mat'),'refine_res');
 %     load(fullfile(res_folder, 'varianceMap.mat'),'varMap');
 %     load(fullfile(res_folder, 'synQuant_priCvt_res.mat'),...
 %         'eig_res_2d', 'eig_res_3d');
-    load([res_folder '\synQuant_pri_var_reg.mat']);
-    eig_res_2d = eig_res_2d_reg;
-    eig_res_3d = eig_res_3d_reg;
-    varMap = varMap_reg;
-    
-    org_varMap = varMap;    
-    org_eigMaps = cell(numel(eig_res_2d),1);
-    for i=1:numel(org_eigMaps)
-        org_eigMaps{i} = cell(2,1);
-        org_eigMaps{i}{1} = eig_res_2d{i};
-        org_eigMaps{i}{2} = eig_res_3d{i};
+    load(fullfile(res_folder, 'synQuant_pri_var_reg.mat'));   
+    if sc_f > 1
+        org_varMap = varMap_reg;    
+        org_eigMaps = cell(numel(eig_res_2d_reg),1);
+        for i=1:numel(org_eigMaps)
+            org_eigMaps{i} = cell(2,1);
+            org_eigMaps{i}{1} = eig_res_2d_reg{i};
+            org_eigMaps{i}{2} = eig_res_3d_reg{i};
+        end
+    else
+        varMaps = varMap_reg;    
+        eigMaps = cell(numel(eig_res_2d_reg),1);
+        for i=1:numel(eigMaps)
+            eigMaps{i} = cell(2,1);
+            eigMaps{i}{1} = eig_res_2d_reg{i};
+            eigMaps{i}{2} = eig_res_3d_reg{i};
+        end
     end
+    clear eig_res_2d_reg eig_res_3d_reg varMap_reg
+end 
+fprintf('Loading finished.');
+
+
+if sc_f > 1
+    % let's first downsample the detection results
+    [h, w, z] = size(org_refine_res{1});
+    % we resize the data to [h/sc_f, w/sc_f, z, t]
+    
+    st_loc = [];
+    sz_crop = [];
+    % st_loc = [251, 1, 1];
+    % sz_crop = [200, 250, z];
+    gt_mat_org = {};
+    [refine_res_in, embryo_vid, gt_mat, threshold_res_in, varMaps, ...
+        eigMaps] = data_scaling(sc_f, st_loc, ...
+        sz_crop, org_refine_res, embryo_vid_org, gt_mat_org, ...
+        org_threshold_res, org_varMap, org_eigMaps);
+    clear org_refine_res embryo_vid_org org_threshold_res
+    clear org_varMap org_eigMaps
 end
-
-
-
-% let's first downsample the detection results
-[h, w, z] = size(org_refine_res{1});
-sc_f = 1; % we resize the data to [h/sc_f, w/sc_f, z, t]
-
-st_loc = [];
-sz_crop = [];
-% st_loc = [251, 1, 1];
-% sz_crop = [200, 250, z];
-gt_mat_org = {};
-[refine_res_in, embryo_vid, gt_mat, threshold_res_in, varMaps, ...
-    eigMaps] = data_scaling(sc_f, st_loc, ...
-    sz_crop, org_refine_res, embryo_vid_org, gt_mat_org, ...
-    org_threshold_res, org_varMap, org_eigMaps);
 
 g = graphPara_cell(sum(cellfun(@(x) max(x(:)), refine_res_in)));%1
 

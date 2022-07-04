@@ -110,7 +110,7 @@ for i=1:numel(s.VoxelIdxList)%[7 9 13 15 17 18 19 20 21 22]%
     valid_newLabel = newLabel(:)>0;
     loc_cells{i} = cell(2,1);
     loc_cells{i}{1} = [comMaps.linerInd(valid_newLabel), newLabel(valid_newLabel)];
-    loc_cells{i}{2} = round(quantile(vid(valid_newLabel),0.5));
+    loc_cells{i}{2} = round(quantile(comMaps.vidComp(valid_newLabel),0.5));
     
 %     loc_cells{i}{2} = comMaps.pickedThreshold;
     

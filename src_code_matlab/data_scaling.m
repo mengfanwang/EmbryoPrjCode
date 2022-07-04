@@ -11,7 +11,7 @@ if ~isempty(st_loc)
 else
     [h, w, z] = size(org_refine_res{1});
 end
-ds_sz = round([h/sc_f, w/sc_f, z]);
+ds_sz = round([h/sc_f, w/sc_f, z/sc_f]);
 
 % st_loc(1:2) = round(st_loc(1:2)/sc_f);
 % sz_crop(1:2) = round(sz_crop(1:2)/sc_f);
