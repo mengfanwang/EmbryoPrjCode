@@ -7,7 +7,8 @@ addpath('../debug_func');
 addpath('../src_code_matlab');
 addpath('../src_code_cellSegment');
 addpath('../src_code_cellTracker');
-addpath('../src_code_visualization');
+addpath('../src_code_visualization'); % 13000s 0.25/2
+                                      % 11000s on redetection step
 
 %% system and path
 if isunix
@@ -113,6 +114,11 @@ if sc_f > 1
         org_threshold_res, org_varMap, org_eigMaps);
     clear org_refine_res embryo_vid_org org_threshold_res
     clear org_varMap org_eigMaps
+end
+
+% temoporal modification for threshold_res_in
+for ii = 1:numel(tif_files)
+    threshold_res_in{ii} = 15*ones(size(threshold_res_in{ii}), 'uint8');
 end
 
 g = graphPara_cell(sum(cellfun(@(x) max(x(:)), refine_res_in)));%1
