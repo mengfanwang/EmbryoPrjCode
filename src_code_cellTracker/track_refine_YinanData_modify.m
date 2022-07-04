@@ -116,10 +116,10 @@ if sc_f > 1
     clear org_varMap org_eigMaps
 end
 
-% temoporal modification for threshold_res_in
-for ii = 1:numel(tif_files)
-    threshold_res_in{ii} = 15*ones(size(threshold_res_in{ii}), 'uint8');
-end
+% % temoporal modification for threshold_res_in
+% for ii = 1:numel(tif_files)
+%     threshold_res_in{ii} = 15*ones(size(threshold_res_in{ii}), 'uint8');
+% end
 
 g = graphPara_cell(sum(cellfun(@(x) max(x(:)), refine_res_in)));%1
 
