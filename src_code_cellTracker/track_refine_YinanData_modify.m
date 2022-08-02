@@ -40,8 +40,8 @@ sc_f = 2;          % downsample factor
 
 % set saving folder
 tif_files = dir(fullfile(data_folder, '*.tif'));
-if ~exist(res_folder,'dir')
-    mkdir(res_folder);
+if ~exist(save_folder,'dir')
+    mkdir(save_folder);
 end
 
 % load original data and detection results and ground truth
@@ -115,11 +115,6 @@ if sc_f > 1
     clear org_refine_res embryo_vid_org org_threshold_res
     clear org_varMap org_eigMaps
 end
-
-% % temoporal modification for threshold_res_in
-% for ii = 1:numel(tif_files)
-%     threshold_res_in{ii} = 15*ones(size(threshold_res_in{ii}), 'uint8');
-% end
 
 g = graphPara_cell(sum(cellfun(@(x) max(x(:)), refine_res_in)));%1
 

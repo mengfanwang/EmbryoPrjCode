@@ -1,7 +1,7 @@
 clc;clear;close all;
 
 if isunix
-    load('/work/Mengfan/Embryo/TM0-49/track_0.25/movieInfo.mat');
+    load('/work/Mengfan/Embryo/TM0-49/track_0.25/movieInfo_temp.mat');
     load('/work/Mengfan/Embryo/TM0-49/track_0.25/track_refine_res.mat');
     xml_folder = '/work/Mengfan/Embryo/TM0-49/tgmm_xml';
 else
