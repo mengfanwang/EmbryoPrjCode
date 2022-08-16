@@ -1,31 +1,24 @@
 clc;clear;close all;
 
-load('E:\Embryo\TM0-49\track_v1\movieInfo.mat');
-load('E:\Embryo\TM0-49\track_v1\track_refine_res.mat');
-xml_folder = 'E:\Embryo\TM0-49\track_v1\tgmm_xml\';
-% registration_flag = 0;
+if isunix
+    load('/work/Mengfan/Embryo/TM0-49/track_0.25/movieInfo_temp.mat');
+    load('/work/Mengfan/Embryo/TM0-49/track_0.25/track_refine_res.mat');
+    xml_folder = '/work/Mengfan/Embryo/TM0-49/tgmm_xml';
+else
+    load('E:\Embryo\TM0-49\track_v1\movieInfo.mat');
+    load('E:\Embryo\TM0-49\track_v1\track_refine_res.mat');
+    xml_folder = 'E:\Embryo\TM0-49\track_v1\tgmm_xml\';
+end
+
 
 t = length(movieInfo.n_perframe);
 start_ind = [0; cumsum(movieInfo.n_perframe)];
 n_total = length(movieInfo.xCoord);
 lineage_list = nan(n_total,1);
-x_ind = movieInfo.xCoord;
-y_ind = movieInfo.yCoord;
-z_ind = movieInfo.zCoord;
-% if registration_flag
-%     % load trans_mat
-%     load('E:\Embryo\registration_temporal_data\ImageReg.mat');
-%     trans_before = [x_ind y_ind z_ind ones(length(x_ind),1)];
-%     trans_after = zeros(length(x_ind),3);
-%     for ii = 1:length(x_ind)
-%         tt = find(ii > start_ind, 1, 'last');
-%         trans_temp = trans_before(ii,:)*trans_mat{tt};
-%         trans_after(ii,:) = trans_temp(1:3);
-%     end
-%     x_ind = trans_after(:,1) - bound.x_min;
-%     y_ind = trans_after(:,2) - bound.y_min;
-%     z_ind = trans_after(:,3) - bound.z_min;
-% end
+x_ind = (movieInfo.xCoord - 1) * 2;
+y_ind = (movieInfo.yCoord - 1) * 2;
+z_ind = (movieInfo.zCoord - 1) * 2;  % sc_f = 2
+
 for ii = 1:length(movieInfo.tracks)
     lineage_list(movieInfo.tracks{ii}) = ii - 1;
 end
@@ -62,5 +55,5 @@ for tt = 1:t
     end
     ind = num2str(10000+tt-1);
     ind = ind(2:end);
-    xmlwrite([xml_folder 'GMEMfinalResult_frame' ind '.xml'], docNode);
+    xmlwrite(fullfile(xml_folder, ['GMEMfinalResult_frame' ind '.xml']), docNode);
 end

@@ -2,7 +2,7 @@ clc;clear;close all;
 %% system and path
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
-    path_name = '/work/Mengfan/Embryo/TM0-49';
+    path_name = '/work/Mengfan/Embryo/22-01-11';
     input_data_name = fullfile(path_name, 'fusion_0.25/fusion_H2BGFP_TM0-49.h5');
     input_res_folder = fullfile(path_name, 'detection_0.25');
     output_data_folder = fullfile(path_name, 'data_reg_0.25');

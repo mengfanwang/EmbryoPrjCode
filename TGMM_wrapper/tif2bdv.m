@@ -1,25 +1,35 @@
 clc;clear;close all;
-% tic;hdf5info('E:\Embryo\TM0-49\H2BGFP_TM0-49.h5');toc
-% read tif file
-folder_path = 'E:\Embryo\registration_temporal_data\PointReg';
-% folder_list = dir(folder_path);
-% folder_list = folder_list(3:end);
-data = zeros(243,380,79,40);
-for tt = 0:39
-%     file = dir([folder_path folder_list(tt).name]);
-%     file = file(end);
-    ind = num2str(100+tt);
-    ind = ind(2:end);
-    data(:,:,:,tt+1) = tifread([folder_path '\' ind '.tif']);
+if isunix
+    addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
+    folder_path = '/work/Mengfan/Embryo/TM0-49/data_reg_0.25';
+    data_name = '/work/Mengfan/Embryo/TM0-49/result_0.25';
+else
+    folder_path = 'E:\Embryo\registration_temporal_data\PointReg';
 end
 
 %%% parameter %%%
-data_name = 'PointReg';
 view_num = 1;
-time_num = 40;
 res_mat = [1 1 1; 2 2 2;];
 res_mat = res_mat';
 sub_mat = 16*ones(3,2);
+
+% read tif file
+tif_files = dir(fullfile(folder_path, '*.tif'));
+time_num = numel(tif_files);
+for tt = 0:time_num - 1
+    ind = num2str(100000+tt);
+    ind = ind(2:end);
+    if tt == 0
+        data_temp = tifread(fullfile(folder_path, [ind '.tif']));
+        [x,y,z] = size(data_temp);
+        data = zeros(x,y,z,numel(tif_files));
+        data(:,:,:,1) = data_temp;
+    else
+        data(:,:,:,tt+1) = tifread(fullfile(folder_path, [ind '.tif']));
+    end
+end
+data = single(data);
+
 
 % data transform
 [x,y,z,t] = size(data);
@@ -91,7 +101,7 @@ for tt = 0:time_num-1
     end
 end
 root.appendChild(viewRegs);
-xmlwrite(['.\' data_name '.xml'],docNode);
+xmlwrite([data_name '.xml'],docNode);
 
 % write hdf5 data
 h5create([data_name '.h5'],'/s00/resolutions',size(res_mat));

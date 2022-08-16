@@ -10,8 +10,8 @@ addpath('../src_code_visualization');
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
     addpath('/home/mengfan/ForExecute/cc_ImHandle');
-    data_folder  = '/work/Mengfan/Embryo/TM0-49/fusion_0.25/';
-    res_folder = '/work/Mengfan/Embryo/TM0-49/detection_0.25/';
+    data_folder = '/work/Mengfan/Embryo/22-01-11/fusion_0.5/';
+    res_folder = '/work/Mengfan/Embryo/22-01-11/detection_0.5/';
 else
     addpath('D:\Congchao''s code\cc_ImHandle\');
     addpath D:\MatlabTools;

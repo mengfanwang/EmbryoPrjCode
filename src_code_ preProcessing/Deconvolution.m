@@ -3,15 +3,15 @@ clc;clear;close all;
 %% system and path
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
-    path_name = '/work/Mengfan/Embryo/21-04-28';
-    source_data = 'H2BGFP_21-04-28.h5';
-    target_folder = 'deconvolution';
+    path_name = '/work/Mengfan/Embryo/22-01-11';
+    source_data = 'myf5GFP-H2BmCherry.v1.h5';
+    target_folder = 'deconvolution';    
 else
     addpath D:\MatlabTools;
     path_name = '\\rs0001\Mengfan\Embryo\TM0-49\';
     source_data = 'H2BGFP_TM0-49.h5';
 end
-[h5_struct, num_view] = readh5info(fullfile(path_name, source_data));
+[h5_struct, num_view, name_view] = readh5info(fullfile(path_name, source_data));
 if ~isfolder(fullfile(path_name, target_folder))
     mkdir(fullfile(path_name, target_folder));
 end
@@ -39,8 +39,7 @@ for ii = 0:num_total-1
     tt_ind = tt_ind(2:6);
     fprintf('processing: %d %d\n',tt, vv);
 
-    vv_ind = num2str(100+vv);
-    vv_ind = vv_ind(2:3);
+    vv_ind = name_view{vv+1};
     data = hdf5read(fullfile(path_name, source_data),['/t' tt_ind '/s' vv_ind '/0/cells']);
     data = single(data);
     z_size = size(data,3);
