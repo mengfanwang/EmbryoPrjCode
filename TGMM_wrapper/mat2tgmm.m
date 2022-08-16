@@ -15,9 +15,9 @@ t = length(movieInfo.n_perframe);
 start_ind = [0; cumsum(movieInfo.n_perframe)];
 n_total = length(movieInfo.xCoord);
 lineage_list = nan(n_total,1);
-x_ind = movieInfo.xCoord * 2;
-y_ind = movieInfo.yCoord * 2;
-z_ind = movieInfo.zCoord * 2;  % sc_f = 2
+x_ind = (movieInfo.xCoord - 1) * 2;
+y_ind = (movieInfo.yCoord - 1) * 2;
+z_ind = (movieInfo.zCoord - 1) * 2;  % sc_f = 2
 
 for ii = 1:length(movieInfo.tracks)
     lineage_list(movieInfo.tracks{ii}) = ii - 1;

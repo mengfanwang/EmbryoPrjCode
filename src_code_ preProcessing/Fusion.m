@@ -10,10 +10,10 @@ clc;clear;close all;
 %% system and path
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
-    path_name = '/work/Mengfan/Embryo/21-04-28';
-    source_data = 'H2BGFP_21-04-28.h5';
-    data_name = fullfile(path_name, 'deconvolution/deconvolution_H2BGFP_21-04-28.h5');
-    xml_name = fullfile(path_name, 'H2BGFP_21-04-28.xml');
+    path_name = '/work/Mengfan/Embryo/22-01-11';
+    source_data = 'myf5GFP-H2BmCherry.v1.h5';
+    data_name = fullfile(path_name, 'deconvolution/deconvolution_myf5GFP-H2BmCherry.v1.h5');
+    xml_name = fullfile(path_name, 'myf5GFP-H2BmCherry.v1.xml');
     target_folder = 'fusion';
 else
     addpath D:\MatlabTools;
@@ -21,7 +21,7 @@ else
 end
 xml = xml2struct(xml_name);
 register_info = xml.SpimData.ViewRegistrations.ViewRegistration;
-[h5_struct, num_view] = readh5info(fullfile(path_name, source_data));
+[h5_struct, num_view, name_view] = readh5info(fullfile(path_name, source_data));
 num_time = length(h5_struct);
 num_total = num_time * num_view;
 if num_view ~= 8
@@ -29,9 +29,9 @@ if num_view ~= 8
 end
 %% parameter setting
 device = 'GPU'; % GPU 25s CPU 45s parallel 250s
-save_mode = 'tif'; %save as 'tif', 'h5', or 'both' 
+save_mode = 'both'; %save as 'tif', 'h5', or 'both' 
 
-downsample_scale = 4;
+downsample_scale = 2;
 pad_size = ceil(40 / downsample_scale); % fusion refinement constriant
 bd_size = 3; % related to the deconvolution (n-1)/2. remove boundary
 maxIter = 1000; % max iteration of step 4
@@ -45,7 +45,7 @@ end
 % loss_all = zeros(num_time,1);
 % intensity_all = zeros(num_time,1); % for measure the loss and intensity
 tic;
-for tt = 115:num_time-1
+for tt = 196:196 %0:num_time-1
     tt_ind = num2str(100000+tt);
     tt_ind = tt_ind(2:6);
     fprintf('processing: %d\n',tt);
@@ -67,8 +67,7 @@ for tt = 115:num_time-1
     x_min = inf; y_min = inf; z_min = inf;
     x_max = -inf;y_max = -inf;z_max = -inf;
     for vv = 1:4
-        vv_ind = num2str(100+vv-1);
-        vv_ind = vv_ind(2:3);
+        vv_ind = name_view{vv};
         im_size = h5info(data_name, ['/t' tt_ind '/s' vv_ind '/0/cells']);
         im_size = im_size.Dataspace.Size;
         ref{vv} = affineOutputView(im_size, affine3d(trans{vv}'),'BoundsStyle','FollowOutput');
@@ -89,13 +88,11 @@ for tt = 115:num_time-1
     z_start = cell(4,1); z_end = cell(4,1);
     im = cell(4,1); im_fuse = cell(4,1);
     for vv = 1:4
-        vv_ind = num2str(100+vv-1);
-        vv_ind = vv_ind(2:3);
+        vv_ind = name_view{vv};
         im{vv} = hdf5read(data_name,['/t' tt_ind '/s' vv_ind '/0/cells']);
         im_size = size(im{vv});
 
-        vv_ind = num2str(100+vv+3);
-        vv_ind = vv_ind(2:3);
+        vv_ind = name_view{vv+4};
         im2 = hdf5read(data_name,['/t' tt_ind '/s' vv_ind '/0/cells']);
         im{vv} = (im{vv} + im2)/2;
         im{vv} = im{vv} - baseIntensity;
@@ -148,7 +145,7 @@ for tt = 115:num_time-1
             im1 = data1(ys:ye,xs:xe,zs:ze);
             for vv = 1:size(diff_candi,1)
                 im2 = data2(ys+diff_candi(vv,2):ye+diff_candi(vv,2),...
-                    xs+diff_candi(vv,1):xe+diff_candi(vv,1),zs+diff_candi(vv,3):ze+dif f_candi(vv,3));
+                    xs+diff_candi(vv,1):xe+diff_candi(vv,1),zs+diff_candi(vv,3):ze+diff_candi(vv,3));
                 loss_temp(vv) = mean((im1-im2).^2,'all');
             end
             [loss_min, ind_min] = min(loss_temp);
