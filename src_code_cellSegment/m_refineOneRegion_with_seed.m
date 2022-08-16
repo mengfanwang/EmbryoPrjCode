@@ -50,7 +50,7 @@ for ii = 1:com.NumObjects
         keyboard;
     end
     [~,~,cs,~] = maxflow(G, src, sink); % cs: fg, ct: bg
-    cs = cs(cs<numel(newLabel));
+    cs = cs(cs<=numel(newLabel));
     %cs = cs(fMap(cs));
     cur_l = newLabel(cs);
     if length(unique(cur_l))>2
