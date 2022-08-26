@@ -18,6 +18,10 @@ Part 1: Initialization
 		.cycle_track ---------- = true using mcc = false using mcf
 		.n_nodes -------------- nodes of graph = 2*particleNum + 1/2
 		.excess_node ---------- [1 g.nodes] source and sink for mcf graph
+		.trackLength4var ------ tracks with smaller length will not be used for estimation
+		.jumpCost ------------- moveInfo.jumpRatio
+		.applyDrift2allCoordinate =True update coordinate location = False update cost in 2.19
+		.useOldArcProps ------- use old movieInfo.arc_avg_mid_std in 2.16
 
 Part 2: Tracking
 	|---2.1	mcfTracking_cell
@@ -32,6 +36,17 @@ Part 2: Tracking
 		    |---2.10 overlap2cost
 	    |---2.11 trackGraphBuilder_cell
 	    |---2.12 mccTracker
+	    	|---2.13 mcc4mot
+	    	|---2.14 mcc4mot_cell
+	    	|---2.15 upt_cost_with_Dist
+	    	|---2.16 stable_arc_cost_extract
+	    		|---2.17 arc_cost_in_track 
+	    	|---2.xx relinkJumpOveredCell
+	    |---2.xx transitCostUpt_cell
+	    	|---2.xx driftFromTracks
+	    	|---2.xx getStdFromTracks_cell   -->2.9
+
+
 
 
 	movieInfo:
@@ -44,16 +59,22 @@ Part 2: Tracking
 		.orgCoord --------- original xyz coordinate
 		.Ci --------------- Initial: observation cost
 
-		.ovGamma -------------- parameters of estimated Gamma distribution
-		.CDist ---------------- max overlap distance
-		.CDist_i2j ------------ both two overlap distances
-		.CDist_j2i ------------ backward distance (the latter of i2j)
-		.Cij ------------------ forward  cost (distance -> z-score)
-		.Cji ------------------ backward cost
-     	.nei ------------------ forward  neighbor indexes
-     	.preNei --------------- backward neighbor indexes
-     	.ovSize --------------- forward  overlap size
-     	.preOvSize ------------ backward overlap size 
+		.ovGamma ---------- parameters of estimated Gamma distribution
+		.CDist ------------ max overlap distance
+		.CDist_i2j -------- both two overlap distances
+		.CDist_j2i -------- backward distance (the latter of i2j)
+		.Cij -------------- forward  cost (distance -> z-score)
+		.Cji -------------- backward cost
+     	.nei -------------- forward  neighbor indexes
+     	.preNei ----------- backward neighbor indexes
+     	.ovSize ----------- forward  overlap size
+     	.preOvSize -------- backward overlap size 	
+
+		.parents ---------- parents of each detection
+		.kids ------------- kids of each children
+		.track_bf_merge --- trajectories before merging tracks
+
+
 
 
 	Function 2.1 mcfTracking_cell: tracking based on min-cost flow/circulation
@@ -93,6 +114,16 @@ Part 2: Tracking
 	Input: 	det_maps voxIdxList movieInfo g
 			dets_YXZ ----------	(yxzt n*4) center location of detections 
 	Output: movieInfo
+			.ovGamma ---------- parameters of estimated Gamma distribution
+			.CDist ------------ max overlap distance
+			.CDist_i2j -------- both two overlap distances
+			.CDist_j2i -------- backward distance (the latter of i2j)
+			.Cij -------------- forward  cost (distance -> z-score)
+			.Cji -------------- backward cost
+	     	.nei -------------- forward  neighbor indexes
+	     	.preNei ----------- backward neighbor indexes
+	     	.ovSize ----------- forward  overlap size
+	     	.preOvSize -------- backward overlap size 
 
 	Function 2.6 ovDistanceMap: calculate the distance between regions across frames based on overlapping ratio
 	Input:  curMap ------------ id map of current frame
@@ -132,9 +163,10 @@ Part 2: Tracking
 	Function 2.10 overlap2cost: change the overlap distance to z-score (cost)
     Input:  ov_score ---------- input score (distance)
             phat -------------- Gamma parameter
-            jump_punish ------- Unused?
+            jump_punish ------- jump ratio. jumps are punished.
     Output: cost -------------- converted z-score
     		oc ---------------- sqrt(cost)
+	Note: probability * jump is weird. How about (p)^(1/punish) ?
 
     Function 2.11 trackGraphBuilder_cell: build tracking graph
     Input:  movieInfo g
@@ -142,8 +174,59 @@ Part 2: Tracking
 			orgG -------------- work on mcf graph. digraph of data_in
             dat_in ------------ [s t w] for mcf and {detection, transition} for mcc
 
+    Function 2.12 mccTracker: get trajectories by solving min-cost circulation
+    Input:  dat_in ------------ {detection, transition, (append)}_arcs
+            movieInfo g 
+    Output: movieInfo
+			.parents ---------- parents of each detection
+			.kids ------------- kids of each children
+			.track_bf_merge --- trajectories before merging tracks
+			.tracks ----------- trajectories
+			.pathCost --------- nan
+			.particle2track --- [track it belongs to, position in the track, track_bf_merge it belongs to]
+			.jumpRatio -------- ratio of different distances of jumps
+
+   	Function 2.13 mcc4mot: solving original min-cost circulation
+   	Input:  detection_arcs,transition_arcs
+   	Output: trajectories, costs
+
+   	Function 2.14 mcc4mot_cell: solving mcc with appended arcs(split/merge)
+   	Input:  detection_arcs,transition_arcs, append_arcs
+   	Output: trajectories, costs
+   			track_bf_merge ---- trajectories before merging tracks
+   			parents ----------- parent nodes of the current nodes
+   			kids -------------- kid nodes of the current nodes
+	Note: need double-check (line 158-181)
+
+	Function 2.15 upt_cost_with_Dist: update cost if something changed
+	Input:  movieInfo.nei/ovGamma/CDist/jumpRatio
+	Output: movieInfo.Cij/Cji
+
+	Function 2.16 stable_arc_cost_extract:
+	Input:  movieInfo, g
+	Output: movieInfo
+	        .arc_avg_mid_std --	[mean, median, std, location] of a track
 
 
+    Function 2.17 arc_cost_in_track: extract the costs from a track
+    Input:  movieInfo, track_id
+    		split_flag --------	not implemented and used
+    		max_jump ----------	allowed maximum jumps
+
+
+	Function 2.18 transitCostUpt_cell: update transition cost using existing trajectories
+	Input:  movieInfo, g
+	Output: movieInfo
+
+	Function 2.19 driftFromTracks: use common motion of adjacent frames to estimate drift
+	Input:  movieInfo, g
+	Output: dfEst -------------	estimated drift
+			movieInfo.drift --- dfEst
+
+	Function 2.20 getStdFromTracks_cell: update the gamma distribution parameters
+	Input: 	movieInfo, g
+	Output: phatDist ---------- gamma parameters
+			
 
 
 
