@@ -45,7 +45,7 @@ end
 % loss_all = zeros(num_time,1);
 % intensity_all = zeros(num_time,1); % for measure the loss and intensity
 tic;
-for tt = 196:196 %0:num_time-1
+for tt = 196:num_time-1
     tt_ind = num2str(100000+tt);
     tt_ind = tt_ind(2:6);
     fprintf('processing: %d\n',tt);
