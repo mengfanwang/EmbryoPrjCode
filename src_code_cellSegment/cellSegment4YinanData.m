@@ -1,40 +1,38 @@
-% if isunix
-%     addpath('/home/ccw/Dropbox/cc_ImHandle/');
-%     save_folder = '/home/ccw/Desktop/embryo_res_folder';
-% else
-%     addpath('C:\Users\Congchao\Dropbox\cc_ImHandle\');
-%     save_folder = 'C:\Users\Congchao\Desktop\cell_detection_samples';
-% end
 clc;clear;close all;
 dbstop if error
-addpath('..\');
-addpath('..\src_code_matlab');
-addpath('..\src_code_cellSegment');
-addpath('..\src_code_cellTracker');
-addpath('D:\Congchao''s code\cc_ImHandle\');
+addpath('../');
+addpath('../src_code_matlab');
+addpath('../src_code_cellSegment');
+addpath('../src_code_cellTracker');
+addpath('../src_code_visualization');
 
-%mydir  = '/home/ccw/Desktop/yinan_data_samples/time_000';
-mydir  = 'E:\Embryo\TM0-49\fore_v1\input\';
-% addpath('./');
-% data folder
-data_folder = mydir;
+%% system and path
+if isunix
+    addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
+    addpath('/home/mengfan/ForExecute/cc_ImHandle');
+    data_folder = '/work/Mengfan/Embryo/22-01-11/sameViewFusion_crop';
+    res_folder = '/work/Mengfan/Embryo/22-01-11/sameViewDetection_crop';
+else
+    addpath('D:\Congchao''s code\cc_ImHandle\');
+    addpath D:\MatlabTools;
+    data_folder  = 'E:\Embryo\TM0-49\debug_v2\input\';
+    res_folder = fullfile('E:\Embryo\TM0-49\debug_v2\');
+end
+
 tif_files = dir(fullfile(data_folder, '/*.tif'));
-
-% results folder
-res_folder = fullfile('E:\Embryo\TM0-49\fore_v1\');
-% if ~exist(res_folder,'dir')
-%     mkdir(res_folder);
-% end
-minIntensity = 50; % The middle of two Gaussian intensity distributions (
+if ~exist(res_folder,'dir')
+    mkdir(res_folder);
+end
+minIntensity = 0; % The middle of two Gaussian intensity distributions (
                     % should learn from data)
 
 %% synQuant
 % add synQuant java path
-Pij = fullfile('..\src_synquant\ij-1.52i.jar');
+Pij = fullfile('../src_synquant/ij-1.52i.jar');
 javaaddpath(Pij);
-p1 = fullfile('..\src_synquant\commons-math3-3.6.1.jar');
+p1 = fullfile('../src_synquant/commons-math3-3.6.1.jar');
 javaaddpath(p1);
-p0 = fullfile('..\src_synquant\SynQuantVid_v1.2.5.1.jar');
+p0 = fullfile('../src_synquant/SynQuantVid_v1.2.5.1.jar');
 javaaddpath(p0);
 
 z_mat = cell(numel(tif_files), 1);
@@ -207,7 +205,7 @@ for i=1:numel(tif_files)
 end
 save(fullfile(res_folder, 'synQuant_refine_res_4d_v9.mat'), 'refine_res',...
     'threshold_res','-v7.3');
-tifwrite(uint8((refine_res{1}>0)*255), [res_folder 'result_2']);
+% tifwrite(uint8((refine_res{1}>0)*255), [res_folder 'result_2']);
 % v2: grow fg if foreground touching boundary in xy direction
 % v3: grow fg if the detected cell touches boundary in xy direction
 % v4: grow fg if the detected cell touches boundary in any 3 direction

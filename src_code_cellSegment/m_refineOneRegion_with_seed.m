@@ -29,8 +29,19 @@ function [newLabel, comMaps, fgReDo] = m_refineOneRegion_with_seed(seed_id, ...
 %     OrSt.NoStbVarCropMap = OrSt.NoStbVarCropMap{2};
 % end
 %% gap detection based on min cut
+comMaps.score3dMap(comMaps.score3dMap<0) = 0;
+comMaps.score2dMap(comMaps.score2dMap<0) = 0;
+min_pv = min(comMaps.score3dMap(:));
+max_pv = max(comMaps.score3dMap(:));
+comMaps.score3dMap = scale_image(comMaps.score3dMap, 1e-3,1, min_pv, max_pv);
+min_pv = min(comMaps.score2dMap(:));
+max_pv = max(comMaps.score2dMap(:));
+comMaps.score2dMap = scale_image(comMaps.score2dMap, 1e-3,1, min_pv, max_pv);
+
+strel_rad = 20;
+strel_ker = getKernel(strel_rad);
 fMap = comMaps.regComp;
-fMap = imdilate(fMap,strel("sphere",10));
+fMap = imdilate(fMap,strel_ker);
 fMap((comMaps.idComp ~= seed_id) & (comMaps.idComp > 0)) = 0;
 com = bwconncomp(comMaps.newIdComp);
 newLabel = zeros(size(fMap));
@@ -41,10 +52,13 @@ for ii = 1:com.NumObjects
     tMap(fMap) = false;
     tMap(comMaps.newIdComp) = true;
     tMap(com.PixelIdxList{ii}) = false;
-    scoreMap = comMaps.score3dMap;
+    scoreMap = comMaps.score3dMap + comMaps.score2dMap; % before fusion
+%     scoreMap = comMaps.score3dMap; % after fusion
     scoreMap(scoreMap<0) = 0;
     [dat_in, src, sink] = graphCut_negHandle_mat(scoreMap, fMap, sMap, ...
-        tMap, 26, [1 1], true);
+        tMap, 10, [1 2], true);       % before fusion
+%     [dat_in, src, sink] = graphCut_negHandle_mat(scoreMap, fMap, sMap, ...
+%         tMap, 26, [1 1], true);       % after fusion
     G = digraph(dat_in(:,1),dat_in(:,2),dat_in(:,3));
     if ~isempty(find(isnan(dat_in(:)), 1)) || isnan(sink)
         keyboard;
@@ -123,4 +137,12 @@ fgReDo = false;
 %     % there also can be pixels not belonging to foreground
 %     newLabel(~ismember(newLabel, seed_ids) | ~comMaps.fmapCompInit) = 0;
 %     [newLabel, ~] = region_sanity_check(newLabel, q.minSize); % previously use 20
+end
+
+function strel_ker = getKernel(strel_rad)
+    strel_ker = ones(strel_rad*2+1, strel_rad*2+1,ceil(strel_rad/5)*2+1);
+    [xx,yy,zz] = ind2sub_direct(size(strel_ker), find(strel_ker));
+    dist = sqrt( (xx - strel_rad-1).^2 + (yy - strel_rad-1).^2 + ( (zz - ceil(strel_rad/5)-1)*5 ).^2 );
+    strel_ker(dist>=strel_rad) = 0;
+    strel_ker = strel(strel_ker);
 end

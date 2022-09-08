@@ -19,7 +19,7 @@ register_info = xml.SpimData.ViewRegistrations.ViewRegistration;
 num_time = length(h5_struct);
 num_total = num_time * num_view;
 
-tt = 245;
+tt = 242;
 tt_ind = num2str(100000+tt);
 tt_ind = tt_ind(2:6);
 fprintf('processing: %d\n',tt);
@@ -33,11 +33,8 @@ for vv = 1:4
     vv_ind = name_view{vv};
     im1 = hdf5read(data_name,['/t' tt_ind '/s' vv_ind '/0/cells']);
 
-    im_fuse = zeros(size(im1));
     tic;
-    parfor zz = 1:size(im_fuse,3)
-        im_fuse(:,:,zz) = wfusimg(im1(:,:,zz),im2(:,:,zz), 'db4', 5, 'mean', 'max');
-    end
+    im_fuse = sameViewFuse(im1, im2);
     toc;
     tifwrite(uint16(im_fuse),fullfile(path_name, target_folder, tt_ind, vv_ind));
 end

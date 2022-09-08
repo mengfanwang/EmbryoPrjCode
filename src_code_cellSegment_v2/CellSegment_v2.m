@@ -10,8 +10,8 @@ addpath('../src_code_visualization');
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
     addpath('/home/mengfan/ForExecute/cc_ImHandle');
-    data_folder = '/work/Mengfan/Embryo/22-01-11/fusion_0.5/';
-    res_folder = '/work/Mengfan/Embryo/22-01-11/detection_0.5/';
+    data_folder = '/work/Mengfan/Embryo/22-01-11/sameViewFusion_crop';
+    res_folder = '/work/Mengfan/Embryo/22-01-11/sameViewDetection_crop';
 else
     addpath('D:\Congchao''s code\cc_ImHandle\');
     addpath D:\MatlabTools;
@@ -46,7 +46,7 @@ for i=1:numel(tif_files)
     [h, w, slices] = size(org_im);
     %out_ims = SliceImage(in_im);
     %org_im = imresize3(org_im,round([h/2 w/2 slices/2]));
-    sigma = 0.8;
+    sigma = [3 3 1];
     sm_im = imgaussfilt3(org_im,sigma);
     %q.posEigMap = eig_res_3d{i}>0;
     % 3D version
@@ -58,7 +58,7 @@ for i=1:numel(tif_files)
     toc
 end
 save(fullfile(res_folder, 'synQuant_res.mat'), 'z_mat', 'id_mat','fMaps','-v7.3');
-% tifwrite(uint8(id_mat{1}*255), [res_folder 'result_1']);
+labelwrite(org_im, id_mat{1}, fullfile(res_folder, 'synQuant_res'));
 % remove java path
 javarmpath(p0);
 javarmpath(p1);
@@ -76,11 +76,11 @@ for i=1:numel(tif_files)
     fprintf('cal priCvt %d/%d file\n', i, numel(tif_files));
     org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
     synId = id_mat{i};
-    
     fMaps = ones(size(org_im));
     
-    [eig2d, ~] = principalCv2d(org_im, synId, 1, fMaps);   % 1: sigma
-    sigma = [1 1 1];
+    sigma = 4;
+    [eig2d, ~] = principalCv2d(org_im, synId, sigma, fMaps);
+    sigma = [4 4 1];
     %   grad3d = imgradient3(imgaussfilt3(org_im,sigma));
     [eig3d, overlay_cl] = principalCv3d(org_im, synId, sigma, fMaps);
     
