@@ -50,7 +50,7 @@ for i=1:numel(tif_files)
     sm_im = imgaussfilt3(org_im,sigma);
     %q.posEigMap = eig_res_3d{i}>0;
     % 3D version
-    [zMap, synId, fMap] = Synquant4Embryo_Paramater(sm_im, q);
+    [zMap, synId, fMap] = m_Synquant4Embryo_Paramater(sm_im, q);
     
     z_mat{i} = single(zMap);
     id_mat{i} = uint16(synId);
@@ -58,7 +58,7 @@ for i=1:numel(tif_files)
     toc
 end
 save(fullfile(res_folder, 'synQuant_res.mat'), 'z_mat', 'id_mat','fMaps','-v7.3');
-labelwrite(org_im, id_mat{1}, fullfile(res_folder, 'synQuant_res'));
+% labelwrite(org_im, id_mat{1}, fullfile(res_folder, 'synQuant_res'));
 % remove java path
 javarmpath(p0);
 javarmpath(p1);
@@ -214,6 +214,34 @@ save(fullfile(res_folder, 'synQuant_refine_res_4d_v9.mat'), 'refine_res',...
 fprintf('Refinement running time:'); % around 183000s 0.25
 toc
 % tifwrite(uint8((refine_res{1}>0)*255), [res_folder 'result_2']);
+%% second time of synQuant  
+% add synQuant java path
+Pij = fullfile('../src_synquant/ij-1.52i.jar');
+javaaddpath(Pij);
+p1 = fullfile('../src_synquant/commons-math3-3.6.1.jar');
+javaaddpath(p1);
+p0 = fullfile('../src_synquant/SynQuantVid_v1.2.5.1.jar');
+javaaddpath(p0);
+
+load(fullfile(res_folder, 'synQuant_priCvt_res.mat'),'eig_res_3d');
+load(fullfile(res_folder, 'synQuant_refine_res_4d_v9.mat'), 'refine_res');
+id_mat_2nd = cell(numel(tif_files), 1);
+for i=1:numel(tif_files)
+    tic;
+    fprintf('processing %d/%d file\n', i, numel(tif_files));
+    org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
+    sigma = 1;
+    sm_im = imgaussfilt3(org_im,sigma);
+    posEigMap = eig_res_3d{i}>0;
+    % 3D version
+    id_mat_2nd{i} = Synquant4Embryo_2iter(sm_im, refine_res{i}, posEigMap);
+    toc;
+end
+save(fullfile(res_folder, 'synQuant_res_2iter.mat'), 'id_mat_2nd','-v7.3');
+% remove java path
+javarmpath(p0);
+javarmpath(p1);
+javarmpath(Pij);
 %% write 3d segmentation result with label
 mkdir(fullfile(res_folder,'synQuant_refine_res_4d_v9'));
 for tt = 1:numel(tif_files)
