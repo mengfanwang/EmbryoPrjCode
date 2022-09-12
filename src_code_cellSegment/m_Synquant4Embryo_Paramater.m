@@ -20,12 +20,14 @@ if nargin < 3
         maxSz = 450;
         minfill = 0.2;
         maxWHRatio = 10;
+        z_threshold = 1;
     else
         minSz = 100;
         %minSz = 10; % indeed 5 should be OK, since 0.5^5<0.05
         maxSz = 3000;
         minfill = 0.0001;
         maxWHRatio = 100;
+        z_threshold = 100;
     end
 end
 fMap =  imgIn > q.minIntensity;
@@ -60,7 +62,7 @@ for i=1:size(zMap,3)
     synId(:,:,i) = synId1(i,:,:);
 end
 
-synId(zMap<=1 | ~fMap) = 0;
+synId(zMap<=z_threshold | ~fMap) = 0;
 synId = rearrange_id(synId);
 s = regionprops3(synId, {'VoxelIdxList'});
 cnt = 0;
