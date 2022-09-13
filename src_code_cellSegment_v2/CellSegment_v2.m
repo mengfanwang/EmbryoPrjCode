@@ -230,14 +230,15 @@ for i=1:numel(tif_files)
     tic;
     fprintf('processing %d/%d file\n', i, numel(tif_files));
     org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
-    sigma = 1;
+    sigma = [3 3 1];
     sm_im = imgaussfilt3(org_im,sigma);
     posEigMap = eig_res_3d{i}>0;
     % 3D version
-    id_mat_2nd{i} = Synquant4Embryo_2iter(sm_im, refine_res{i}, posEigMap);
+    id_mat_2nd{i} = m_Synquant4Embryo_2iter(sm_im, refine_res{i}, posEigMap);
     toc;
 end
 save(fullfile(res_folder, 'synQuant_res_2iter.mat'), 'id_mat_2nd','-v7.3');
+labelwrite(uint8(org_im/2), id_mat_2nd{1}, fullfile(res_folder, 'synQuant_res_2iter'));
 % remove java path
 javarmpath(p0);
 javarmpath(p1);

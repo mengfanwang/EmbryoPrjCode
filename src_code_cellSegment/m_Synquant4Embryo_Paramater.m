@@ -1,4 +1,4 @@
-function [zMap, synId, fMap] = Synquant4Embryo_Paramater(imgIn, q, minSz, maxSz, flag_2d, minfill, maxWHRatio)
+function [zMap, synId, fMap] = m_Synquant4Embryo_Paramater(imgIn, q, minSz, maxSz, flag_2d, minfill, maxWHRatio)
 % cell detection using synQuant for 3D image
 % INPUT:
 % vid: is YXZ 3D image

@@ -1,4 +1,4 @@
-function cell_2ndIter = Synquant4Embryo_2iter(imgIn, cellIdMap_1stIter, posEigMap, tif_id)
+function cell_2ndIter = m_Synquant4Embryo_2iter(imgIn, cellIdMap_1stIter, posEigMap)
 % re-detect cells using synQuant given results from 1st iteration
 
 % posEigMap: map of positive principal curvature
@@ -7,14 +7,9 @@ function cell_2ndIter = Synquant4Embryo_2iter(imgIn, cellIdMap_1stIter, posEigMa
 s_1st = regionprops3(cellIdMap_1stIter, {'VoxelIdxList','Volume'});
 cell_sz = [s_1st.Volume];
 cell_levels = cellfun(@(x) mean(imgIn(x)), s_1st.VoxelIdxList);
-% od = round(0.05*length(cell_sz));
-% st_levels = sort(cell_levels, 'ascend');
-% min_level = st_levels(od);
-% st_szs = sort(cell_sz, 'ascend');
-% minSz = st_szs(od);
-min_level = min(cell_levels);
-minSz = min(cell_sz);
-maxSz = max(cell_sz);
+min_level = quantile(cell_levels,0.1);
+minSz = min(cell_sz); %quantile(cell_sz,0.01); not reasonable. should use seed size
+maxSz = quantile(cell_sz,0.99);
 imgIn_org = imgIn;
 %% mask out all the detected cells and re-do everything
 imgIn = imgIn_org;
@@ -48,23 +43,21 @@ for i=1:numel(s_2nd.VoxelIdxList)
     end
 end
 
-if nargin > 3
-    % synId_out = cellIdMap_1stIter + uint32(cell_2ndIter);
-    % display
-    imgIn_org = uint8(imgIn_org/5000 * 255);
-    [H1,W1,D1] = size(cell_2ndIter);
-    overlay_im = zeros([H1,W1,3,D1], 'uint8');
-    for i=1:D1
-        overlay_im(:,:,1,i) = uint8((cellIdMap_1stIter(:,:,i)>0) * 100);
-        overlay_im(:,:,2,i) = uint8(imgIn_org(:,:,i)*2);
-        overlay_im(:,:,3,i) = uint8((cell_2ndIter(:,:,i)>0) * 100);
-    end
-    svf = 'C:\Users\Congchao\Desktop\cell_detection_samples\crop_embryo_data_500x500x30x40\segmentation_from_synQuant\';
-    tifwrite(overlay_im, fullfile(svf, ['overlay_synQuant_', num2str(tif_id)]));
 end
 
+function miss_ind = getMissingCell
+    % 27 of 1510 cells are missed (not all)
+    miss_ind = [182, 327, 69;
+                173, 349, 72;
+                218, 538, 71;
+                223, 468, 83;
+                229, 454, 83;
+                192, 98,  69;
+                204, 130 ,69;
+                188, 126, 72;
+                291, 419, 71;
+                263, 641, 70;];
 end
-
 
 
 
