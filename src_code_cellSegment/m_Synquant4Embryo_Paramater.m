@@ -22,12 +22,32 @@ if nargin < 3
         maxWHRatio = 10;
         z_threshold = 1;
     else
-        minSz = 100;
-        %minSz = 10; % indeed 5 should be OK, since 0.5^5<0.05
-        maxSz = 3000;
+%         minSz = 100;
+%         maxSz = 3000;
+%         minfill = 0.0001;
+%         maxWHRatio = 100;
+%         z_threshold = 100;     % num:98
+
+%         minSz = 20;            % num:41
+%         maxSz = 30000;         % num:66
+%         minfill = 0.0001;
+%         maxWHRatio = 100;
+%         z_threshold = 0;       % z=2:98; z=0:30;
+
+%         minSz = 20;
+%         maxSz = 30000;
+%         minfill = 0.0001;
+%         maxWHRatio = 100, ;
+%         z_threshold = 2;       % num:24
+%     4     5     9    10    13    20    21    23    32    34    35    41    
+%     47    49    55    65    70    74    75    83    84 87    89    91
+        
+        minSz = 20;
+        maxSz = 30000;
         minfill = 0.0001;
         maxWHRatio = 100;
-        z_threshold = 100;
+        z_threshold = 2;             % num:68
+%         z_threshold = 100;         % num:38 % inten normal z=2->27??
     end
 end
 fMap =  imgIn > q.minIntensity;

@@ -4,12 +4,12 @@ function cell_2ndIter = m_Synquant4Embryo_2iter(imgIn, cellIdMap_1stIter, posEig
 % posEigMap: map of positive principal curvature
 % contact: ccwant@vt.edu 02/04/2020
 %% get the cell information
-s_1st = regionprops3(cellIdMap_1stIter, {'VoxelIdxList','Volume'});
+s_1st = regionprops3(cellIdMap_1stIter, {'VoxelIdxList','Volume','SurfaceArea'});
 cell_sz = [s_1st.Volume];
 cell_levels = cellfun(@(x) mean(imgIn(x)), s_1st.VoxelIdxList);
-min_level = quantile(cell_levels,0.1);
-minSz = min(cell_sz); %quantile(cell_sz,0.01); not reasonable. should use seed size
-maxSz = quantile(cell_sz,0.99);
+min_level = quantile(cell_levels,0.05);
+minSz = 50; %min(cell_sz); %quantile(cell_sz,0.01); not reasonable. should use seed size
+maxSz = quantile(cell_sz,0.95);
 imgIn_org = imgIn;
 %% mask out all the detected cells and re-do everything
 imgIn = imgIn_org;
@@ -17,7 +17,7 @@ cell_map_dilate = imdilate(cellIdMap_1stIter>0, strel('disk',1));
 cell_map_dilate = imdilate(cell_map_dilate, strel('sphere',1));
 mask_out = posEigMap | cell_map_dilate;%
 
-seedMap = ~mask_out;
+seedMap = ~mask_out; 
 seedMap_dilate = imdilate(seedMap, strel('disk',1));% gap < 2pixels will be adjacent
 
 synId_append = bwlabeln(seedMap_dilate, 26);
@@ -45,19 +45,7 @@ end
 
 end
 
-function miss_ind = getMissingCell
-    % 27 of 1510 cells are missed (not all)
-    miss_ind = [182, 327, 69;
-                173, 349, 72;
-                218, 538, 71;
-                223, 468, 83;
-                229, 454, 83;
-                192, 98,  69;
-                204, 130 ,69;
-                188, 126, 72;
-                291, 419, 71;
-                263, 641, 70;];
-end
+
 
 
 

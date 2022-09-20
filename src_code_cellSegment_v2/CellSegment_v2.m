@@ -10,8 +10,8 @@ addpath('../src_code_visualization');
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
     addpath('/home/mengfan/ForExecute/cc_ImHandle');
-    data_folder = '/work/Mengfan/Embryo/22-01-11/sameViewFusion_crop';
-    res_folder = '/work/Mengfan/Embryo/22-01-11/sameViewDetection_crop';
+    data_folder = '/work/Mengfan/Embryo/22-01-11/sameViewFusion_crop3';
+    res_folder = '/work/Mengfan/Embryo/22-01-11/sameViewDetection_crop3_test';
 else
     addpath('D:\Congchao''s code\cc_ImHandle\');
     addpath D:\MatlabTools;
@@ -25,6 +25,7 @@ if ~exist(res_folder,'dir')
 end
 minIntensity = 50; % The middle of two Gaussian intensity distributions (
                     % should learn from data)
+                    % 50: 354; 150: 280;
 
 %% synQuant
 tic;
@@ -58,6 +59,7 @@ for i=1:numel(tif_files)
     toc
 end
 save(fullfile(res_folder, 'synQuant_res.mat'), 'z_mat', 'id_mat','fMaps','-v7.3');
+labelwrite(uint8(org_im/2), id_mat{1}, fullfile(res_folder, 'synQuant_res'));
 % labelwrite(org_im, id_mat{1}, fullfile(res_folder, 'synQuant_res'));
 % remove java path
 javarmpath(p0);
@@ -211,6 +213,7 @@ for i=1:numel(tif_files)
 end
 save(fullfile(res_folder, 'synQuant_refine_res_4d_v9.mat'), 'refine_res',...
     'threshold_res','-v7.3');
+labelwrite(uint8(org_im/3), refine_res{1}, fullfile(res_folder, 'synQuant_res_4d_v9'));
 fprintf('Refinement running time:'); % around 183000s 0.25
 toc
 % tifwrite(uint8((refine_res{1}>0)*255), [res_folder 'result_2']);
