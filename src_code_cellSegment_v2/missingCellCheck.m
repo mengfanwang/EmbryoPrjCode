@@ -29,6 +29,17 @@ for ii = 1:size(miss_ind,1)
 end
 disp(ss)
 %%
+miss_ind = getMissingCell;
+ss = 0;
+s_list = [];
+for ii = 1:size(miss_ind,1)
+    if refine_res{1}(miss_ind(ii,2),miss_ind(ii,1),miss_ind(ii,3)) == 0
+        ss = ss+1;
+        s_list = [s_list ii];
+    end
+end
+disp(ss)
+%%
 for ii = 1:size(miss_ind,1)
     cell_list = [cell_list id_map(miss_ind(ii,2),miss_ind(ii,1),miss_ind(ii,3))];
 end
@@ -162,14 +173,14 @@ function miss_ind = getMissingCell
 end
 
 function miss_ind = getFP
-    roi = ReadImageJROI('/work/Mengfan/Embryo/22-01-11/sameViewDetection_crop2_test/FP1.roi');
+    roi = ReadImageJROI('/work/Mengfan/Embryo/22-01-11/sameViewDetection_crop2_test/sameViewDetection_crop2_test_inten_50/FP1.roi');
     miss_ind = round([roi.mfCoordinates roi.vnSlices]);
-    roi = ReadImageJROI('/work/Mengfan/Embryo/22-01-11/sameViewDetection_crop2_test/FP2.roi');
+    roi = ReadImageJROI('/work/Mengfan/Embryo/22-01-11/sameViewDetection_crop2_test/sameViewDetection_crop2_test_inten_50/FP2.roi');
     miss_ind = [miss_ind; round([roi.mfCoordinates roi.vnSlices])];
-    roi = ReadImageJROI('/work/Mengfan/Embryo/22-01-11/sameViewDetection_crop2_test/FP3.roi');
+    roi = ReadImageJROI('/work/Mengfan/Embryo/22-01-11/sameViewDetection_crop2_test/sameViewDetection_crop2_test_inten_50/FP3.roi');
     miss_ind = [miss_ind; round([roi.mfCoordinates roi.vnSlices])];
     miss_ind(miss_ind(:,3) > 40 | miss_ind(:,3) < 21,:) = [];
-    b = load('/work/Mengfan/Embryo/22-01-11/sameViewDetection_crop2_test/synQuant_refine_res_4d_v9.mat','refine_res');
+    b = load('/work/Mengfan/Embryo/22-01-11/sameViewDetection_crop2_test/sameViewDetection_crop2_test_inten_50/synQuant_refine_res_4d_v9.mat','refine_res');
     a = sub2ind_direct(size(b.refine_res{1}),miss_ind(:,2),miss_ind(:,1),miss_ind(:,3));
     a_new = zeros(size(a));
     a_list = [];
@@ -201,7 +212,7 @@ function miss_ind = getFN
     a = a(logical(a_new));
     miss_ind = zeros(length(a), 3);
     [miss_ind(:,2), miss_ind(:,1), miss_ind(:,3)] = ind2sub_direct(size(b.b), a);
-    roi = ReadImageJROI('/work/Mengfan/Embryo/22-01-11/sameViewDetection_crop2_test/FN.roi');
+    roi = ReadImageJROI('/work/Mengfan/Embryo/22-01-11/sameViewDetection_crop2_test/sameViewDetection_crop2_test_inten_50/FN.roi');
     miss_ind2 = round([roi.mfCoordinates roi.vnSlices]);
     miss_ind2(miss_ind(:,3) > 40 | miss_ind(:,3) < 21,:) = [];
     miss_ind = [miss_ind; miss_ind2];

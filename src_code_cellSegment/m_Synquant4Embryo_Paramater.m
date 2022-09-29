@@ -46,7 +46,7 @@ if nargin < 3
         maxSz = 30000;
         minfill = 0.0001;
         maxWHRatio = 100;
-        z_threshold = 2;             % num:68
+        z_threshold = 5;             % num:68
 %         z_threshold = 100;         % num:38 % inten normal z=2->27??
     end
 end
@@ -83,7 +83,7 @@ for i=1:size(zMap,3)
 end
 
 synId(zMap<=z_threshold | ~fMap) = 0;
-synId = rearrange_id(synId);
+synId = rearrange_id_isolated(synId,minSz);
 s = regionprops3(synId, {'VoxelIdxList'});
 cnt = 0;
 synId = zeros(size(imgIn));

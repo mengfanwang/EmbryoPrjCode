@@ -10,8 +10,8 @@ addpath('../src_code_visualization');
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
     addpath('/home/mengfan/ForExecute/cc_ImHandle');
-    data_folder = '/work/Mengfan/Embryo/22-01-11/sameViewFusion_crop3';
-    res_folder = '/work/Mengfan/Embryo/22-01-11/sameViewDetection_crop3_test';
+    data_folder = '/work/Mengfan/Embryo/22-01-11/samViewFusion_240-249_08';
+    res_folder = '/work/Mengfan/Embryo/22-01-11/sameViewDetection_240-249_08';
 else
     addpath('D:\Congchao''s code\cc_ImHandle\');
     addpath D:\MatlabTools;
@@ -59,7 +59,7 @@ for i=1:numel(tif_files)
     toc
 end
 save(fullfile(res_folder, 'synQuant_res.mat'), 'z_mat', 'id_mat','fMaps','-v7.3');
-labelwrite(uint8(org_im/2), id_mat{1}, fullfile(res_folder, 'synQuant_res'));
+% labelwrite(uint8(org_im/2), id_mat{1}, fullfile(res_folder, 'synQuant_res'));
 % labelwrite(org_im, id_mat{1}, fullfile(res_folder, 'synQuant_res'));
 % remove java path
 javarmpath(p0);

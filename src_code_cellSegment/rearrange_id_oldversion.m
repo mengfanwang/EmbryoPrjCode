@@ -25,7 +25,9 @@ if max_id < 1e4
         map = [idMap(s.VoxelIdxList(1)) 1];
     else
         map = zeros(numel(s.VoxelIdxList), 2);
+        fprintf('Rearrange old version:');
         for i=1:numel(s.VoxelIdxList)
+            fprintf('%d ', i);
             if ~isempty(s.VoxelIdxList{i})
                 cnt = cnt + 1;
                 newIdMap(s.VoxelIdxList{i}) = cnt;
@@ -35,6 +37,7 @@ if max_id < 1e4
         map = map(1:cnt, :);
     end
 else % need to change to avoid bug
+    error('Too much seeds!')
     l_map = bwlabeln(idMap>0, 26);
     newIdMap = zeros(size(l_map));
     s = regionprops3(l_map, {'VoxelIdxList'});
