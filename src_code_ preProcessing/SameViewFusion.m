@@ -8,7 +8,7 @@ if isunix
     source_data = 'myf5GFP-H2BmCherry.v1.h5';
     data_name = fullfile(path_name, 'deconvolution/deconvolution_myf5GFP-H2BmCherry.v1.h5');
     xml_name = fullfile(path_name, 'myf5GFP-H2BmCherry.v1.xml');
-    target_folder = 'samViewFusion_240-249_08';
+    target_folder = 'samViewFusion_230-239_08';
 else
     addpath D:\MatlabTools;
     path_name = 'H:\Embryo\TM0-49\';
@@ -20,13 +20,13 @@ num_time = length(h5_struct);
 num_total = num_time * num_view;
 
 %% fusion
-for tt = 240:249
+for tt = 230:239
 tt_ind = num2str(100000+tt);
 tt_ind = tt_ind(2:6);
 fprintf('processing: %d\n',tt);
-% if ~isfolder(fullfile(path_name, target_folder,tt_ind))
-%     mkdir(fullfile(path_name, target_folder,tt_ind));
-% end
+if ~isfolder(fullfile(path_name, target_folder))
+    mkdir(fullfile(path_name, target_folder));
+end
 for vv = 1:1
     vv_ind = name_view{vv+4};
     im2 = hdf5read(data_name,['/t' tt_ind '/s' vv_ind '/0/cells']);
