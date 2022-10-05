@@ -10,8 +10,8 @@ addpath('../src_code_visualization');
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
     addpath('/home/mengfan/ForExecute/cc_ImHandle');
-    data_folder = '/work/Mengfan/Embryo/22-01-11/sameVIewFusion_242_08';
-    res_folder = '/work/Mengfan/Embryo/22-01-11/sameVIewDetection_242_08';
+    data_folder = '/work/Mengfan/Embryo/22-01-11/samViewFusion_230-239_08';
+    res_folder = '/work/Mengfan/Embryo/22-01-11/sameViewDetection_230-239_08';
 else
     addpath('D:\Congchao''s code\cc_ImHandle\');
     addpath D:\MatlabTools;
@@ -203,7 +203,7 @@ for i=1:numel(tif_files)
     end
     
     %profile on;
-    [newIdMap, thresholdMap] = m_regionWiseAnalysis4d_parallel(synId, ...
+    [newIdMap, thresholdMap] = m_regionWiseAnalysis4d(synId, ...
             eigAll,org_im, varMapAll, []);%, i
     %profile viewer;
     %profile off;

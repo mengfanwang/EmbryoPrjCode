@@ -89,7 +89,12 @@ if iscell(idMap)
 else
     idMap = idMap_current;
 end
-parfor i=1:numel(s.VoxelIdxList)%[7 9 13 15 17 18 19 20 21 22]%
+ids_list = cell(numel(s.VoxelIdxList),1);
+for ii=1:numel(s.VoxelIdxList)
+    ids_list{ii} = idMap_current(s.VoxelIdxList{seed_proc_order(ii)});
+end
+fprintf('Start parallel computation! \n')
+for i=1:numel(s.VoxelIdxList)%[7 9 13 15 17 18 19 20 21 22]%
     fprintf('%d/%d ', i, numel(s.VoxelIdxList));
 %     if i==9
 %         fprintf('process %d out of %d\n', i, numel(s.VoxelIdxList));
@@ -97,7 +102,7 @@ parfor i=1:numel(s.VoxelIdxList)%[7 9 13 15 17 18 19 20 21 22]%
     seed_id = seed_proc_order(i);
 %     seed_id = 450;                           % debug mode
     yxz = s.VoxelIdxList{seed_id};
-    ids = idMap_current(yxz);
+    ids = ids_list{i};
     yxz = yxz(ids==seed_id);
     [newLabel, comMaps, ~] = m_refineOneRegion_with_seed(seed_id, yxz, vid,...
         vid_stb, idMap, eig2d, eig3d, OrSt, q);
@@ -112,26 +117,27 @@ parfor i=1:numel(s.VoxelIdxList)%[7 9 13 15 17 18 19 20 21 22]%
 %     loc_cells{i}{2} = comMaps.pickedThreshold;
     
     %% do a simple update to the idMap
-    idMap_current(yxz) = 0;
-    idMap_current(loc_cells{i}{1}(:,1)) = seed_id;
+%     idMap_current(yxz) = 0;
+%     idMap_current(loc_cells{i}{1}(:,1)) = seed_id;
 
-    %% a further check for cells in 2nd round, remove those dim and small ones
-    if ~isempty(test_ids) % this is appended cells
-        vals = vid_current(loc_cells{i}{1}(:,1));
-        ids = unique(loc_cells{i}{1}(:,2));
-        for j=1:length(ids)
-            tmp_cell = find(loc_cells{i}{1}(:,2)==ids(j));
-            if length(tmp_cell) < minSz ||  mean(vals(tmp_cell)) < min_level % smaller than min size or 5% minimal
-                loc_cells{i}{1}(tmp_cell,1) = 0;
-            end
-        end
-        loc_cells{i}{1}(loc_cells{i}{1}(:,1)==0,:) = [];
-    end
-    %% write data into images for error check
+%     %% a further check for cells in 2nd round, remove those dim and small ones
+%     if ~isempty(test_ids) % this is appended cells
+%         vals = vid_current(loc_cells{i}{1}(:,1));
+%         ids = unique(loc_cells{i}{1}(:,2));
+%         for j=1:length(ids)
+%             tmp_cell = find(loc_cells{i}{1}(:,2)==ids(j));
+%             if length(tmp_cell) < minSz ||  mean(vals(tmp_cell)) < min_level % smaller than min size or 5% minimal
+%                 loc_cells{i}{1}(tmp_cell,1) = 0;
+%             end
+%         end
+%         loc_cells{i}{1}(loc_cells{i}{1}(:,1)==0,:) = [];
+%     end
+%     %% write data into images for error check
 %     if ~isempty(save_folder)
 %         writeRefineCell(comMaps.vidComp, newLabel, comMaps.regComp, i, save_folder);
 %     end
 end
+fprintf('End parallel computation! \n')
 % label the new ID Map
 newIdMap = zeros(size(idMap_current));
 thresholdMap = zeros(size(idMap_current));
