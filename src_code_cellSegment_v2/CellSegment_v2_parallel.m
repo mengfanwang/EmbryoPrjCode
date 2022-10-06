@@ -10,8 +10,8 @@ addpath('../src_code_visualization');
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
     addpath('/home/mengfan/ForExecute/cc_ImHandle');
-    data_folder = '/work/Mengfan/Embryo/22-01-11/sameVIewFusion_242_08';
-    res_folder = '/work/Mengfan/Embryo/22-01-11/sameVIewDetection_242_08';
+    data_folder = '/work/Mengfan/Embryo/22-01-11/sameViewFusion_crop2';
+    res_folder = '/work/Mengfan/Embryo/22-01-11/sameViewDetection_crop2';
 else
     addpath('D:\Congchao''s code\cc_ImHandle\');
     addpath D:\MatlabTools;
@@ -160,6 +160,8 @@ scale_term = 300;
 load(fullfile(res_folder, 'synQuant_priCvt_res.mat'));
 load(fullfile(res_folder, 'synQuant_res.mat'));
 load(fullfile(res_folder, 'varianceMap.mat'));
+fprintf('Reading data:');
+toc
 refine_res = cell(numel(tif_files), 1);
 threshold_res = cell(numel(tif_files), 1);
 multi_frames_flag = false; % use multiple frames for segmentation
@@ -204,7 +206,7 @@ for i=1:numel(tif_files)
     
     %profile on;
     [newIdMap, thresholdMap] = m_regionWiseAnalysis4d_parallel(synId, ...
-            eigAll,org_im, varMapAll, []);%, i
+        eigAll,org_im, varMapAll, []);%, i
     %profile viewer;
     %profile off;
     refine_res{i} = uint32(newIdMap);

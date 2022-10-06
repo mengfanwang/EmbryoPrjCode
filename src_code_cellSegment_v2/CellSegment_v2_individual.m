@@ -37,13 +37,17 @@ javaaddpath(p1);
 p0 = fullfile('../src_synquant/SynQuantVid_v1.2.5.1.jar');
 javaaddpath(p0);
 
-z_mat = cell(numel(tif_files), 1);
-id_mat = cell(numel(tif_files), 1);
-fMaps = cell(numel(tif_files), 1);
+if ~isfolder(fullfile(res_folder, 'synQuant_res'))
+    mkdir(fullfile(res_folder, 'synQuant_res'));
+end
+if ~isfolder(fullfile(res_folder, 'synQuant_res_tif'))
+    mkdir(fullfile(res_folder, 'synQuant_res_tif'));
+end
 q.minIntensity = minIntensity;
 for i=1:numel(tif_files)
     fprintf('processing %d/%d file\n', i, numel(tif_files));
     org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
+    [~, org_name, ~] = fileparts(tif_files(i).name);
     [h, w, slices] = size(org_im);
     %out_ims = SliceImage(in_im);
     %org_im = imresize3(org_im,round([h/2 w/2 slices/2]));
@@ -53,13 +57,15 @@ for i=1:numel(tif_files)
     % 3D version
     [zMap, synId, fMap] = m_Synquant4Embryo_Paramater(sm_im, q);
     
-    z_mat{i} = single(zMap);
-    id_mat{i} = uint16(synId);
-    fMaps{i} = fMap;
+    z_mat = single(zMap);
+    id_mat = uint16(synId);
+    fMaps = fMap;
     toc
+    save(fullfile(res_folder, 'synQuant_res', [org_name '.mat']), 'z_mat', 'id_mat','fMaps','-v7.3');
+    labelwrite(uint8(org_im/2), id_mat, fullfile(res_folder, 'synQuant_res_tif', org_name));
 end
-save(fullfile(res_folder, 'synQuant_res.mat'), 'z_mat', 'id_mat','fMaps','-v7.3');
-% labelwrite(uint8(org_im/2), id_mat{1}, fullfile(res_folder, 'synQuant_res'));
+
+% 
 % labelwrite(org_im, id_mat{1}, fullfile(res_folder, 'synQuant_res'));
 % remove java path
 javarmpath(p0);
@@ -70,14 +76,16 @@ toc
 
 %% refine results from synQuant
 tic;
-load(fullfile(res_folder, 'synQuant_res.mat'));
-eig_res_2d = cell(numel(tif_files), 1);
-eig_res_3d = cell(numel(tif_files), 1);
-eig_overlay = cell(numel(tif_files), 1);
+if ~isfolder(fullfile(res_folder, 'synQuant_priCvt_res'))
+    mkdir(fullfile(res_folder, 'synQuant_priCvt_res'));
+end
 for i=1:numel(tif_files)
     fprintf('cal priCvt %d/%d file\n', i, numel(tif_files));
     org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
-    synId = id_mat{i};
+    [~, org_name, ~] = fileparts(tif_files(i).name);
+    load(fullfile(res_folder, 'synQuant_res', [org_name '.mat']));
+
+    synId = id_mat;
     fMaps = ones(size(org_im));
     
     sigma = 4;
@@ -87,31 +95,33 @@ for i=1:numel(tif_files)
     [eig3d, overlay_cl] = principalCv3d(org_im, synId, sigma, fMaps);
     
     % use eig_res_2d to store grad3d to keep strcut uniform
-    eig_res_2d{i} = single(eig2d);
-    eig_res_3d{i} = single(eig3d);
-    eig_overlay{i} = [];
+    eig_res_2d = single(eig2d);
+    eig_res_3d = single(eig3d);
+    save(fullfile(res_folder, 'synQuant_priCvt_res', [org_name '.mat']), 'eig_res_2d',...
+    'eig_res_3d','-v7.3');
 end
-save(fullfile(res_folder, 'synQuant_priCvt_res.mat'), 'eig_res_2d',...
-    'eig_res_3d','eig_overlay','-v7.3');
 fprintf('Principal curvature running time:'); % around 5700s 0.25
 toc
 %% calculate the variance map of all frames
 tic;
-varMap = cell(numel(tif_files), 1);
+if ~isfolder(fullfile(res_folder, 'varianceMap'))
+    mkdir(fullfile(res_folder, 'varianceMap'));
+end
 scale_term = 300;
 for i=1:numel(tif_files)
     disp(i);
     
     org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
+    [~, org_name, ~] = fileparts(tif_files(i).name);
     vid = 255*org_im/scale_term;
-    varMap{i} = cell(3,2);
-    [varMap{i}{1,1}, varMap{i}{2,1},varMap{i}{3,1}] = ...
+    varMap = cell(3,2);
+    [varMap{1,1}, varMap{2,1},varMap{3,1}] = ...
         calVarianceStablizationBY(vid, 0.8, 3);
     vid_stb = sqrt(vid+3/8);
-    [varMap{i}{1,2}, varMap{i}{2,2},varMap{i}{3,2}] = ...
+    [varMap{1,2}, varMap{2,2},varMap{3,2}] = ...
         calVarianceStablizationBY(vid_stb, 0.8, 3);
+    save(fullfile(res_folder, 'varianceMap', [org_name '.mat']), 'varMap','-v7.3');
 end
-save(fullfile(res_folder, 'varianceMap.mat'), 'varMap','-v7.3');
 fprintf('Variance running time:'); % around 7500s 0.25
 toc
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -156,110 +166,42 @@ toc
 
 %% region refine based on 4d information (infor across >1 frame) around 1 hour
 tic;
+if ~isfolder(fullfile(res_folder, 'synQuant_refine_res'))
+    mkdir(fullfile(res_folder, 'synQuant_refine_res'));
+end
+if ~isfolder(fullfile(res_folder, 'synQuant_refine_res_tif'))
+    mkdir(fullfile(res_folder, 'synQuant_refine_res_tif'));
+end
 scale_term = 300;
-load(fullfile(res_folder, 'synQuant_priCvt_res.mat'));
-load(fullfile(res_folder, 'synQuant_res.mat'));
-load(fullfile(res_folder, 'varianceMap.mat'));
-refine_res = cell(numel(tif_files), 1);
-threshold_res = cell(numel(tif_files), 1);
 multi_frames_flag = false; % use multiple frames for segmentation
 cell_wise_save_flag = false; % save each cell segment
 for i=1:numel(tif_files)
     fprintf('Processing the frame %d ', i);
-    
-    if cell_wise_save_flag
-        seg_res_folder = fullfile(res_folder,'segment_cells');
-        seg_res_folder = fullfile(seg_res_folder,['frame_', num2str(i)]);
-        if ~exist(seg_res_folder,'dir')
-            mkdir(seg_res_folder);
-        end
-    end
-    if multi_frames_flag % use 3 consecutive frames
-        org_im = cell(3,1);
-        synId = cell(3,1);
-        eigAll = cell(3,1);
-        varMapAll = cell(3,1);
-        for j=i-1:i+1
-            if j>0 && j<=numel(tif_files)
-                tmp_im = tifread(fullfile(tif_files(j).folder, tif_files(j).name));
-                tmp_im = 255*tmp_im/scale_term;
-                org_im{j-i+2} = tmp_im;
-                synId{j-i+2} = id_mat{j};
-                eigAll{j-i+2} = cell(2,1); % save both 2d and 3d pincipal curvature
-                eigAll{j-i+2}{1} = eig_res_2d{i};
-                eigAll{j-i+2}{2} = eig_res_3d{i};
-                varMapAll{j-i+2} = varMap{j};
-            end
-        end
-    else
-        tmp_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
-%         org_im = 255*tmp_im/scale_term;
-        org_im = tmp_im;
-        synId = id_mat{i};
-        eigAll = cell(2,1); % save both 2d and 3d pincipal curvature
-        eigAll{1} = eig_res_2d{i};
-        eigAll{2} = eig_res_3d{i};
-        varMapAll = varMap{i};
-    end
-    
+    load(fullfile(res_folder, 'synQuant_res', [org_name '.mat']));
+    load(fullfile(res_folder, 'synQuant_priCvt_res', [org_name '.mat']));
+    load(fullfile(res_folder, 'varianceMap', [org_name '.mat']));
+
+    org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
+    synId = id_mat;
+    eigAll = cell(2,1); % save both 2d and 3d pincipal curvature
+    eigAll{1} = eig_res_2d;
+    eigAll{2} = eig_res_3d;
+    varMapAll = varMap;
+
     %profile on;
-    [newIdMap, thresholdMap] = m_regionWiseAnalysis4d(synId, ...
-            eigAll,org_im, varMapAll, []);%, i
+%     [newIdMap, thresholdMap] = m_regionWiseAnalysis4d(synId, ...
+%             eigAll,org_im, varMapAll, []);%, i
+    [newIdMap, thresholdMap] = m_regionWiseAnalysis4d_parallel(synId, ...
+        eigAll,org_im, varMapAll, []);%, i
     %profile viewer;
     %profile off;
-    refine_res{i} = uint32(newIdMap);
-    threshold_res{i} = uint8(thresholdMap);
+    refine_res = uint32(newIdMap);
+    threshold_res = uint8(thresholdMap);
     toc
-end
-save(fullfile(res_folder, 'synQuant_refine_res_4d_v9.mat'), 'refine_res',...
+    save(fullfile(res_folder, 'synQuant_refine_res', [org_name '.mat']), 'refine_res',...
     'threshold_res','-v7.3');
-labelwrite(uint8(org_im/3), refine_res{1}, fullfile(res_folder, 'synQuant_res_4d_v9'));
+    labelwrite(uint8(org_im/2), refine_res, fullfile(res_folder, 'synQuant_refine_res_tif', org_name));
+end
 fprintf('Refinement running time:'); % around 183000s 0.25
 toc
 % tifwrite(uint8((refine_res{1}>0)*255), [res_folder 'result_2']);
-%% second time of synQuant  
-% add synQuant java path
-Pij = fullfile('../src_synquant/ij-1.52i.jar');
-javaaddpath(Pij);
-p1 = fullfile('../src_synquant/commons-math3-3.6.1.jar');
-javaaddpath(p1);
-p0 = fullfile('../src_synquant/SynQuantVid_v1.2.5.1.jar');
-javaaddpath(p0);
-
-load(fullfile(res_folder, 'synQuant_priCvt_res.mat'),'eig_res_3d');
-load(fullfile(res_folder, 'synQuant_refine_res_4d_v9.mat'), 'refine_res');
-id_mat_2nd = cell(numel(tif_files), 1);
-for i=1:numel(tif_files)
-    tic;
-    fprintf('processing %d/%d file\n', i, numel(tif_files));
-    org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
-    sigma = [3 3 1];
-    sm_im = imgaussfilt3(org_im,sigma);
-    posEigMap = eig_res_3d{i}>0;
-    % 3D version
-    id_mat_2nd{i} = m_Synquant4Embryo_2iter(sm_im, refine_res{i}, posEigMap);
-    toc;
-end
-save(fullfile(res_folder, 'synQuant_res_2iter.mat'), 'id_mat_2nd','-v7.3');
-labelwrite(uint8(org_im/2), id_mat_2nd{1}, fullfile(res_folder, 'synQuant_res_2iter'));
-% remove java path
-javarmpath(p0);
-javarmpath(p1);
-javarmpath(Pij);
-%% write 3d segmentation result with label
-mkdir(fullfile(res_folder,'synQuant_refine_res_4d_v9'));
-for tt = 1:numel(tif_files)
-    tt_ind = num2str(100000+tt);
-    tt_ind = tt_ind(2:6);
-    org_im_all = tifread(fullfile(tif_files(tt).folder, tif_files(tt).name));
-    refine_res_all = refine_res{tt};
-    labelwrite(uint8(org_im_all),refine_res_all, fullfile(res_folder,'synQuant_refine_res_4d_v9',tt_ind));
-end
-%% write 4d segmentatin result with label
-% org_im_all = zeros(h, w, slices, numel(tif_files));
-% refine_res_all = zeros(size(org_im_all));
-% for tt = 1:numel(tif_files)
-%         org_im_all(:,:,:,tt) = tifread(fullfile(tif_files(tt).folder, tif_files(tt).name));
-%         refine_res_all(:,:,:,tt) = refine_res{tt};
-% end
-% labelwrite(uint8(org_im_all),refine_res_all, [res_folder '\synQuant_refine_res_4d_v9']);

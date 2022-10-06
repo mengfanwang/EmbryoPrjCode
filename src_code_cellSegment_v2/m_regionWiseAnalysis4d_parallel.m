@@ -51,35 +51,16 @@ else
     idMap_current = idMap;
     vid_current = vid;
 end
-idMap_init = idMap_current;
+% idMap_init = idMap_current;
 
 %% start the main functions
-if isempty(test_ids)
-    [idMap2, redundant_flag] = region_sanity_check(idMap_current, q.minSeedSize); % remove small objects
-    if redundant_flag
-        idMap_current = idMap2;
-    end
-    s = regionprops3(idMap_current, {'VoxelIdxList'});
-else
-    idMap2 = idMap_current;
-    idMap2(~ismember(idMap2, test_ids)) = 0;
-    s = regionprops3(idMap2, {'VoxelIdxList'});
-    
-    idMap2 = idMap_current;
-    idMap2(ismember(idMap2, test_ids)) = 0;
-    s_1st = regionprops3(idMap2, {'VoxelIdxList','Volume'});
-    % build prior-knowledge information from detected cells
-    cell_sz = [s_1st.Volume];
-    cell_levels = cellfun(@(x) mean(vid_current(x)), s_1st.VoxelIdxList);
-    cell_sz(test_ids) = []; % remove cells from 2nd iteration
-    cell_levels(test_ids) = []; % remove cells from 2nd iteration
-    od = round(0.05*length(cell_sz));
-    st_levels = sort(cell_levels, 'ascend');
-    min_level = st_levels(od);
-    st_szs = sort(cell_sz, 'ascend');
-    minSz = st_szs(od);
+
+[idMap2, redundant_flag] = region_sanity_check(idMap_current, q.minSeedSize); % remove small objects
+if redundant_flag
+    idMap_current = idMap2;
 end
-loc_cells = cell(numel(s.VoxelIdxList),1);
+s = regionprops3(idMap_current, {'VoxelIdxList'});
+
 % process from brightest seed to dimmest ones
 seed_levels = cellfun(@(x) mean(vid_current(x)), s.VoxelIdxList);
 [~, seed_proc_order] = sort(seed_levels,'descend');
@@ -89,34 +70,42 @@ if iscell(idMap)
 else
     idMap = idMap_current;
 end
-ids_list = cell(numel(s.VoxelIdxList),1);
+
+loc_cells = cell(numel(s.VoxelIdxList),1);
+comMaps = cell(numel(s.VoxelIdxList),1);
 for ii=1:numel(s.VoxelIdxList)
-    ids_list{ii} = idMap_current(s.VoxelIdxList{seed_proc_order(ii)});
+    %% crop needed information
+    seed_id = seed_proc_order(ii);
+%     seed_id = 1347;
+    yxz = s.VoxelIdxList{seed_id};
+    ids = idMap_current(yxz);
+    yxz = yxz(ids==seed_id);
+    [comMaps{ii}, ~] = get_local_area(vid, vid_stb, idMap, seed_id,...
+        eig2d, eig3d, yxz, OrSt, q);
+    
 end
+fprintf('Pre-processing running time:'); 
+toc
 fprintf('Start parallel computation! \n')
-for i=1:numel(s.VoxelIdxList)%[7 9 13 15 17 18 19 20 21 22]%
-    fprintf('%d/%d ', i, numel(s.VoxelIdxList));
+parfor i=1:numel(s.VoxelIdxList)%[7 9 13 15 17 18 19 20 21 22]%
+%     fprintf('%d/%d ', i, numel(s.VoxelIdxList));
 %     if i==9
 %         fprintf('process %d out of %d\n', i, numel(s.VoxelIdxList));
 %     end
     seed_id = seed_proc_order(i);
-%     seed_id = 450;                           % debug mode
-    yxz = s.VoxelIdxList{seed_id};
-    ids = ids_list{i};
-    yxz = yxz(ids==seed_id);
-    [newLabel, comMaps, ~] = m_refineOneRegion_with_seed(seed_id, yxz, vid,...
-        vid_stb, idMap, eig2d, eig3d, OrSt, q);
+%     seed_id = 1347;                           % debug mode
+    [newLabel, comMaps_temp] = m_refineOneRegion_with_seed_parallel(seed_id, comMaps{i});
 
     %% save cell locations
     % modify: change threshold
     valid_newLabel = newLabel(:)>0;
     loc_cells{i} = cell(2,1);
-    loc_cells{i}{1} = [comMaps.linerInd(valid_newLabel), newLabel(valid_newLabel)];
-    loc_cells{i}{2} = round(quantile(comMaps.vidComp(valid_newLabel),0.5));
+    loc_cells{i}{1} = [comMaps_temp.linerInd(valid_newLabel), newLabel(valid_newLabel)];
+    loc_cells{i}{2} = round(quantile(comMaps_temp.vidComp(valid_newLabel),0.5));
     
 %     loc_cells{i}{2} = comMaps.pickedThreshold;
     
-    %% do a simple update to the idMap
+%     %% do a simple update to the idMap
 %     idMap_current(yxz) = 0;
 %     idMap_current(loc_cells{i}{1}(:,1)) = seed_id;
 
@@ -132,12 +121,11 @@ for i=1:numel(s.VoxelIdxList)%[7 9 13 15 17 18 19 20 21 22]%
 %         end
 %         loc_cells{i}{1}(loc_cells{i}{1}(:,1)==0,:) = [];
 %     end
-%     %% write data into images for error check
-%     if ~isempty(save_folder)
-%         writeRefineCell(comMaps.vidComp, newLabel, comMaps.regComp, i, save_folder);
-%     end
+
 end
 fprintf('End parallel computation! \n')
+fprintf('Parallelization running time:'); 
+toc
 % label the new ID Map
 newIdMap = zeros(size(idMap_current));
 thresholdMap = zeros(size(idMap_current));
@@ -151,69 +139,5 @@ for i=1:numel(loc_cells)
         regCnt = regCnt + max(cur_labels);
     end
 end
-
-if ~isempty(tif_id)
-    [H1,W1,D1] = size(idMap_init);
-    overlay_im = zeros([H1,W1,3,D1], 'uint8');
-    %vid_current = scale_image(vid_current, 0, 255);
-    if ~isempty(test_ids)
-        cell_1st = ~ismember(idMap_init, test_ids) & idMap_init>0;
-        for i=1:D1
-            overlay_im(:,:,1,i) = uint8(cell_1st(:,:,i) * 100);
-            overlay_im(:,:,2,i) = uint8(vid_current(:,:,i)*2);
-            overlay_im(:,:,3,i) = uint8((newIdMap(:,:,i)>0) * 100);
-        end
-    else
-        for i=1:D1
-            overlay_im(:,:,1,i) = uint8((newIdMap(:,:,i)>0) * 100);
-            overlay_im(:,:,2,i) = uint8(vid_current(:,:,i)*2);
-        end
-    end
-    
-    svf = 'C:\Users\Congchao\Desktop\cell_detection_samples\crop_embryo_data_500x500x30x40\segmentation_from_synQuant\';
-    tifwrite(overlay_im, fullfile(svf, ['overlay_synQuant_', num2str(tif_id)]));
-end
-%% repeat the refinement if there is remaining seed
-% practically not applicable due to
-% 1. large number of false positive seeds (e.g. the boundary of cells)
-% 2. fg detection bias to the nearby regions (that's why these seeds were left)
-% idMap{2}(newIdMap>0) = 0;
-% idMap2 = region_sanity_check(idMap{2}, q.minSeedSize, true);
-% s = regionprops3(idMap2, {'VoxelIdxList'});
-% idMap2(idMap2>0) = idMap2(idMap2>0) + regCnt;
-% idMap{2} = idMap2 + newIdMap;
-% loc_cells = cell(numel(s.VoxelIdxList),1);
-% for i=regCnt+1 : regCnt+numel(s.VoxelIdxList)%[7 9 13 15 17 18 19 20 21 22]%
-%     yxz = s.VoxelIdxList{i-regCnt};
-% %     if mod(i, 10) == 0
-% %         fprintf('process %d out of %d\n', i, numel(s.VoxelIdxList));
-% %     end
-%     [newLabel, comMaps, fgReDo] = refineOneRegion_with_seed(i, yxz, vid,...
-%         vid_stb, idMap, eig2d, eig3d, OrSt, q);
-%     if fgReDo
-%         fgReDoCnt = fgReDoCnt + 1;
-%         %fprintf('Initial fg are too small \n');
-%     end
-%     %% save cell locations
-%     valid_newLabel = newLabel(:)>0;
-%     loc_cells{i-regCnt} = cell(2,1);
-%     loc_cells{i-regCnt}{1} = [comMaps.linerInd(valid_newLabel), newLabel(valid_newLabel)];
-%     loc_cells{i-regCnt}{2} = comMaps.pickedThreshold;
-%     %% write data into images for error check
-%     if ~isempty(save_folder)
-%         writeRefineCell(comMaps.vidComp, newLabel, comMaps.regComp, i, save_folder);
-%     end
-% end
-% fprintf('Totally %d cells has small initial foreground\n', fgReDoCnt);
-% % label the new ID Map
-% for i=1:numel(loc_cells)
-%     if ~isempty(loc_cells{i}{1})
-%         cur_locs = loc_cells{i}{1}(:,1);
-%         cur_labels = loc_cells{i}{1}(:,2);
-%         newIdMap(cur_locs) = cur_labels + regCnt;
-%         thresholdMap(cur_locs) = loc_cells{i}{2};
-%         regCnt = regCnt + max(cur_labels);
-%     end
-% end
 
 end
