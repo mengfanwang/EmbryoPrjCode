@@ -36,7 +36,7 @@ for ii = 1:com.NumObjects
 %     scoreMap = comMaps.score3dMap; % after fusion
     scoreMap(scoreMap<0) = 0;
     [dat_in, src, sink] = graphCut_negHandle_mat(scoreMap, fMap, sMap, ...
-        tMap, 10, [1 2], true);       % before fusion
+        tMap, 10, [1 1], true);       % before fusion
 %     [dat_in, src, sink] = graphCut_negHandle_mat(scoreMap, fMap, sMap, ...
 %         tMap, 26, [1 1], true);       % after fusion
     G = digraph(dat_in(:,1),dat_in(:,2),dat_in(:,3));

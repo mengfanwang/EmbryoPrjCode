@@ -1,6 +1,6 @@
 clc;clear;close all;
 dbstop if error
-addpath('../');
+addpath('../'); 
 addpath('../src_code_matlab');
 addpath('../src_code_cellSegment');
 addpath('../src_code_cellTracker');
@@ -10,11 +10,13 @@ addpath('../src_code_visualization');
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
     addpath('/home/mengfan/ForExecute/cc_ImHandle');
-    data_folder = '/work/Mengfan/Embryo/22-01-11/samViewFusion_230-239_08';
-    res_folder = '/work/Mengfan/Embryo/22-01-11/sameViewDetection_230-239_08';
+    data_folder = '/work/Mengfan/Embryo/22-01-11/sameViewFusion_sample_10';
+    res_folder = '/work/Mengfan/Embryo/22-01-11/sameViewDetection_sample_10';
+%     data_folder = '/work/Mengfan/Embryo/20220930_Joaquin/sameViewFusion_00-01_08';
+%     res_folder = '/work/Mengfan/Embryo/20220930_Joaquin/sameViewDetection00-01_08';
 else
     addpath('D:\Congchao''s code\cc_ImHandle\');
-    addpath D:\MatlabTools;
+    addpath D:\MatlabTools; 
     data_folder  = 'E:\Embryo\TM0-49\debug_v2\input\';
     res_folder = fullfile('E:\Embryo\TM0-49\debug_v2\');
 end
@@ -23,9 +25,9 @@ tif_files = dir(fullfile(data_folder, '/*.tif'));
 if ~exist(res_folder,'dir')
     mkdir(res_folder);
 end
-minIntensity = 50; % The middle of two Gaussian intensity distributions (
+minIntensity = 25; % The middle of two Gaussian intensity distributions (
                     % should learn from data)
-                    % 50: 354; 150: 280;
+                    % 0-20:25; 230:249:50
 
 %% synQuant
 tic;
@@ -44,25 +46,28 @@ if ~isfolder(fullfile(res_folder, 'synQuant_res_tif'))
     mkdir(fullfile(res_folder, 'synQuant_res_tif'));
 end
 q.minIntensity = minIntensity;
+ds_scale = 2; % down sample scale
 for i=1:numel(tif_files)
     fprintf('processing %d/%d file\n', i, numel(tif_files));
     org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
     [~, org_name, ~] = fileparts(tif_files(i).name);
     [h, w, slices] = size(org_im);
-    %out_ims = SliceImage(in_im);
-    %org_im = imresize3(org_im,round([h/2 w/2 slices/2]));
+    org_im = imresize3(org_im,round([h/ds_scale w/ds_scale slices]));
+    
     sigma = [3 3 1];
     sm_im = imgaussfilt3(org_im,sigma);
-    %q.posEigMap = eig_res_3d{i}>0;
-    % 3D version
     [zMap, synId, fMap] = m_Synquant4Embryo_Paramater(sm_im, q);
     
     z_mat = single(zMap);
     id_mat = uint16(synId);
     fMaps = fMap;
+
+    z_mat = imresize3(z_mat,[h w slices],'nearest');
+    id_mat = imresize3(id_mat,[h w slices],'nearest');
+    fMaps = imresize3(fMaps,[h w slices],'nearest');
     toc
     save(fullfile(res_folder, 'synQuant_res', [org_name '.mat']), 'z_mat', 'id_mat','fMaps','-v7.3');
-    labelwrite(uint8(org_im/2), id_mat, fullfile(res_folder, 'synQuant_res_tif', org_name));
+%     labelwrite(uint8(org_im/2), id_mat, fullfile(res_folder, 'synQuant_res_tif', org_name));
 end
 
 % 
@@ -88,9 +93,11 @@ for i=1:numel(tif_files)
     synId = id_mat;
     fMaps = ones(size(org_im));
     
-    sigma = 4;
+    % start of video: 8/[8 8 2]  % end of video: 4/[4 4 1]
+    % current setting: sigma = 4*(2-tt/250)
+    sigma = 4*(2-str2num(org_name)/250);
     [eig2d, ~] = principalCv2d(org_im, synId, sigma, fMaps);
-    sigma = [4 4 1];
+    sigma = [sigma sigma sigma/4];
     %   grad3d = imgradient3(imgaussfilt3(org_im,sigma));
     [eig3d, overlay_cl] = principalCv3d(org_im, synId, sigma, fMaps);
     
@@ -177,11 +184,12 @@ multi_frames_flag = false; % use multiple frames for segmentation
 cell_wise_save_flag = false; % save each cell segment
 for i=1:numel(tif_files)
     fprintf('Processing the frame %d ', i);
+    org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
+    [~, org_name, ~] = fileparts(tif_files(i).name);
     load(fullfile(res_folder, 'synQuant_res', [org_name '.mat']));
     load(fullfile(res_folder, 'synQuant_priCvt_res', [org_name '.mat']));
     load(fullfile(res_folder, 'varianceMap', [org_name '.mat']));
 
-    org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
     synId = id_mat;
     eigAll = cell(2,1); % save both 2d and 3d pincipal curvature
     eigAll{1} = eig_res_2d;
@@ -200,7 +208,8 @@ for i=1:numel(tif_files)
     toc
     save(fullfile(res_folder, 'synQuant_refine_res', [org_name '.mat']), 'refine_res',...
     'threshold_res','-v7.3');
-    labelwrite(uint8(org_im/2), refine_res, fullfile(res_folder, 'synQuant_refine_res_tif', org_name));
+    org_im(org_im>255) = 255;
+    labelwrite(uint8(org_im), refine_res, fullfile(res_folder, 'synQuant_refine_res_tif', org_name));
 end
 fprintf('Refinement running time:'); % around 183000s 0.25
 toc

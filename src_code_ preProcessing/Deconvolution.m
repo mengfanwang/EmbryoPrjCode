@@ -3,8 +3,8 @@ clc;clear;close all;
 %% system and path
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
-    path_name = '/work/Mengfan/Embryo/22-01-11';
-    source_data = 'myf5GFP-H2BmCherry.v1.h5';
+    path_name = '/work/Mengfan/Embryo/20220930_Joaquin';
+    source_data = '20220920_isl2bGFP_H2BmCherry_6h_ON.h5';
     target_folder = 'deconvolution';    
 else
     addpath D:\MatlabTools;
@@ -18,8 +18,11 @@ end
 num_time = length(h5_struct);
 num_total = num_time * num_view;
 %% parameter setting
-device = 'GPU'; % CPU or GPU
+device = 'CPU'; % CPU or GPU
 save_mode = 'both'; %save as 'tif', 'h5', or 'both' 
+if strcmp(device, 'GPU')
+    gpuDevice(2);
+end
 
 z = 2:6:38;
 pdf_z = normpdf(z,20,8);
@@ -31,9 +34,12 @@ num_iter = 30;
 %%
 fprintf('Start processing...\n');
 tic;
-for ii = 0:num_total-1
+for ii = 0:159 %num_total-1
     tt = floor(ii/num_view);
     vv = mod(ii, num_view);
+    if vv < 8
+        continue;  % for Joaquin's data
+    end
     % read data from h5 file
     tt_ind = num2str(100000+tt);
     tt_ind = tt_ind(2:6);
@@ -60,7 +66,8 @@ for ii = 0:num_total-1
         x = fftshift(fft(data_deconv,[],3),3);
     end
     if strcmp(device, 'GPU')
-        data_deconv = gather(data_deconv);
+
+
     end
     if strcmp(save_mode, 'h5') || strcmp(save_mode, 'both')
         h5create(fullfile(path_name, target_folder, ['deconvolution_' source_data]),...
@@ -69,7 +76,7 @@ for ii = 0:num_total-1
             ['/t' tt_ind '/s' vv_ind '/0/cells'],data_deconv);
     end
     if strcmp(save_mode, 'tif') || strcmp(save_mode, 'both')
-        if vv == 0
+        if ~isfolder(fullfile(path_name, target_folder, tt_ind))
             mkdir(fullfile(path_name, target_folder, tt_ind));
         end
         tifwrite(uint16(data_deconv),fullfile(path_name, target_folder, tt_ind, vv_ind));

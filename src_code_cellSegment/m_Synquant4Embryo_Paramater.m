@@ -22,32 +22,11 @@ if nargin < 3
         maxWHRatio = 10;
         z_threshold = 1;
     else
-%         minSz = 100;
-%         maxSz = 3000;
-%         minfill = 0.0001;
-%         maxWHRatio = 100;
-%         z_threshold = 100;     % num:98
-
-%         minSz = 20;            % num:41
-%         maxSz = 30000;         % num:66
-%         minfill = 0.0001;
-%         maxWHRatio = 100;
-%         z_threshold = 0;       % z=2:98; z=0:30;
-
-%         minSz = 20;
-%         maxSz = 30000;
-%         minfill = 0.0001;
-%         maxWHRatio = 100, ;
-%         z_threshold = 2;       % num:24
-%     4     5     9    10    13    20    21    23    32    34    35    41    
-%     47    49    55    65    70    74    75    83    84 87    89    91
-        
-        minSz = 20;
-        maxSz = 30000;
+        minSz = 20;                
+        maxSz = 30000/4;  % /4 for downsample case
         minfill = 0.0001;
         maxWHRatio = 100;
-        z_threshold = 5;             % num:68
-%         z_threshold = 100;         % num:38 % inten normal z=2->27??
+        z_threshold = 5;             
     end
 end
 fMap =  imgIn > q.minIntensity;
@@ -83,6 +62,7 @@ for i=1:size(zMap,3)
 end
 
 synId(zMap<=z_threshold | ~fMap) = 0;
+toc
 synId = rearrange_id_isolated(synId,minSz);
 s = regionprops3(synId, {'VoxelIdxList'});
 cnt = 0;

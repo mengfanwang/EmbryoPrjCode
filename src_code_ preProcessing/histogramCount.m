@@ -1,4 +1,4 @@
-function [his,variance,parameters] = histogramCount(data,kerSize,options)
+function [his,variance,parameters] = HistogramCount(data,kerSize,options)
 
     % This function is used to generate histogram from the input data.
     %
@@ -82,8 +82,7 @@ function [his,variance,parameters] = histogramCount(data,kerSize,options)
     dataSize = size(data);
     dataDim = length(dataSize);
     if dataDim <= 3
-%         realSignal = medfilt3(data,kerSize);
-        realSignal = convn(data,ones(kerSize)/27,'same');
+        realSignal = medfilt3(data,kerSize);
     else
         numFrame = dataSize(4);
         realSignal = zeros(dataSize);
@@ -109,10 +108,6 @@ function [his,variance,parameters] = histogramCount(data,kerSize,options)
     end
     data = data(:);                  
     realSignal = realSignal(:);
-    
-%     % remove 0 intensity pixels
-%     realSignal(data <= 0) = [];
-%     data(data <= 0) = [];
 
     histEdges = options.histEdges;
     binEdges = options.binEdges;
@@ -222,8 +217,7 @@ function [his,variance,parameters] = histogramCount(data,kerSize,options)
         end
 
         his(ii,:) = his(ii,:)/sum(his(ii,:));
-        variance(ii) = sum(his(ii,:).*(binCenters-histCenters(ii)).^2)/var_ratio(ii); 
-        % warning: may decrease the variance
+        variance(ii) = sum(his(ii,:).*(binCenters-histCenters(ii)).^2)/var_ratio(ii);
     end
     disp(['Finished. Counting part running time is ' num2str(toc) ' seconds.']);
     parameters.var_ratio = var_ratio;
