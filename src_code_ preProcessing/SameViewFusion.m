@@ -6,10 +6,9 @@ if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
     path_name = '/work/Mengfan/Embryo/22-01-11';
     source_data = 'myf5GFP-H2BmCherry.v1.h5';
-%     data_name = fullfile(path_name, 'deconvolution/deconvolution_myf5GFP-H2BmCherry.v1.h5');
-    data_name = fullfile(path_name, 'myf5GFP-H2BmCherry.v1.h5')
+    data_name = fullfile(path_name, 'deconvolution/deconvolution_myf5GFP-H2BmCherry.v1.h5');
     xml_name = fullfile(path_name, 'myf5GFP-H2BmCherry.v1.xml');
-    target_folder = 'sameViewFusion_nodeconv_10';
+    target_folder = 'sameViewFusion_10';
 %     path_name = '/work/Mengfan/Embryo/20220930_Joaquin';
 %     source_data = '20220920_isl2bGFP_H2BmCherry_6h_ON.h5';
 %     data_name = fullfile(path_name, 'deconvolution/deconvolution_20220920_isl2bGFP_H2BmCherry_6h_ON.h5');
@@ -26,7 +25,7 @@ num_time = length(h5_struct);
 num_total = num_time * num_view;
 
 %% fusion
-for tt = 00:50:200
+for tt = 00:249
 tt_ind = num2str(100000+tt);
 tt_ind = tt_ind(2:6);
 fprintf('processing: %d\n',tt);

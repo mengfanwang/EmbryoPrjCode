@@ -3,6 +3,8 @@ clc;clear;close all;
 %% system and path
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
+%     path_name = '/work/Mengfan/Embryo/22-01-11';
+%     source_data = 'myf5GFP-H2BmCherry.v1.h5';
     path_name = '/work/Mengfan/Embryo/20220930_Joaquin';
     source_data = '20220920_isl2bGFP_H2BmCherry_6h_ON.h5';
     target_folder = 'deconvolution';    
@@ -18,7 +20,7 @@ end
 num_time = length(h5_struct);
 num_total = num_time * num_view;
 %% parameter setting
-device = 'CPU'; % CPU or GPU
+device = 'GPU'; % CPU or GPU
 save_mode = 'both'; %save as 'tif', 'h5', or 'both' 
 if strcmp(device, 'GPU')
     gpuDevice(2);
@@ -34,7 +36,7 @@ num_iter = 30;
 %%
 fprintf('Start processing...\n');
 tic;
-for ii = 0:159 %num_total-1
+for ii = 3208:3215 %num_total-1
     tt = floor(ii/num_view);
     vv = mod(ii, num_view);
     if vv < 8
@@ -56,7 +58,18 @@ for ii = 0:159 %num_total-1
         H = gpuArray(H);
     end
     A = 1 - lambda*conj(H).*H;
-    y = fftshift(fft(data_median,[],3),3);
+    
+    % split into 4 parts for GPU memory
+%     y = fftshift(fft(data_median,[],3),3);
+    
+    data_deconv_all = zeros(size(data_median));
+    for bb = 1:2
+    if bb == 1
+    y = fftshift(fft(data_median(1:960,:,:),[],3),3);
+    else
+    y = fftshift(fft(data_median(961:end,:,:),[],3),3);
+    end
+
     g = lambda*conj(H).*y;
     x = y;
     for iter = 1:num_iter
@@ -66,9 +79,17 @@ for ii = 0:159 %num_total-1
         x = fftshift(fft(data_deconv,[],3),3);
     end
     if strcmp(device, 'GPU')
-
-
+        data_deconv = gather(data_deconv);
+        if bb == 1
+            data_deconv_all(1:960,:,:) = data_deconv;
+        else
+            data_deconv_all(961:end,:,:) = data_deconv;
+        end
     end
+    end
+    data_deconv = data_deconv_all;
+
+
     if strcmp(save_mode, 'h5') || strcmp(save_mode, 'both')
         h5create(fullfile(path_name, target_folder, ['deconvolution_' source_data]),...
             ['/t' tt_ind '/s' vv_ind '/0/cells'],size(data_deconv),'Datatype','single');

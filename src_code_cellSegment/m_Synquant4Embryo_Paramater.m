@@ -63,7 +63,7 @@ end
 
 synId(zMap<=z_threshold | ~fMap) = 0;
 toc
-synId = rearrange_id_isolated(synId,minSz);
+% synId = rearrange_id_isolated(synId,minSz);    % not rearranged
 s = regionprops3(synId, {'VoxelIdxList'});
 cnt = 0;
 synId = zeros(size(imgIn));

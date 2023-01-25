@@ -10,10 +10,10 @@ addpath('../src_code_visualization');
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
     addpath('/home/mengfan/ForExecute/cc_ImHandle');
-    data_folder = '/work/Mengfan/Embryo/22-01-11/sameViewFusion_sample_10';
-    res_folder = '/work/Mengfan/Embryo/22-01-11/sameViewDetection_sample_10';
-%     data_folder = '/work/Mengfan/Embryo/20220930_Joaquin/sameViewFusion_00-01_08';
-%     res_folder = '/work/Mengfan/Embryo/20220930_Joaquin/sameViewDetection00-01_08';
+    data_folder = '/work/Mengfan/Embryo/22-01-11/sameViewFusion_10';
+    res_folder = '/work/Mengfan/Embryo/22-01-11/sameViewDetection_10';
+%     data_folder = '/work/Mengfan/Embryo/20220930_Joaquin/Fusion_sample_9';
+%     res_folder = '/work/Mengfan/Embryo/20220930_Joaquin/Detection_sample_9';
 else
     addpath('D:\Congchao''s code\cc_ImHandle\');
     addpath D:\MatlabTools; 
@@ -67,7 +67,8 @@ for i=1:numel(tif_files)
     fMaps = imresize3(fMaps,[h w slices],'nearest');
     toc
     save(fullfile(res_folder, 'synQuant_res', [org_name '.mat']), 'z_mat', 'id_mat','fMaps','-v7.3');
-%     labelwrite(uint8(org_im/2), id_mat, fullfile(res_folder, 'synQuant_res_tif', org_name));
+    org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
+    labelwrite(uint8(org_im/1.25), id_mat, fullfile(res_folder, 'synQuant_res_tif', org_name));
 end
 
 % 
