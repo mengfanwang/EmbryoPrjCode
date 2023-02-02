@@ -5,19 +5,20 @@ if isunix
     fore_folder = '/work/public/sameViewFusion/sameViewDetection_050-149_11/synQuant_refine_res';
 end
 
-reg_ind = 87;
+reg_ind = 90;
 data1 = tifread(fullfile(data_folder, ['000' num2str(reg_ind) '.tif']));
 data2 = tifread(fullfile(data_folder, ['000' num2str(reg_ind+1) '.tif']));
-% fore1 = load(fullfile(fore_folder, '00082.mat'));
-% fore2 = load(fullfile(fore_folder, '00083.mat'));
-% fore2 = fore2.refine_res>0;
+
+fore2 = load(fullfile(fore_folder, ['000' num2str(reg_ind+1) '.mat']));
+fore2 = fore2.refine_res>0;
 
 data1 = data1(:,:,1:160);
 data1_backup = imresize3(data1, [960 960 160]);
 data2 = data2(:,:,1:160);
 data2_backup = imresize3(data2, [960 960 160]);
-% fore2_backup = fore2(:,:,1:160);
-fore2_backup = ones(size(data2_backup));
+fore2 = imresize3(fore2, [960 960 160]);
+fore2_backup = fore2(:,:,1:160);
+% fore2_backup = ones(size(data2_backup));
 
 %%                           block
 % layer 1: 960 960 160       512
@@ -27,7 +28,7 @@ fore2_backup = ones(size(data2_backup));
 % layer 5: 60  60  10
 %%
 clc;close all;
-clearvars -except data1_backup data2_backup fore2_backup
+clearvars -except data1_backup data2_backup fore2_backup reg_ind
 
 sigma_gaussian = 1;
 layer_num = 4;

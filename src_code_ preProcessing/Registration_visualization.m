@@ -5,10 +5,10 @@ if isunix
     fore_folder = '/work/public/sameViewFusion/sameViewDetection_050-149_11/synQuant_refine_res';
 end
 
-reg_ind = 86;
-data1 = tifread(fullfile(data_folder, ['000' num2str(reg_ind) '.tif']));
+reg_ind = 137;
+data1 = tifread(fullfile(data_folder, ['00' num2str(reg_ind) '.tif']));
 % data2 = tifread(fullfile(data_folder, '00083.tif'));
-fore2 = load(fullfile(fore_folder, ['000' num2str(reg_ind) '.mat']));
+fore2 = load(fullfile(fore_folder, ['00' num2str(reg_ind) '.mat']));
 fore2 = fore2.refine_res>0;
 
 data1 = data1(:,:,1:160);
@@ -18,12 +18,13 @@ fore2 = imresize3(fore2, [960 960 160]);
 fore2_backup = fore2 > 0.5;
 
 %%
-load(['/work/Mengfan/Embryo/Registration/tmp_result/phi_' num2str(reg_ind) '_' num2str(reg_ind+1) '_rigid.mat']);
-load(['/work/Mengfan/Embryo/Registration/nonrigid_result/' num2str(reg_ind) '_l4_s1_nearest.mat']);
-
+% load(['/work/Mengfan/Embryo/Registration/tmp_result/phi_' num2str(reg_ind) '_' num2str(reg_ind+1) '_rigid.mat']);
+% load(['/work/Mengfan/Embryo/Registration/nonrigid_result/' num2str(reg_ind) '_l4_s1_nearest.mat']);
+load('/work/Mengfan/Embryo/Registration/nonrigid_result_l4_s1_linear/137.mat');
+1
 %% plot
 clc
-zz = 100;
+zz = 122;
 data1 = data1_backup(:,:,zz);
 fore2 = fore2_backup(:,:,zz);
 
@@ -50,10 +51,11 @@ fore2 = fore2_backup(:,:,zz);
 % uy = imresize(uy, size(data1)) - phi_rigid(2);
 
 phi_current_vec = reshape(phi_current_vec,3,[]);
-phi_current = imresize4d(phi_current_vec, [960 960 160], 'linear');
-ux = phi_current(:,:,zz,1) - phi_rigid(1);
-uy = phi_current(:,:,zz,2) - phi_rigid(2);
-uz = phi_current(:,:,zz,3) - phi_rigid(3);
+phi_current = imresize4d(phi_current_vec, [960 960 160], 'nearest');
+ux = phi_current(:,:,zz,1);
+uy = phi_current(:,:,zz,2);
+% ux = phi_current(:,:,zz,1) - phi_rigid(1);
+% uy = phi_current(:,:,zz,2) - phi_rigid(2);
 
 ux(~fore2) = 0;
 uy(~fore2) = 0;
