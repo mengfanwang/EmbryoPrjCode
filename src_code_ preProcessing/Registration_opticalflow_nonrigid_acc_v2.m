@@ -1,24 +1,78 @@
 %% system and path
+dbstop if error
+for reg_ind = 191:191
+    % view11 L4 error: 51 63
+    % view11 L5 error: 77 81
+    % view10 L4 error: 46 127
+    % view10 L5 error: 24 50 54 58 77 85 87 90 91 126 161 180 191
+    % drift:74 194-196
+    % view10:193-198
+clearvars -except reg_ind
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
-    data_folder = '/work/Mengfan/Embryo/22-01-11/sameViewFusion_050-149_11';
-    fore_folder = '/work/public/sameViewFusion/sameViewDetection_050-149_11/synQuant_refine_res';
+%     data_folder = '/work/Mengfan/Embryo/22-01-11/sameViewFusion_050-149_11';
+%     fore_folder = '/work/public/sameViewFusion/sameViewDetection_050-149_11/synQuant_refine_res';
+
+    data_folder = '/work/public/sameViewFusion/sameViewFusion_10';
+    fore_folder = '/work/public/sameViewFusion/sameViewDetection_10/Wei_refine_res';
 end
 
-reg_ind = 90;
-data1 = tifread(fullfile(data_folder, ['000' num2str(reg_ind) '.tif']));
-data2 = tifread(fullfile(data_folder, ['000' num2str(reg_ind+1) '.tif']));
+data1_name = num2str(100000 + reg_ind);
+data1_name = data1_name(2:end);
+data1 = tifread(fullfile(data_folder, [data1_name '.tif']));
+data2_name = num2str(100000 + reg_ind + 1);
+data2_name = data2_name(2:end);
+data2 = tifread(fullfile(data_folder, [data2_name '.tif']));
 
-fore2 = load(fullfile(fore_folder, ['000' num2str(reg_ind+1) '.mat']));
+fore2 = load(fullfile(fore_folder, [data2_name '.mat']));
 fore2 = fore2.refine_res>0;
 
-data1 = data1(:,:,1:160);
-data1_backup = imresize3(data1, [960 960 160]);
-data2 = data2(:,:,1:160); 
-data2_backup = imresize3(data2, [960 960 160]);
-fore2 = imresize3(fore2, [960 960 160]);
-fore2_backup = fore2(:,:,1:160);
-% fore2_backup = ones(size(data2_backup));
+% view 11
+% data1 = data1(:,:,1:160);
+% data1_backup = imresize3(data1, [960 960 160]);
+% data2 = data2(:,:,1:160); 
+% data2_backup = imresize3(data2, [960 960 160]);
+% fore2_backup = fore2(:,:,1:160);
+% fore2_backup = imresize3(fore2_backup, [960 960 160]);
+% if reg_ind == 51
+%     fore2_backup(240:270,830:860,1:11) = 0;
+%     fore2_backup(1:10,380:400,139:147) = 0;
+% elseif reg_ind == 63
+%     fore2_backup(310:330,730:750,120:130) = 0;
+% elseif reg_ind == 77
+%     fore2_backup(750:770,530:560,136:142) = 0;
+% elseif reg_ind == 81
+%     fore2_backup(720:750,910:950,106:115) = 0;
+% end
+
+% view 10
+zslices = size(data1,3);
+data1_backup = imresize3(data1, [960 960 zslices]);
+data2_backup = imresize3(data2, [960 960 zslices]);
+fore2_backup = imresize3(fore2, [960 960 zslices]);
+layer_num = 5;  
+if mod(zslices, 2^layer_num) ~= 0 
+    data1_backup = padarray(data1_backup, [0 0 2^layer_num-mod(zslices, 2^layer_num)], 'replicate','post');
+    data2_backup = padarray(data2_backup, [0 0 2^layer_num-mod(zslices, 2^layer_num)], 'replicate','post');
+    fore2_backup = padarray(fore2_backup, [0 0 2^layer_num-mod(zslices, 2^layer_num)], 0, 'post');
+end
+if reg_ind == 46
+    fore2_backup(1:10,550:570,124:132) = 0;
+elseif reg_ind == 127
+    fore2_backup(100:130,40:75,165:175) = 0;
+elseif reg_ind == 24
+    fore2_backup(760:770,780:790,3:9) = 0;
+elseif reg_ind == 50
+    fore2_backup(640:650,200:220,5:10) = 0;
+elseif ismember(reg_ind, [54 58 77 85 87 90 91])
+    fore2_backup(890:910,575:600,1:5) = 0;
+elseif reg_ind == 126
+    fore2_backup(360:370,945:955,57:62) = 0;
+elseif reg_ind == 161
+    fore2_backup(730:740,815:825,175:179) = 0;
+elseif reg_ind == 180
+    fore2_backup(635:645,635:645,57:61) = 0;
+end
 %%             size          block
 % layer 0: 960 960 160       512
 % layer 1: 480 480 80        64
@@ -30,15 +84,14 @@ clc;
 clearvars -except data1_backup data2_backup fore2_backup reg_ind
 
 % accelerated version of Registration_opticalflow_nonrigid_v2.m
-% results should guranteee the same   - current not
-% try to improve interpolation of phi_current
+% results should guranteee the same  
 
 sigma_gaussian = 1;
-layer_num = 4;   
+layer_num = 5;   
 batch_size = round(size(data1_backup)/2^layer_num);
 pad_size = [15 15 5];
 step = 1;
-smoothness_para = 0.1;
+smoothness_para = 1;
 % resize_method = 'nearest';
 resize_method = 'linear';
 % resize_method = 'cubic';
@@ -65,23 +118,18 @@ tic;
 for layer = layer_num:-1:0
     
     data1 = imgaussfilt(data1_backup,sigma_gaussian*(layer+1));
-    data1 = imresize3(data1, round([960 960 160]/2^layer));
+    data1 = imresize3(data1, round(size(data1_backup)/2^layer));
     data2 = imgaussfilt(data2_backup,sigma_gaussian*(layer+1));
-    data2 = imresize3(data2, round([960 960 160]/2^layer));    
+    data2 = imresize3(data2, round(size(data1_backup)/2^layer));    
     [x,y,z] = size(data1);
 
-    data1_pad = padarray(data1,pad_size,'replicate'); 
+    data1_pad = gpuArray(padarray(data1,pad_size,'replicate')); 
     data2_pad = padarray(data2,pad_size,'replicate');
     gt2 = data2;
 
-    fore2 = imresize3(fore2_backup, round([960 960 160]/2^layer));  
+    fore2 = imresize3(fore2_backup, round(size(data1_backup)/2^layer));  
     fore2 = fore2 >= 0.5;
-    fore2_vec = find(fore2);
-    [x_fore, y_fore, z_fore] = ind2sub(size(fore2), fore2_vec);
-    [y_batch, x_batch, z_batch] = meshgrid(0:2^(layer_num - layer)+1);
-    y_batch = y_batch*batch_size(2) + 0.5 - batch_size(2)/2;
-    x_batch = x_batch*batch_size(1) + 0.5 - batch_size(1)/2;
-    z_batch = z_batch*batch_size(3) + 0.5 - batch_size(3)/2;
+
     
     time_local = time_local - toc;
     if layer == layer_num
@@ -113,11 +161,15 @@ for layer = layer_num:-1:0
                     fore_temp = logical(fore2(x_start:x_end, y_start:y_end, z_start:z_end));
                     batch_bin_ind = batch_bin_ind + 1;
                     if any(fore_temp, 'all')
-                        batch_ind = batch_ind + 1;
-                        batch_table(batch_ind,:) = [xx yy zz];
-                        batch_loc(batch_ind,:) = [x_start x_end y_start y_end z_start z_end];
-                        fore_ind(x_start:x_end, y_start:y_end, z_start:z_end) = fore_temp*batch_ind;
-                        batch_bin(batch_bin_ind) = 1;
+                        if sum(fore_temp(:)) > 30    % enough samples
+                            batch_ind = batch_ind + 1;
+                            batch_table(batch_ind,:) = [xx yy zz];
+                            batch_loc(batch_ind,:) = [x_start x_end y_start y_end z_start z_end];
+                            fore_ind(x_start:x_end, y_start:y_end, z_start:z_end) = fore_temp*batch_ind;
+                            batch_bin(batch_bin_ind) = 1;
+                        else
+                            fore2(x_start:x_end, y_start:y_end, z_start:z_end) = false;
+                        end
                     end                  
                 end
             end
@@ -132,11 +184,6 @@ for layer = layer_num:-1:0
         for ii = 1:batch_num
             fore_ind_list{ii} = find(fore_ind == ii);
         end
-%         [x_batch,y_batch,z_batch] = ind2sub([2^(layer_num - layer) 2^(layer_num - layer) 2^(layer_num - layer)],...
-%             find(ones(2^(layer_num - layer), 2^(layer_num - layer), 2^(layer_num - layer))));
-%         x_batch = x_batch*batch_size(1) + 0.5;
-%         y_batch = y_batch*batch_size(2) + 0.5;
-%         z_batch = z_batch*batch_size(3) + 0.5;
 
         % acquire batch relationship
         edge_ind = 0;
@@ -167,7 +214,7 @@ for layer = layer_num:-1:0
     time_local = time_local + toc;
 
     if layer == layer_num
-        phi_current = gpuArray(zeros(x,y,z,3));
+        phi_current = zeros(x,y,z,3);
         phi_current_vec = zeros(3,1);
     else 
     %     phi_current = zeros(x,y,z,3);
@@ -183,10 +230,20 @@ for layer = layer_num:-1:0
         phi_current_vec = phi_current_vec';
         phi_current_vec = phi_current_vec(:);
         
-        phi_current = gpuArray(phi_current);
+%         phi_current = gpuArray(phi_current);
     end
 
-[x_ind,y_ind,z_ind] = ind2sub(size(data1),fore2_vec);
+    fore2_vec = find(fore2);
+    [x_fore, y_fore, z_fore] = ind2sub(size(fore2), fore2_vec);
+    [y_batch, x_batch, z_batch] = meshgrid(0:2^(layer_num - layer)+1);
+    y_batch = y_batch*batch_size(2) + 0.5 - batch_size(2)/2;
+    x_batch = x_batch*batch_size(1) + 0.5 - batch_size(1)/2;
+    z_batch = z_batch*batch_size(3) + 0.5 - batch_size(3)/2;
+
+    [x_ind,y_ind,z_ind] = ind2sub(size(data1),fore2_vec);
+    x_ind = gpuArray(x_ind);
+    y_ind = gpuArray(y_ind);
+    z_ind = gpuArray(z_ind);
 
 loss = gpuArray(zeros(1000,1));
 time = gpuArray(zeros(1000,1));
@@ -195,7 +252,7 @@ time = gpuArray(zeros(1000,1));
     x_bias = phi_previous(fore2_vec);
     y_bias = phi_previous(fore2_vec + x*y*z);
     z_bias = phi_previous(fore2_vec + 2*x*y*z);
-for iter = 1:50
+for iter = 1:25
 %     phi_previous = phi_current;
 %     x_bias = phi_previous(fore2_vec);
 %     y_bias = phi_previous(fore2_vec + x*y*z);
@@ -240,6 +297,9 @@ for iter = 1:50
     AtA = gpuArray(AtA);
     AtIt = gpuArray(AtIt);
     phi_gradient = -(AtA + smoothness*L)\(AtIt + smoothness*L*phi_current_vec(batch_bin));
+    if gather(any(isnan(phi_gradient)))
+        error('Wrong result!');
+    end
     if max(abs(phi_gradient)) < 1e-4 || norm(phi_gradient) < 1e-6
         break;
     end
@@ -266,7 +326,7 @@ for iter = 1:50
     else
         smooth_error = smoothness*phi_current_vec(batch_bin)'*L*phi_current_vec(batch_bin)/sum(fore2(:));
     end
-    fprintf('Gradient: %f\n',norm(phi_gradient)/length(phi_gradient));
+    fprintf('Gradient: %f Max Translation:%f %f %f\n',norm(phi_gradient)/length(phi_gradient), max(abs(x_bias)), max(abs(y_bias)), max(abs(z_bias)));
     fprintf('Iteration %d\n Current error:%f MSE: %f Smooth: %f Time:%f\n',iter, mse+smooth_error, mse, smooth_error, toc);
     loss(iter) = mse+smooth_error;
     time(iter) = toc;
@@ -276,8 +336,13 @@ end
     loss = gather(loss(1:iter));
     time = gather(time(1:iter));
 end
-% phi_current = gather(phi_current);
+phi_current_vec = gather(phi_current_vec);
 % save(['/work/Mengfan/Embryo/Registration/nonrigid_result/' num2str(reg_ind) '_l' num2str(layer_num) '_s'  num2str(smoothness_para)  '_' resize_method '.mat'],'phi_current_vec', 'loss', 'mse_ori' ,'-v7.3');
+if any(isnan(phi_current_vec))
+    error('Wrong result!');
+end
+save(['/work/Mengfan/Embryo/Registration/nonrigid_result_view10_l' num2str(layer_num) '_s'  num2str(smoothness_para)  '_' resize_method '/' num2str(reg_ind)  '.mat'],'phi_current_vec', 'loss', 'mse_ori' ,'-v7.3');
+end
 
 % function k = find_in_boundary(X, loc)
 %     % loc: [x_start x_end y_start y_end z_start z_end]

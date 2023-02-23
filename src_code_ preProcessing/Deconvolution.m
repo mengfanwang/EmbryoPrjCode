@@ -5,12 +5,12 @@ if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
 %     path_name = '/work/Mengfan/Embryo/22-01-11';
 %     source_data = 'myf5GFP-H2BmCherry.v1.h5';
-    path_name = '/work/Mengfan/Embryo/20220930_Joaquin';
-    source_data = '20220920_isl2bGFP_H2BmCherry_6h_ON.h5';
+    path_name = '/work/Mengfan/Embryo/20220518 isl2b H2Bmcherry overnight';
+    source_data = '20220518 isl2b H2Bmcherry overnight.h5';
     target_folder = 'deconvolution';    
 else
     addpath D:\MatlabTools;
-    path_name = '\\rs0001\Mengfan\Embryo\TM0-49\';
+    path_name = '\\rs0001\Mengfan\Embryo\TM0-49\'   ;
     source_data = 'H2BGFP_TM0-49.h5';
 end
 [h5_struct, num_view, name_view] = readh5info(fullfile(path_name, source_data));
@@ -36,7 +36,7 @@ num_iter = 30;
 %%
 fprintf('Start processing...\n');
 tic;
-for ii = 3208:3215 %num_total-1
+for ii = 12:16:799 %num_total-1
     tt = floor(ii/num_view);
     vv = mod(ii, num_view);
     if vv < 8

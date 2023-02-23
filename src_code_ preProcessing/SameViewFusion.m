@@ -4,16 +4,16 @@ clc;clear;close all;
 %% system and path
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
-    path_name = '/work/Mengfan/Embryo/22-01-11';
-    source_data = 'myf5GFP-H2BmCherry.v1.h5';
-    data_name = fullfile(path_name, 'deconvolution/deconvolution_myf5GFP-H2BmCherry.v1.h5');
-    xml_name = fullfile(path_name, 'myf5GFP-H2BmCherry.v1.xml');
-    target_folder = 'sameViewFusion_10';
-%     path_name = '/work/Mengfan/Embryo/20220930_Joaquin';
-%     source_data = '20220920_isl2bGFP_H2BmCherry_6h_ON.h5';
-%     data_name = fullfile(path_name, 'deconvolution/deconvolution_20220920_isl2bGFP_H2BmCherry_6h_ON.h5');
-%     xml_name = fullfile(path_name, '20220920_isl2bGFP_H2BmCherry_6h_ON.xml');
-%     target_folder = 'sameViewFusion_00-01_08';
+%     path_name = '/work/Mengfan/Embryo/22-01-11';
+%     source_data = 'myf5GFP-H2BmCherry.v1.h5';
+%     data_name = fullfile(path_name, 'deconvolution/deconvolution_myf5GFP-H2BmCherry.v1.h5');
+%     xml_name = fullfile(path_name, 'myf5GFP-H2BmCherry.v1.xml');
+%     target_folder = 'sameViewFusion_10';
+    path_name = '/work/Mengfan/Embryo/20220518 isl2b H2Bmcherry overnight';
+    source_data = '20220518 isl2b H2Bmcherry overnight.h5';
+    data_name = fullfile(path_name, 'deconvolution/deconvolution_20220518 isl2b H2Bmcherry overnight.h5');
+    xml_name = fullfile(path_name, '20220518 isl2b H2Bmcherry overnight.xml');
+    target_folder = 'Fusion_angle0';
 else
     addpath D:\MatlabTools;
     path_name = 'H:\Embryo\TM0-49\';
@@ -25,14 +25,14 @@ num_time = length(h5_struct);
 num_total = num_time * num_view;
 
 %% fusion
-for tt = 00:249
+for tt = 00:49
 tt_ind = num2str(100000+tt);
 tt_ind = tt_ind(2:6);
 fprintf('processing: %d\n',tt);
 if ~isfolder(fullfile(path_name, target_folder))
     mkdir(fullfile(path_name, target_folder));
 end
-for vv = 3:3
+for vv = 9:9
     vv_ind = name_view{vv+4};
     im2 = hdf5read(data_name,['/t' tt_ind '/s' vv_ind '/0/cells']);
 

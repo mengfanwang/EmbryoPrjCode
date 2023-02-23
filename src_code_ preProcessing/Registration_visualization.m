@@ -5,7 +5,7 @@ if isunix
     fore_folder = '/work/public/sameViewFusion/sameViewDetection_050-149_11/synQuant_refine_res';
 end
 
-reg_ind = 137;
+reg_ind = 107;
 data1 = tifread(fullfile(data_folder, ['00' num2str(reg_ind) '.tif']));
 % data2 = tifread(fullfile(data_folder, '00083.tif'));
 fore2 = load(fullfile(fore_folder, ['00' num2str(reg_ind) '.mat']));
@@ -20,46 +20,25 @@ fore2_backup = fore2 > 0.5;
 %%
 % load(['/work/Mengfan/Embryo/Registration/tmp_result/phi_' num2str(reg_ind) '_' num2str(reg_ind+1) '_rigid.mat']);
 % load(['/work/Mengfan/Embryo/Registration/nonrigid_result/' num2str(reg_ind) '_l4_s1_nearest.mat']);
-load('/work/Mengfan/Embryo/Registration/nonrigid_result_l4_s1_linear/137.mat');
+load('/work/Mengfan/Embryo/Registration/nonrigid_result_view11_l5_s1_linear/107.mat');
 1
+%%
+% phi_current_vec = reshape(phi_current_vec,3,[]);
+% phi_current = imresize4d(phi_current_vec, [960 960 160], 'nearest');
 %% plot
-clc
-zz = 122;
+zz = 75;
 data1 = data1_backup(:,:,zz);
 fore2 = fore2_backup(:,:,zz);
 
-% get ux uy uz
-% 1. direct way
-% ux = phi_current(:,:,zz,1) - phi_rigid(1);
-% uy = phi_current(:,:,zz,2) - phi_rigid(2);
-% % 2. interpolation
-% ux = zeros(16,16);
-% uy = zeros(16,16);
-% batch_size = [60 60 10];
-% for yy = 1:16
-% for xx = 1:16
-%     x_start = (xx-1)*batch_size(1) + 1;
-%     x_end = xx*batch_size(1);
-%     y_start = (yy-1)*batch_size(2) + 1;
-%     y_end = yy*batch_size(2);
-%     ux(xx, yy) = unique(phi_current(x_start:x_end, y_start:y_end, zz, 1));
-%     uy(xx, yy) = unique(phi_current(x_start:x_end, y_start:y_end, zz, 2));
-% end
-% end
-% % 
-% ux = imresize(ux, size(data1)) - phi_rigid(1);
-% uy = imresize(uy, size(data1)) - phi_rigid(2);
-
 phi_current_vec = reshape(phi_current_vec,3,[]);
+% phi_current = imresize4d(phi_current_vec, [960 960 192], 'linear');
 phi_current = imresize4d(phi_current_vec, [960 960 160], 'nearest');
 ux = phi_current(:,:,zz,1);
 uy = phi_current(:,:,zz,2);
-% ux = phi_current(:,:,zz,1) - phi_rigid(1);
-% uy = phi_current(:,:,zz,2) - phi_rigid(2);
 
-ux(~fore2) = 0;
-uy(~fore2) = 0;
-uz(~fore2) = 0;
+% ux(~fore2) = 0;
+% uy(~fore2) = 0;
+% uz(~fore2) = 0;
 
 
 [x_size, y_size, z_size] = size(ux);
@@ -87,7 +66,7 @@ h = imshow(data1/255);hold on;
 % h = imshow(zeros(size(imresize(max(data1,[],3)/2,scale)))); hold on;
 for ii = 1:256
     ind = color_quiver == ii;
-    quiver(X(ind)*scale,Y(ind)*scale,-y(ind)*4,-x(ind)*4,0,'Color',color(ii,:));
+    quiver(X(ind)*scale,Y(ind)*scale,-y(ind),-x(ind),0,'Color',color(ii,:));
 end
 % camroll(-90);
 

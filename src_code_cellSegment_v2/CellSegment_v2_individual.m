@@ -10,10 +10,10 @@ addpath('../src_code_visualization');
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
     addpath('/home/mengfan/ForExecute/cc_ImHandle');
-    data_folder = '/work/Mengfan/Embryo/22-01-11/sameViewFusion_10';
-    res_folder = '/work/Mengfan/Embryo/22-01-11/sameViewDetection_10';
-%     data_folder = '/work/Mengfan/Embryo/20220930_Joaquin/Fusion_sample_9';
-%     res_folder = '/work/Mengfan/Embryo/20220930_Joaquin/Detection_sample_9';
+    data_folder = '/work/public/sameViewFusion/sameViewFusion_10';
+    res_folder = '/work/public/sameViewFusion/sameViewDetection_10';
+%     data_folder = '/work/Mengfan/Embryo/20220518 isl2b H2Bmcherry overnight/Fusion_angle0';
+%     res_folder = '/work/Mengfan/Embryo/20220518 isl2b H2Bmcherry overnight/Detection_angle0';
 else
     addpath('D:\Congchao''s code\cc_ImHandle\');
     addpath D:\MatlabTools; 
@@ -25,9 +25,7 @@ tif_files = dir(fullfile(data_folder, '/*.tif'));
 if ~exist(res_folder,'dir')
     mkdir(res_folder);
 end
-minIntensity = 25; % The middle of two Gaussian intensity distributions (
-                    % should learn from data)
-                    % 0-20:25; 230:249:50
+minIntensity = 75; 
 
 %% synQuant
 tic;
