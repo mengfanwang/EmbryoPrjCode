@@ -23,7 +23,7 @@ if nargin < 3
         z_threshold = 1;
     else
         minSz = 20;                
-        maxSz = 30000/4;  % /4 for downsample case
+        maxSz = 30000;  % /4 for downsample case
         minfill = 0.0001;
         maxWHRatio = 100;
         z_threshold = 5;             

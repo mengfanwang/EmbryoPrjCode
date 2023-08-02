@@ -1,44 +1,47 @@
 %% system and path
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
-    data_folder = '/work/Mengfan/Embryo/22-01-11/sameViewFusion_050-149_11';
-    fore_folder = '/work/public/sameViewFusion/sameViewDetection_050-149_11/synQuant_refine_res';
+%     data_folder = '/work/Mengfan/Embryo/22-01-11/sameViewFusion_050-149_11';
+%     fore_folder = '/work/public/sameViewFusion/sameViewDetection_050-149_11/synQuant_refine_res';
+    data_folder = '/work/public/Joaquin/view12';
+    fore_folder = '/work/public/Joaquin/Detection_view12/v6_z4z5/Wei_refine_res';
 end
 
-reg_ind = 107;
-data1 = tifread(fullfile(data_folder, ['00' num2str(reg_ind) '.tif']));
+reg_ind = 48;
+data1 = tifread(fullfile(data_folder, ['0000' num2str(reg_ind) '.tif']));
 % data2 = tifread(fullfile(data_folder, '00083.tif'));
-fore2 = load(fullfile(fore_folder, ['00' num2str(reg_ind) '.mat']));
+fore2 = load(fullfile(fore_folder, ['0000' num2str(reg_ind) '.mat']));
 fore2 = fore2.refine_res>0;
 
 data1 = data1(:,:,1:160);
-data1_backup = imresize3(data1, [960 960 160]);
+data1_backup = imresize3(data1, [960 960 265]);
 fore2 = fore2(:,:,1:160);
-fore2 = imresize3(fore2, [960 960 160]);
+fore2 = imresize3(fore2, [960 960 265]);
 fore2_backup = fore2 > 0.5;
 
 %%
 % load(['/work/Mengfan/Embryo/Registration/tmp_result/phi_' num2str(reg_ind) '_' num2str(reg_ind+1) '_rigid.mat']);
 % load(['/work/Mengfan/Embryo/Registration/nonrigid_result/' num2str(reg_ind) '_l4_s1_nearest.mat']);
-load('/work/Mengfan/Embryo/Registration/nonrigid_result_view11_l5_s1_linear/107.mat');
-1
+% load('/work/Mengfan/Embryo/Registration/nonrigid_result_view11_l5_s1_linear/107.mat');
+load('/work/Mengfan/Embryo/20220518 isl2b H2Bmcherry overnight/Registration/00048.mat');
 %%
 % phi_current_vec = reshape(phi_current_vec,3,[]);
 % phi_current = imresize4d(phi_current_vec, [960 960 160], 'nearest');
 %% plot
-zz = 75;
-data1 = data1_backup(:,:,zz);
+zz = 210;
+data1 = data1_backup(:,:,zz)/2;
 fore2 = fore2_backup(:,:,zz);
 
 phi_current_vec = reshape(phi_current_vec,3,[]);
 % phi_current = imresize4d(phi_current_vec, [960 960 192], 'linear');
-phi_current = imresize4d(phi_current_vec, [960 960 160], 'nearest');
+% phi_current = imresize4d(phi_current_vec, [960 960 160], 'nearest');
+phi_current = imresize4d(phi_current_vec, [960 960 265], 'linear');
 ux = phi_current(:,:,zz,1);
 uy = phi_current(:,:,zz,2);
 
-% ux(~fore2) = 0;
-% uy(~fore2) = 0;
-% uz(~fore2) = 0;
+ux(~fore2) = 0;
+uy(~fore2) = 0;
+uz(~fore2) = 0;
 
 
 [x_size, y_size, z_size] = size(ux);

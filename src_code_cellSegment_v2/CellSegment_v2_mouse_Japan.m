@@ -16,8 +16,8 @@ if isunix
 %     data_folder = '/work/Mengfan/Embryo/20220518 isl2b H2Bmcherry overnight/view12';
 %     res_folder = '/work/Mengfan/Embryo/20220518 isl2b H2Bmcherry overnight/Detection_view12';
 
-    data_folder = '/work/Mengfan/Embryo/23-06-29_Yinan/view9';
-    res_folder = '/work/Mengfan/Embryo/23-06-29_Yinan/Detection_view9';
+    data_folder = '/work/Mengfan/EmbryoData_other/Mouse_Japan/embryo1-embryo1_Vertical-gfp_data';
+    res_folder = '/work/Mengfan/EmbryoData_other/Mouse_Japan/embryo1-embryo1_Vertical-gfp_detection';
     
 else
     addpath('D:\Congchao''s code\cc_ImHandle\');
@@ -30,7 +30,7 @@ tif_files = dir(fullfile(data_folder, '/*.tif'));
 if ~exist(res_folder,'dir')
     mkdir(res_folder);
 end
-minIntensity = 50; 
+minIntensity = 25; 
 
 %% synQuant
 tic;
@@ -49,15 +49,17 @@ if ~isfolder(fullfile(res_folder, 'synQuant_res_tif'))
     mkdir(fullfile(res_folder, 'synQuant_res_tif'));
 end
 q.minIntensity = minIntensity;
-ds_scale = 2; % down sample scale
+scale_term = 500;
+ds_scale = 1; % down sample scale
 for i=1:numel(tif_files)
     fprintf('processing %d/%d file\n', i, numel(tif_files));
     org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
     [~, org_name, ~] = fileparts(tif_files(i).name);
     [h, w, slices] = size(org_im);
     org_im = imresize3(org_im,round([h/ds_scale w/ds_scale slices]));
-    org_im = org_im - 200;  
+    org_im = org_im - 400;  
     org_im(org_im < 0) = 0;
+    org_im = org_im*255 / scale_term;
     
     sigma = [3 3 1];
     sm_im = imgaussfilt3(org_im,sigma);
@@ -72,7 +74,7 @@ for i=1:numel(tif_files)
     fMaps = imresize3(fMaps,[h w slices],'nearest');
     toc
     save(fullfile(res_folder, 'synQuant_res', [org_name '.mat']), 'z_mat', 'id_mat','fMaps','-v7.3');
-    org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
+%     org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
     labelwrite(uint8(org_im/2), id_mat, fullfile(res_folder, 'synQuant_res_tif', org_name));
 end
 

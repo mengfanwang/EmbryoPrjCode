@@ -5,8 +5,8 @@ if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
     path_name = '/work/Mengfan/Embryo/20220518 isl2b H2Bmcherry overnight';
     source_data = '20220518 isl2b H2Bmcherry overnight.h5';
-    target_folder = 'data';
-    mode = 'merge';  % if mode == merge, combine two views together
+    target_folder = 'data_view';
+    mode = 'NOmerge';  % if mode == merge, combine two views together
 else
     path_name = 'E:\Embryo\TM0-49';
     source_data = 'H2BGFP_TM0-49.h5';
@@ -20,21 +20,21 @@ end
 if strcmp(mode, 'merge')
     target_folder = [target_folder, '_merge'];
 end
-if ~isfolder(fullfile(path_name, target_folder))
-    mkdir(fullfile(path_name, target_folder));
-end
 num_time = length(h5_struct);
-for tt = 1:1 %1:num_time
+for tt = 1:num_time
     fprintf('Processing time point %d/%d:', tt, num_time);
     tt_ind = num2str(99999+tt);
     tt_ind = tt_ind(2:6);
-    mkdir(fullfile(path_name, target_folder, tt_ind));
+%     mkdir(fullfile(path_name, target_folder, tt_ind));
     if ~strcmp(mode, 'merge')
-        for vv = 9:16 %1:num_view
-            fprintf(' %d', vv);
+        for vv = 13:13 %1:8 %1:num_view
             vv_ind = name_view{vv};
+            fprintf(vv_ind);
             data = hdf5read(fullfile(path_name, source_data),['/t' tt_ind '/s' vv_ind '/0/cells']);
-            tifwrite(uint16(data),fullfile(path_name, target_folder,  tt_ind, vv_ind));
+            if ~isfolder(fullfile(path_name, [target_folder vv_ind]))
+                mkdir(fullfile(path_name, [target_folder vv_ind]));
+            end
+            tifwrite(uint16(data),fullfile(path_name, [target_folder vv_ind],  tt_ind));
         end
         fprintf('\n');
     else
