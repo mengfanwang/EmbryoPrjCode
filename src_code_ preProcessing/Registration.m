@@ -2,10 +2,37 @@
 clc;clear;close all;
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
-    data_folder = '/work/Mengfan/Embryo/22-01-11/sameViewFusion_050-149_11';
+    data_folder = '/work/Mengfan/Embryo/20220518 isl2b H2Bmcherry overnight/view12';
 end
 tif_files = dir(fullfile(data_folder, '/*.tif'));
 ds_scale = 2;
+
+%% global registration
+optimizer = registration.optimizer.RegularStepGradientDescent;
+metric = registration.metric.MeanSquares;
+optimizer.MaximumIterations = 500;
+optimizer.MaximumStepLength = 0.01;
+
+tform = cell(1,numel(tif_files)-1);
+
+%%
+tic;
+for ii = 1:51 %52:numel(tif_files)-1
+    fprintf('processing %d/%d file\n', ii, numel(tif_files));
+
+    im_a = tifread(fullfile(tif_files(ii).folder, tif_files(ii).name));
+    [h, w, slices] = size(im_a);
+%     im_a = imresize3(im_a,round([h/ds_scale w/ds_scale slices*ds_scale]));
+
+    im_b = tifread(fullfile(tif_files(ii+1).folder, tif_files(ii+1).name));
+    [h, w, slices] = size(im_b);
+%     im_b = imresize3(im_b,round([h/ds_scale w/ds_scale slices*ds_scale]));
+
+    tform_temp = imregtform(im_a, im_b, 'rigid', optimizer, metric);
+    tform{ii} = tform_temp;
+    toc
+end
+toc
 
 %% save downsampled data
 if ~isfolder([data_folder '_ds'])
@@ -40,7 +67,7 @@ for ii = 1:numel(tif_files)-1
     [h, w, slices] = size(im_b);
     im_b = imresize3(im_b,round([h/ds_scale w/ds_scale slices]));
 
-    tform_temp = imregtform(im_a, im_b, 'translation', optimizer, metric);
+    tform_temp = imregtform(im_a, im_b, 'rigid', optimizer, metric);
     tform{ii} = tform_temp;
     toc
 end

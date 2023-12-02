@@ -10,11 +10,11 @@ if isunix
 %     xml_name = fullfile(path_name, 'myf5GFP-H2BmCherry.xml');
 %     target_folder = 'sameViewFusion_2';
 
-    path_name = '/work/Mengfan/Embryo/23-06-29_Yinan';
-    source_data = 'HRASgscGFP-H2BmCherry_2.h5';
-    data_name = fullfile(path_name, 'deconvolution/deconvolution_HRASgscGFP-H2BmCherry_2.h5');
-    xml_name = fullfile(path_name, 'HRASgscGFP-H2BmCherry_2.xml');
-    target_folder = 'view9';
+    path_name = '/work/Mengfan/Embryo/23-11-01_Yinan';
+    source_data = 'HRASGFP-H2BmChery_2.h5';
+    data_name = fullfile(path_name, 'HRASGFP-H2BmChery_2.h5');
+    xml_name = fullfile(path_name, 'HRASGFP-H2BmChery_2.xml');
+    target_folder = 'view1';
 else
     addpath D:\MatlabTools;
     path_name = 'H:\Embryo\TM0-49\';
@@ -26,14 +26,14 @@ num_time = length(h5_struct);
 num_total = num_time * num_view;
 
 %% fusion
-for tt = 19:159
+for tt = 160:179
 tt_ind = num2str(100000+tt);
 tt_ind = tt_ind(2:6);
 fprintf('processing: %d\n',tt);
 if ~isfolder(fullfile(path_name, target_folder))
     mkdir(fullfile(path_name, target_folder));
 end
-for vv = 10:10
+for vv = 2:2
     vv_ind = name_view{vv+4};
     im2 = hdf5read(data_name,['/t' tt_ind '/s' vv_ind '/0/cells']);
 

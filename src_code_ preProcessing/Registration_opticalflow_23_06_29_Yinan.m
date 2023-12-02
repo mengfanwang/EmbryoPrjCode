@@ -1,14 +1,14 @@
 %% system and path
 dbstop if error
-for reg_ind = 148:148
+for reg_ind = 36:36
 
 clearvars -except reg_ind
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
 
-    data_folder = '/work/Mengfan/Embryo/23-06-29_Yinan/view9';
-    fore_folder = '/work/Mengfan/Embryo/23-06-29_Yinan/Detection_view9/Wei_refine_res';
-    save_folder = '/work/Mengfan/Embryo/23-06-29_Yinan/Registration';
+    data_folder = '/work/Mengfan/Embryo/23-06-29_Yinan2/view9_rmMem';
+    fore_folder = '/work/Mengfan/Embryo/23-06-29_Yinan2/Detection_view9_rmMem/Wei_refine_res';
+    save_folder = '/work/Mengfan/Embryo/23-06-29_Yinan2/Registration';
 end
 
 data1_name = num2str(100000 + reg_ind);
@@ -33,10 +33,10 @@ if mod(zslices, 2^layer_num) ~= 0
 end
 if reg_ind == 36
     fore2_backup(58:84,135:145,8:12) = 0;
-elseif reg_ind == 129
-    fore2_backup(150:160,305:320,166:170) = 0;
-elseif reg_ind == 148
-    fore2_backup(100:110,810:815,36:40) = 0;
+% elseif reg_ind == 129
+%     fore2_backup(150:160,305:320,166:170) = 0;
+% elseif reg_ind == 148
+%     fore2_backup(100:110,810:815,36:40) = 0;
 end
 
 %%             size          block
