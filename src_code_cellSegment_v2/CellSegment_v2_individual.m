@@ -10,8 +10,12 @@ addpath('../src_code_visualization');
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
     addpath('/home/mengfan/ForExecute/cc_ImHandle');
-    data_folder = '/work/Mengfan/EmbryoData_other/drosophila-cell-tracking/raw_data/TIF';
-    res_folder = '/work/Mengfan/EmbryoData_other/drosophila-cell-tracking/Our/Detection_drosophila';
+    data_folder = '/work/Mengfan/Embryo/23-11-01_Yinan/view9';
+    res_folder = '/work/Mengfan/Embryo/23-11-01_Yinan/Detection_view9';
+
+%     data_folder = '/work/Mengfan/Embryo/20220930_Joaquin/view9';
+%     res_folder = '/work/Mengfan/Embryo/20220930_Joaquin/Detection_view9';
+    
 else
     addpath('D:\Congchao''s code\cc_ImHandle\');
     addpath D:\MatlabTools; 
@@ -23,7 +27,7 @@ tif_files = dir(fullfile(data_folder, '/*.tif'));
 if ~exist(res_folder,'dir')
     mkdir(res_folder);
 end
-minIntensity = 20; 
+minIntensity = 50; 
 
 %% synQuant
 tic;
@@ -48,11 +52,13 @@ for i=1:numel(tif_files)
     org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
     [~, org_name, ~] = fileparts(tif_files(i).name);
     [h, w, slices] = size(org_im);
+    org_im = imresize3(org_im,round([h/ds_scale w/ds_scale slices]));
+    org_im = org_im - 200;  
+    org_im(org_im < 0) = 0;
     
-    sigma = [1 1 1];
+    sigma = [3 3 1];
     sm_im = imgaussfilt3(org_im,sigma);
-%     [zMap, synId, fMap] = m_Synquant4Embryo_Paramater(sm_im, q);
-    [zMap, synId, fMap] = m_Synquant4Embryo_Paramater(sm_im, q, 20, 3000, false, 0.4, 4);
+    [zMap, synId, fMap] = m_Synquant4Embryo_Paramater(sm_im, q);
         
     z_mat = single(zMap);
     id_mat = uint16(synId);
@@ -63,7 +69,8 @@ for i=1:numel(tif_files)
     fMaps = imresize3(fMaps,[h w slices],'nearest');
     toc
     save(fullfile(res_folder, 'synQuant_res', [org_name '.mat']), 'z_mat', 'id_mat','fMaps','-v7.3');
-    labelwrite(uint8(org_im/3), id_mat, fullfile(res_folder, 'synQuant_res_tif', org_name));
+    org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
+    labelwrite(uint8(org_im/2), id_mat, fullfile(res_folder, 'synQuant_res_tif', org_name));
 end
 
 % 
