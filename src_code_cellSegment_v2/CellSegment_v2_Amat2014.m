@@ -10,8 +10,8 @@ addpath('../src_code_visualization');
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
     addpath('/home/mengfan/ForExecute/cc_ImHandle');
-    data_folder = '/work/Mengfan/Embryo/23-11-01_Yinan/view9';
-    res_folder = '/work/Mengfan/Embryo/23-11-01_Yinan/Detection_view9';
+    data_folder = '/work/Mengfan/Embryo/Amat2014/tif';
+    res_folder = '/work/Mengfan/Embryo/Amat2014/Detection';
 
 %     data_folder = '/work/Mengfan/Embryo/20220930_Joaquin/view9';
 %     res_folder = '/work/Mengfan/Embryo/20220930_Joaquin/Detection_view9';
@@ -27,7 +27,7 @@ tif_files = dir(fullfile(data_folder, '/*.tif'));
 if ~exist(res_folder,'dir')
     mkdir(res_folder);
 end
-minIntensity = 50; 
+minIntensity = 10; 
 
 %% synQuant
 tic;
@@ -46,19 +46,17 @@ if ~isfolder(fullfile(res_folder, 'synQuant_res_tif'))
     mkdir(fullfile(res_folder, 'synQuant_res_tif'));
 end
 q.minIntensity = minIntensity;
-ds_scale = 1; % down sample scale
-for i=1:numel(tif_files)
+ds_scale = 2; % down sample scale
+for i=163:numel(tif_files)
     fprintf('processing %d/%d file\n', i, numel(tif_files));
     org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
     [~, org_name, ~] = fileparts(tif_files(i).name);
     [h, w, slices] = size(org_im);
     org_im = imresize3(org_im,round([h/ds_scale w/ds_scale slices]));
-    org_im = org_im - 200;  
-    org_im(org_im < 0) = 0;
     
     sigma = [3 3 1];
     sm_im = imgaussfilt3(org_im,sigma);
-    [zMap, synId, fMap] = m_Synquant4Embryo_Paramater(sm_im, q);
+    [zMap, synId, fMap] = m_Synquant4Embryo_Paramater(sm_im, q, 200/4, 30000, false, 0.01, 100);
         
     z_mat = single(zMap);
     id_mat = uint16(synId);

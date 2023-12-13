@@ -32,7 +32,7 @@ if nargin < 3
         maxWHRatio = 4;      
     end
 end
-z_threshold = 5;  
+z_threshold = 2;  
 fMap =  imgIn > q.minIntensity;
 if isfield(q, 'posEigMap')
     posEigMap = q.posEigMap;
