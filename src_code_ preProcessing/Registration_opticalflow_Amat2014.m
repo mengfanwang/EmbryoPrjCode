@@ -1,13 +1,13 @@
 %% system and path
 dbstop if error
-for reg_ind = 160:178
-    % 150:248  pad 7: 177 183 198
+for reg_ind = 7:80
 clearvars -except reg_ind
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
 
-    data_folder = '/work/Mengfan/Embryo/23-11-01_Yinan/view9';
-    fore_folder = '/work/Mengfan/Embryo/23-11-01_Yinan/Detection_view9/Wei_refine_res';
+    data_folder = '/work/public/Embryo/Amat2014/data';
+    fore_folder = '/work/public/Embryo/Amat2014/Detection/Wei_refine_res';
+    save_folder = '/work/public/Embryo/Amat2014/Registration';
 end
 
 data1_name = num2str(100000 + reg_ind);
@@ -20,21 +20,20 @@ data2 = tifread(fullfile(data_folder, [data2_name '.tif']));
 fore2 = load(fullfile(fore_folder, [data2_name '.mat']));
 fore2 = fore2.refine_res>0;
 
-
-% view 10
 zslices = size(data1,3);
-data1_backup = imresize3(data1, [960 960 zslices]);
-data2_backup = imresize3(data2, [960 960 zslices]);
-fore2_backup = imresize3(fore2, [960 960 zslices]);
+data1_backup = imresize3(data1, [896 909 zslices]);
+data2_backup = imresize3(data2, [896 909 zslices]);
+fore2_backup = imresize3(fore2, [896 909 zslices]);
 layer_num = 5;  
 if mod(zslices, 2^layer_num) ~= 0 
-    data1_backup = padarray(data1_backup, [0 0 2^layer_num-mod(zslices, 2^layer_num)], 'replicate','post');
-    data2_backup = padarray(data2_backup, [0 0 2^layer_num-mod(zslices, 2^layer_num)], 'replicate','post');
-    fore2_backup = padarray(fore2_backup, [0 0 2^layer_num-mod(zslices, 2^layer_num)], 0, 'post');
+    data1_backup = padarray(data1_backup, [960-896 960-909 2^layer_num-mod(zslices, 2^layer_num)], 'replicate','post');
+    data2_backup = padarray(data2_backup, [960-896 960-909 2^layer_num-mod(zslices, 2^layer_num)], 'replicate','post');
+    fore2_backup = padarray(fore2_backup, [960-896 960-909 2^layer_num-mod(zslices, 2^layer_num)], 0, 'post');
 end
-% if reg_ind == 1
-%     fore2_backup(60:75,180:195,154:161) = 0;
-% end
+if reg_ind == 7
+    fore2_backup(541:570, 721:750, 193:200) = 0;
+    fore2_backup(811:840, 421:450, 177:184) = 0;
+end
 %%             size          block
 % layer 0: 960 960 160       512
 % layer 1: 480 480 80        64
@@ -43,7 +42,7 @@ end
 % layer 4: 60  60  10      
 %%
 clc;
-clearvars -except data1_backup data2_backup fore2_backup reg_ind data1_name
+clearvars -except data1_backup data2_backup fore2_backup reg_ind data1_name save_folder
 
 % accelerated version of Registration_opticalflow_nonrigid_v2.m
 % results should guranteee the same  
@@ -323,7 +322,7 @@ phi_current_vec = gather(phi_current_vec);
 if any(isnan(phi_current_vec))
     error('Wrong result!');
 end
-save(['/work/Mengfan/Embryo/23-11-01_Yinan/Registration/' data1_name '.mat'],'phi_current_vec', 'loss', 'mse_ori' ,'-v7.3');
+save(fullfile(save_folder, [data1_name '.mat']),'phi_current_vec', 'loss', 'mse_ori' ,'-v7.3');
 end
 
 % function k = find_in_boundary(X, loc)
