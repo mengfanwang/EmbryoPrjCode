@@ -10,8 +10,8 @@ addpath('../src_code_visualization');
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
     addpath('/home/mengfan/ForExecute/cc_ImHandle');
-    data_folder = '/work/Mengfan/Embryo/Amat2014/tif';
-    res_folder = '/work/Mengfan/Embryo/Amat2014/Detection';
+    data_folder = '/work/public/Embryo/Amat2014/data';
+    res_folder = '/work/public/Embryo/Amat2014/Detection';
 
 %     data_folder = '/work/Mengfan/Embryo/20220930_Joaquin/view9';
 %     res_folder = '/work/Mengfan/Embryo/20220930_Joaquin/Detection_view9';
@@ -116,13 +116,13 @@ if ~isfolder(fullfile(res_folder, 'varianceMap'))
     mkdir(fullfile(res_folder, 'varianceMap'));
 end
 scale_term = 300;
-for i= 1:numel(tif_files)  
+for i= 301:numel(tif_files)  
     disp(i);
     
     org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
     [~, org_name, ~] = fileparts(tif_files(i).name);
-    org_im = org_im - 200;  
-    org_im(org_im < 0) = 0;
+%     org_im = org_im - 200;  
+%     org_im(org_im < 0) = 0;
     vid = 255*org_im/scale_term;
     varMap = cell(3,2);
     [varMap{1,1}, varMap{2,1},varMap{3,1}] = ...

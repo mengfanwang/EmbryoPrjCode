@@ -1,13 +1,13 @@
 %% system and path
 dbstop if error
-for reg_ind = 312:400
+for reg_ind = 0:98
+    % 150:248  pad 7: 177 183 198
 clearvars -except reg_ind
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
 
-    data_folder = '/work/public/Embryo/Amat2014/data';
-    fore_folder = '/work/public/Embryo/Amat2014/Detection/Wei_refine_res';
-    save_folder = '/work/public/Embryo/Amat2014/Registration';
+    data_folder = '/work/Mengfan/EmbryoData_other/drosophila-cell-tracking/raw_data/TIF';
+    fore_folder = '/work/Mengfan/EmbryoData_other/drosophila-cell-tracking/Our/Detection_drosophila/Wei_refine_res';
 end
 
 data1_name = num2str(100000 + reg_ind);
@@ -20,38 +20,13 @@ data2 = tifread(fullfile(data_folder, [data2_name '.tif']));
 fore2 = load(fullfile(fore_folder, [data2_name '.mat']));
 fore2 = fore2.refine_res>0;
 
-zslices = size(data1,3);
-data1_backup = imresize3(data1, [896 909 zslices]);
-data2_backup = imresize3(data2, [896 909 zslices]);
-fore2_backup = imresize3(fore2, [896 909 zslices]);
-layer_num = 5;  
-if mod(zslices, 2^layer_num) ~= 0 
-    data1_backup = padarray(data1_backup, [960-896 960-909 2^layer_num-mod(zslices, 2^layer_num)], 'replicate','post');
-    data2_backup = padarray(data2_backup, [960-896 960-909 2^layer_num-mod(zslices, 2^layer_num)], 'replicate','post');
-    fore2_backup = padarray(fore2_backup, [960-896 960-909 2^layer_num-mod(zslices, 2^layer_num)], 0, 'post');
-end
-if reg_ind == 7
-    fore2_backup(541:570, 721:750, 193:200) = 0;
-    fore2_backup(811:840, 421:450, 177:184) = 0;
-elseif reg_ind == 17
-    fore2_backup(451:480, 241:270, 169:176) = 0;
-    fore2_backup(511:570, 721:750, 193:200) = 0;
-elseif reg_ind == 27
-    fore2_backup(1:60, 661:720, 157:163) = 0;
-elseif reg_ind == 32
-    fore2_backup(1:60, 362:420, 194:208) = 0;
-elseif reg_ind == 167
-    fore2_backup(481:510, 61:90, 201:208) = 0;
-elseif reg_ind == 171
-    fore2_backup(631:660, 151:180, 185:192) = 0;
-    fore2_backup(61:90, 91:120, 225:232) = 0;
-elseif reg_ind == 222
-    fore2_backup(61:120, 301:360, 4:8) = 0;
-elseif reg_ind == 257
-    fore2_backup(541:570, 721:750, 217:224) = 0;
-elseif reg_ind == 269
-    fore2_backup(751:780, 301:330, 241:248) = 0;
-end
+
+data1_backup = padarray(data1, [0 38 2], 'replicate','post');
+data2_backup = padarray(data2, [0 38 2], 'replicate','post');
+fore2_backup = padarray(fore2, [0 38 2], 0, 'post');
+% if reg_ind == 1
+%     fore2_backup(60:75,180:195,154:161) = 0;
+% end
 %%             size          block
 % layer 0: 960 960 160       512
 % layer 1: 480 480 80        64
@@ -60,15 +35,15 @@ end
 % layer 4: 60  60  10      
 %%
 clc;
-clearvars -except data1_backup data2_backup fore2_backup reg_ind data1_name save_folder
+clearvars -except data1_backup data2_backup fore2_backup reg_ind data1_name
 
 % accelerated version of Registration_opticalflow_nonrigid_v2.m
 % results should guranteee the same  
 
 sigma_gaussian = 1;
-layer_num = 5;   
+layer_num = 3;   
 batch_size = round(size(data1_backup)/2^layer_num);
-pad_size = [15 15 5];
+pad_size = [10 10 5];
 step = 1;
 smoothness_para = 1;
 % resize_method = 'nearest';
@@ -340,7 +315,7 @@ phi_current_vec = gather(phi_current_vec);
 if any(isnan(phi_current_vec))
     error('Wrong result!');
 end
-save(fullfile(save_folder, [data1_name '.mat']),'phi_current_vec', 'loss', 'mse_ori' ,'-v7.3');
+save(['/work/Mengfan/EmbryoData_other/drosophila-cell-tracking/Our/Registration/' data1_name '.mat'],'phi_current_vec', 'loss', 'mse_ori' ,'-v7.3');
 end
 
 % function k = find_in_boundary(X, loc)

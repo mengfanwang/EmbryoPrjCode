@@ -2,7 +2,7 @@
 clc;clear;close all;
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
-    data_folder = '/work/Mengfan/Embryo/20220518 isl2b H2Bmcherry overnight/view12';
+    data_folder = '/work/Mengfan/Embryo/20220930_Joaquin/view9';
 end
 tif_files = dir(fullfile(data_folder, '/*.tif'));
 ds_scale = 2;
@@ -17,7 +17,7 @@ tform = cell(1,numel(tif_files)-1);
 
 %%
 tic;
-for ii = 1:51 %52:numel(tif_files)-1
+for ii = 1:200  %52:numel(tif_files)-1
     fprintf('processing %d/%d file\n', ii, numel(tif_files));
 
     im_a = tifread(fullfile(tif_files(ii).folder, tif_files(ii).name));
