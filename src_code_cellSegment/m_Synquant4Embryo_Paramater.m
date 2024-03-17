@@ -27,12 +27,12 @@ if nargin < 3
 %         maxWHRatio = 100;
 %         z_threshold = 5;             
         minSz = 200;                
-        maxSz = 30000;  % /4 for downsample case
+        maxSz = 300000;  % /4 for downsample case
         minfill = 0.4;
         maxWHRatio = 4;      
     end
 end
-z_threshold = 2;  
+z_threshold = 1;  
 fMap =  imgIn > q.minIntensity;
 if isfield(q, 'posEigMap')
     posEigMap = q.posEigMap;

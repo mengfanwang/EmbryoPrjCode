@@ -47,7 +47,7 @@ if ~isfolder(fullfile(res_folder, 'synQuant_res_tif'))
 end
 q.minIntensity = minIntensity;
 ds_scale = 2; % down sample scale
-for i=163:numel(tif_files)
+for i=901:901
     fprintf('processing %d/%d file\n', i, numel(tif_files));
     org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
     [~, org_name, ~] = fileparts(tif_files(i).name);
@@ -116,8 +116,10 @@ if ~isfolder(fullfile(res_folder, 'varianceMap'))
     mkdir(fullfile(res_folder, 'varianceMap'));
 end
 scale_term = 300;
-for i= 301:numel(tif_files)  
+for i= 400:numel(tif_files)  
     disp(i);
+
+    
     
     org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
     [~, org_name, ~] = fileparts(tif_files(i).name);

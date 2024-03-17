@@ -1,13 +1,13 @@
 %% system and path
 dbstop if error
-for reg_ind = 312:400
+for reg_ind = 837:837
 clearvars -except reg_ind
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
 
     data_folder = '/work/public/Embryo/Amat2014/data';
     fore_folder = '/work/public/Embryo/Amat2014/Detection/Wei_refine_res';
-    save_folder = '/work/public/Embryo/Amat2014/Registration';
+    save_folder = '/work/public/Embryo/Amat2014/Registration2';
 end
 
 data1_name = num2str(100000 + reg_ind);
@@ -36,10 +36,14 @@ if reg_ind == 7
 elseif reg_ind == 17
     fore2_backup(451:480, 241:270, 169:176) = 0;
     fore2_backup(511:570, 721:750, 193:200) = 0;
+    fore2_backup(451:480, 511:540, 187:191) = 0;
 elseif reg_ind == 27
-    fore2_backup(1:60, 661:720, 157:163) = 0;
+    fore2_backup(1:90, 661:720, 157:163) = 0;
+    fore2_backup(1:60, 541:570, 229:234) = 0;
 elseif reg_ind == 32
     fore2_backup(1:60, 362:420, 194:208) = 0;
+elseif reg_ind == 122
+    fore2_backup(181:240, 721:780, 229:240) = 0;
 elseif reg_ind == 167
     fore2_backup(481:510, 61:90, 201:208) = 0;
 elseif reg_ind == 171
@@ -51,6 +55,14 @@ elseif reg_ind == 257
     fore2_backup(541:570, 721:750, 217:224) = 0;
 elseif reg_ind == 269
     fore2_backup(751:780, 301:330, 241:248) = 0;
+elseif reg_ind == 328
+    fore2_backup(841:900, 241:300, 228:232) = 0;
+elseif reg_ind == 672
+    fore2_backup(481:510, 691:720, 226:229) = 0;
+elseif reg_ind == 687
+    fore2_backup(1:120, 451:600, 245:251) = 0;
+elseif reg_ind == 837
+    fore2_backup(571:600, 781:810, 207:211) = 0;
 end
 %%             size          block
 % layer 0: 960 960 160       512

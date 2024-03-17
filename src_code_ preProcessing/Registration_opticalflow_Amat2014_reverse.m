@@ -1,6 +1,6 @@
-%% system and path
+    %% system and path
 dbstop if error
-for reg_ind = -1:499
+for reg_ind = 776:776
 clearvars -except reg_ind
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
@@ -30,7 +30,9 @@ if mod(zslices, 2^layer_num) ~= 0
     data2_backup = padarray(data2_backup, [960-896 960-909 2^layer_num-mod(zslices, 2^layer_num)], 'replicate','post');
     fore2_backup = padarray(fore2_backup, [960-896 960-909 2^layer_num-mod(zslices, 2^layer_num)], 0, 'post');
 end
-if reg_ind == 7
+if reg_ind == -1
+    fore2_backup(481:510, 811:840, 249:253) = 0;
+elseif reg_ind == 7
     fore2_backup(541:570, 721:750, 193:200) = 0;
     fore2_backup(811:840, 421:450, 177:184) = 0;
 elseif reg_ind == 11
@@ -57,6 +59,7 @@ elseif reg_ind == 171
     fore2_backup(631:660, 151:180, 185:192) = 0;
     fore2_backup(61:90, 91:120, 225:232) = 0;
     fore2_backup(62:120, 62:120, 226:240) = 0;
+    fore2_backup(1:240, 61:90, 203:208) = 0;
 elseif reg_ind == 222
     fore2_backup(61:120, 301:360, 4:8) = 0;
 elseif reg_ind == 241
@@ -67,8 +70,16 @@ elseif reg_ind == 269
     fore2_backup(751:780, 301:330, 241:248) = 0;
 elseif reg_ind == 271
     fore2_backup(751:780, 571:600, 1:3) = 0;
+elseif reg_ind == 304
+    fore2_backup(481:510, 61:90, 207:211) = 0;
 elseif reg_ind == 371
     fore2_backup(781:810, 241:270, 241:244) = 0;
+elseif reg_ind == 394
+    fore2_backup(481:510, 61:90, 206:210) = 0;
+elseif reg_ind == 691
+    fore2_backup(1:120, 450:500, 245:251) = 0;
+elseif reg_ind == 776
+    fore2_backup(481:510, 841:870, 1:4) = 0; 
 end
 %%             size          block
 % layer 0: 960 960 160       512

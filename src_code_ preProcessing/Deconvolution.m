@@ -3,11 +3,11 @@ clc;clear;close all;
 %% system and path
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
-    path_name = '/work/Mengfan/Embryo/23-11-01_Yinan';
-    source_data = 'HRASGFP-H2BmChery_2.h5';
+%     path_name = '/work/Mengfan/Embryo/23-11-01_Yinan';
+%     source_data = 'HRASGFP-H2BmChery_2.h5';
 
-%     path_name = '/work/Mengfan/Embryo/20220930_Joaquin';
-%     source_data = '20220920_isl2bGFP_H2BmCherry_6h_ON.h5';
+    path_name = '/work/Mengfan/Embryo/20220518 isl2b H2Bmcherry overnight';
+    source_data = '20220518 isl2b H2Bmcherry overnight.h5';
 
     target_folder = 'deconvolution';   
 else
@@ -25,11 +25,11 @@ num_total = num_time * num_view;
 device = 'GPU'; % CPU or GPU
 save_mode = 'both'; %save as 'tif', 'h5', or 'both' 
 if strcmp(device, 'GPU')
-    gpuDevice(1);
+    gpuDevice(2);
 end
 
 z = 2:6:38;
-pdf_z = normpdf(z,20,8);   % Joaquin data: sigma = 6; yinan data: sigma = 8
+pdf_z = normpdf(z,20,6);   % Joaquin data: sigma = 6; yinan data: sigma = 8
 pdf_z = pdf_z/sum(pdf_z(:));
 pdf_z = reshape(pdf_z,[1 1 numel(pdf_z)]);
 lambda = 0.9;
@@ -38,9 +38,12 @@ num_iter = 30;
 %%
 fprintf('Start processing...\n');
 tic;
-for ii = 2565:16:num_total-1
+for ii = 40:320 %0:16:num_total-1
     tt = floor(ii/num_view);
     vv = mod(ii, num_view);
+    if vv < 8
+        continue;
+    end
     % read data from h5 file
     tt_ind = num2str(100000+tt);
     tt_ind = tt_ind(2:6);

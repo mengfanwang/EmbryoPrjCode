@@ -1,12 +1,6 @@
 %% system and path
 dbstop if error
-for reg_ind = 57:57
-    % view11 L4 error: 51 63
-    % view11 L5 error: 77 81
-    % view10 L4 error: 46 127
-    % view10 L5 error: 24 50 54 58 77 85 87 90 91 126 161 180 191
-    % drift:74 194-196
-    % view10:193-198
+for reg_ind = 14:18
 clearvars -except reg_ind
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
@@ -30,25 +24,6 @@ data2 = tifread(fullfile(data_folder, [data2_name '.tif']));
 fore2 = load(fullfile(fore_folder, [data2_name '.mat']));
 fore2 = fore2.refine_res>0;
 
-% view 11
-% data1 = data1(:,:,1:160);
-% data1_backup = imresize3(data1, [960 960 160]);
-% data2 = data2(:,:,1:160); 
-% data2_backup = imresize3(data2, [960 960 160]);
-% fore2_backup = fore2(:,:,1:160);
-% fore2_backup = imresize3(fore2_backup, [960 960 160]);
-% if reg_ind == 51
-%     fore2_backup(240:270,830:860,1:11) = 0;
-%     fore2_backup(1:10,380:400,139:147) = 0;
-% elseif reg_ind == 63
-%     fore2_backup(310:330,730:750,120:130) = 0;
-% elseif reg_ind == 77
-%     fore2_backup(750:770,530:560,136:142) = 0;
-% elseif reg_ind == 81
-%     fore2_backup(720:750,910:950,106:115) = 0;
-% end
-
-% view 10
 zslices = size(data1,3);
 data1_backup = imresize3(data1, [960 960 zslices]);
 data2_backup = imresize3(data2, [960 960 zslices]);
@@ -59,17 +34,19 @@ if mod(zslices, 2^layer_num) ~= 0
     data2_backup = padarray(data2_backup, [0 0 2^layer_num-mod(zslices, 2^layer_num)], 'replicate','post');
     fore2_backup = padarray(fore2_backup, [0 0 2^layer_num-mod(zslices, 2^layer_num)], 0, 'post');
 end
-if reg_ind == 31
-    fore2_backup(540:550,790:810,255:259) = 0;
-elseif reg_ind == 47
-    fore2_backup(520:540,780:800,3:10) = 0;
-elseif reg_ind == 48
-    fore2_backup(250:265,950:end,3:8) = 0;
-elseif reg_ind == 52
-    fore2_backup(250:270,950:end,3:8) = 0;
-elseif reg_ind == 57
-    fore2_backup(20:40,320:340,260:265) = 0;
+
+
+% % view 11
+% if reg_ind == 6
+%     fore2_backup(541:570, 661:690, 249:254) = 0;
+% end
+
+% view 12
+if reg_ind == 14
+    fore2_backup(1:10, 610:630, 43:49) = 0;
 end
+
+
 %%             size          block
 % layer 0: 960 960 160       512
 % layer 1: 480 480 80        64
@@ -306,6 +283,16 @@ for iter = 1:25
         error_y = find(a(2:3:end-1) > pad_size(2));
         error_z = find(a(3:3:end) > pad_size(3));
         batch_loc(error_y,:)
+
+        % third way
+        error_x = [];
+        for ii = 1:batch_num
+            a = AtA((ii-1)*3+1:ii*3, (ii-1)*3+1:ii*3); 
+            if rank(a) < 3
+                error_x = [error_x; ii];
+            end
+        end
+        batch_loc(error_x,:)
     end
     if max(abs(phi_gradient)) < 1e-4 || norm(phi_gradient) < 1e-6
         break;
@@ -348,7 +335,7 @@ phi_current_vec = gather(phi_current_vec);
 if any(isnan(phi_current_vec))
     error('Wrong result!');
 end
-save(['/work/Mengfan/Embryo/20220518 isl2b H2Bmcherry overnight/Registration/' data1_name '.mat'],'phi_current_vec', 'loss', 'mse_ori' ,'-v7.3');
+save(['/work/Mengfan/Embryo/20220518 isl2b H2Bmcherry overnight/Registration_view12/' data1_name '.mat'],'phi_current_vec', 'loss', 'mse_ori' ,'-v7.3');
 end
 
 % function k = find_in_boundary(X, loc)

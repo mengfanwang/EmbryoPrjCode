@@ -10,11 +10,11 @@ addpath('../src_code_visualization');
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
     addpath('/home/mengfan/ForExecute/cc_ImHandle');
-    data_folder = '/work/Mengfan/Embryo/23-11-01_Yinan/view9';
-    res_folder = '/work/Mengfan/Embryo/23-11-01_Yinan/Detection_view9';
+%     data_folder = '/work/Mengfan/Embryo/23-11-01_Yinan/view9';
+%     res_folder = '/work/Mengfan/Embryo/23-11-01_Yinan/Detection_view9';
 
-%     data_folder = '/work/Mengfan/Embryo/20220930_Joaquin/view9';
-%     res_folder = '/work/Mengfan/Embryo/20220930_Joaquin/Detection_view9';
+    data_folder = '/work/Mengfan/Embryo/20220518 isl2b H2Bmcherry overnight/view9';
+    res_folder = '/work/Mengfan/Embryo/20220518 isl2b H2Bmcherry overnight/Detection_view9';
     
 else
     addpath('D:\Congchao''s code\cc_ImHandle\');
@@ -47,7 +47,7 @@ if ~isfolder(fullfile(res_folder, 'synQuant_res_tif'))
 end
 q.minIntensity = minIntensity;
 ds_scale = 1; % down sample scale
-for i=1:numel(tif_files)
+for i=1:20 %numel(tif_files)
     fprintf('processing %d/%d file\n', i, numel(tif_files));
     org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
     [~, org_name, ~] = fileparts(tif_files(i).name);
@@ -70,6 +70,8 @@ for i=1:numel(tif_files)
     toc
     save(fullfile(res_folder, 'synQuant_res', [org_name '.mat']), 'z_mat', 'id_mat','fMaps','-v7.3');
     org_im = tifread(fullfile(tif_files(i).folder, tif_files(i).name));
+    org_im = org_im - 200;  
+    org_im(org_im < 0) = 0;
     labelwrite(uint8(org_im/2), id_mat, fullfile(res_folder, 'synQuant_res_tif', org_name));
 end
 
@@ -117,7 +119,7 @@ tic;
 if ~isfolder(fullfile(res_folder, 'varianceMap'))
     mkdir(fullfile(res_folder, 'varianceMap'));
 end
-scale_term = 300;
+scale_term = 500;
 for i= 1:numel(tif_files)  
     disp(i);
     
