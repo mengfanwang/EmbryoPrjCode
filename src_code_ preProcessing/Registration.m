@@ -2,39 +2,45 @@
 clc;clear;close all;
 if isunix
     addpath('/home/mengfan/ForExecute/Tools/MatlabTools');
-    data_folder = '/work/Mengfan/Embryo/20220930_Joaquin/view9';
-end
+    data_folder = '/work/Mengfan/Embryo/20240624_isl2bGFP_H2AmCherry_6h_ON/view08_12';
+    save_folder = '/work/Mengfan/Embryo/20240624_isl2bGFP_H2AmCherry_6h_ON/RigidRegistration_view08_12';
+end 
 tif_files = dir(fullfile(data_folder, '/*.tif'));
-ds_scale = 2;
-
+ds_scale = [1/2 1/2 2];
+    
 %% global registration
 optimizer = registration.optimizer.RegularStepGradientDescent;
-metric = registration.metric.MeanSquares;
+metric = registration.metric.MeanSquares    ;
 optimizer.MaximumIterations = 500;
-optimizer.MaximumStepLength = 0.01;
+optimizer.MaximumStepLength = 0.01;   
 
 tform = cell(1,numel(tif_files)-1);
 
 %%
 tic;
-for ii = 1:200  %52:numel(tif_files)-1
+for ii = 1:249 %numel(tif_files)-1
     fprintf('processing %d/%d file\n', ii, numel(tif_files));
 
     im_a = tifread(fullfile(tif_files(ii).folder, tif_files(ii).name));
-    [h, w, slices] = size(im_a);
-%     im_a = imresize3(im_a,round([h/ds_scale w/ds_scale slices*ds_scale]));
+    im_a = im_a - 200; im_a(im_a < 0) = 0;                      % for joaquin data only
+%     [h, w, slices] = size(im_a);
+    im_a = imresize3(im_a,round(size(im_a).*ds_scale));
 
     im_b = tifread(fullfile(tif_files(ii+1).folder, tif_files(ii+1).name));
-    [h, w, slices] = size(im_b);
-%     im_b = imresize3(im_b,round([h/ds_scale w/ds_scale slices*ds_scale]));
+    im_b = im_b - 200; im_b(im_b < 0) = 0;                      % for joaquin data only
+%     [h, w, slices] = size(im_b);
+    im_b = imresize3(im_b,round(size(im_b).*ds_scale));
 
-    tform_temp = imregtform(im_a, im_b, 'rigid', optimizer, metric);
+    tform_temp = imregtform(im_a, im_b, 'rigid', optimizer, metric, 'PyramidLevels', 5);
     tform{ii} = tform_temp;
+
+    save(fullfile(save_folder, tif_files(ii).name(1:end-4)), 'tform_temp');
     toc
 end
 toc
 
-%% save downsampled data
+%% save downsampled data    
+
 if ~isfolder([data_folder '_ds'])
     mkdir([data_folder '_ds']);
 end
@@ -100,7 +106,7 @@ for tt = numel(tif_files):-1:1
     ref{tt} = affineOutputView(im_size, affine3d(trans_mat{tt}),'BoundsStyle','FollowOutput');
     
     x_min = min(x_min,round(ref{tt}.XWorldLimits(1)));
-    x_max = max(x_max,round(ref{tt}.XWorldLimits(2)));
+    x_max = max(x_max,round(ref{tt}.XWorldLimits(2))); 
    
     y_min = min(y_min,round(ref{tt}.YWorldLimits(1)));
     y_max = max(y_max,round(ref{tt}.YWorldLimits(2)));
@@ -142,3 +148,30 @@ for tt = 1:numel(tif_files)
     tifwrite(uint8(data_reg),fullfile([data_folder '_reg'], org_name));
 end
 toc
+
+%%
+data_folder = '/work/Mengfan/Embryo/20240624_isl2bGFP_H2AmCherry_6h_ON/view08_12';
+save_folder = '/work/Mengfan/Embryo/20240624_isl2bGFP_H2AmCherry_6h_ON/RigidRegistration_view08_12';
+tif_files = dir(fullfile(data_folder, '/*.tif'));
+
+t_unitary = tform{1};
+t_unitary.T = eye(4,4);
+t_ds = [ds_scale(1)   0 0 0; 0 ds_scale(2)   0 0; 0 0 ds_scale(3)   0; 0 0 0 1;];
+t_us = [1/ds_scale(1) 0 0 0; 0 1/ds_scale(2) 0 0; 0 0 1/ds_scale(3) 0; 0 0 0 1;];
+
+for ii = 1:249
+%     if ii ~= 49
+    load(fullfile(save_folder, tif_files(ii).name(1:5)));
+    tform{ii} = tform_temp;
+    tform{ii}.T = t_ds * tform{ii}.T * t_us;    
+%     else
+%     load(fullfile(save_folder, [tif_files(ii).name(1:5) '_222']));
+%     tform{ii} = tform_temp;
+%     tform{ii}.T = [0.5 0 0 0; 0 0.5 0 0; 0 0 2 0; 0 0 0 1;] * tform{ii}.T ...
+%         * [2 0 0 0; 0 2 0 0; 0 0 0.5 0; 0 0 0 1;];
+%     end
+end
+
+save_data_name = '/work/Mengfan/Embryo/20240624_isl2bGFP_H2AmCherry_6h_ON/Tracking/stitch/mastodon/embryo_data_h5_reg';
+timepts_to_process = generate_tps_str(0:249);
+tif2bdv_globalReg([], save_data_name, timepts_to_process, [], [], tform)
